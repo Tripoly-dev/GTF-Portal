@@ -184,7 +184,6 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
   const [roomType, setRoomType] = useState<'double' | 'single' | 'triple'>('double')
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
   const [showModal, setShowModal] = useState(false)
-  const [openMonth, setOpenMonth] = useState<string | null>(null)
 
   // Group departures by month
   const byMonth = pkg.departures.reduce<Record<string, DepartureSlot[]>>((acc, d) => {
@@ -194,11 +193,9 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
     return acc
   }, {})
 
-  // Open first available month by default
-  useEffect(() => {
-    const firstMonth = Object.keys(byMonth)[0]
-    if (firstMonth) setOpenMonth(firstMonth)
-  }, [])
+  const monthKeys = Object.keys(byMonth)
+  const [activeMonth, setActiveMonth] = useState('')
+  useEffect(() => { if (monthKeys.length) setActiveMonth(monthKeys[0]) }, [pkg.id])
 
   const roomSupplement = roomType === 'single' ? pkg.singleSupplement : roomType === 'triple' ? -pkg.tripleReduction : 0
   const pricePerPerson = pkg.basePrice + roomSupplement
@@ -225,46 +222,49 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
 
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 18 }}>
 
-          {/* Departure — grouped by month */}
+          {/* Departure — month tabs + date grid */}
           <div>
             <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--ink-mid)', letterSpacing: '0.1em', marginBottom: 10 }}>SELECT DEPARTURE</div>
-            <div style={{ maxHeight: 240, overflowY: 'auto', border: '1px solid var(--rule)' }}>
-              {Object.entries(byMonth).map(([month, slots]) => (
-                <div key={month}>
-                  <button onClick={() => setOpenMonth(openMonth === month ? null : month)} style={{
-                    width: '100%', padding: '9px 14px', background: 'var(--paper)',
-                    border: 'none', borderBottom: '1px solid var(--rule)',
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-                  }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-mid)' }}>{fmtMonth(month)}</span>
-                    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                      <span style={{ fontSize: 10, color: 'var(--ink-light)' }}>{slots.length} dates</span>
-                      <span style={{ fontSize: 10, color: 'var(--ink-light)', transform: openMonth === month ? 'rotate(180deg)' : 'none', display: 'inline-block', transition: 'transform 0.2s' }}>▾</span>
-                    </div>
-                  </button>
-                  {openMonth === month && slots.map(slot => (
-                    <button key={slot.date} onClick={() => { if (slot.status !== 'sold-out') setDepartureDate(slot.date) }}
-                      disabled={slot.status === 'sold-out'}
-                      style={{
-                        width: '100%', padding: '9px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                        background: departureDate === slot.date ? 'var(--teal-lt)' : 'white',
-                        border: 'none', borderBottom: '1px solid var(--rule)',
-                        cursor: slot.status === 'sold-out' ? 'not-allowed' : 'pointer',
-                        opacity: slot.status === 'sold-out' ? 0.5 : 1,
-                        fontFamily: 'Inter, sans-serif', transition: 'background 0.15s',
-                      }}>
-                      <span style={{ fontSize: 12, fontWeight: departureDate === slot.date ? 700 : 500, color: departureDate === slot.date ? 'var(--teal)' : 'var(--ink-mid)' }}>
-                        {new Date(slot.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
-                      </span>
-                      <span style={{ ...STATUS_STYLE[slot.status], padding: '2px 7px', fontSize: 9, fontWeight: 700, borderRadius: 3 }}>
-                        {STATUS_LABEL[slot.status]}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+            {/* Month tab strip */}
+            <div style={{ display: 'flex', overflowX: 'auto', gap: 0, borderBottom: '2px solid var(--rule)', marginBottom: 12 }}>
+              {monthKeys.map(m => (
+                <button key={m} onClick={() => setActiveMonth(m)} style={{
+                  padding: '7px 14px', background: 'none', border: 'none',
+                  borderBottom: activeMonth === m ? '2px solid var(--teal)' : '2px solid transparent',
+                  marginBottom: -2, cursor: 'pointer', whiteSpace: 'nowrap',
+                  fontSize: 12, fontWeight: activeMonth === m ? 700 : 500,
+                  color: activeMonth === m ? 'var(--teal)' : 'var(--ink-light)',
+                  fontFamily: 'Inter, sans-serif', transition: 'all 0.15s',
+                }}>
+                  {new Date(m + '-01').toLocaleDateString('en-IN', { month: 'short', year: '2-digit' })}
+                  <span style={{ marginLeft: 5, fontSize: 10, color: 'var(--ink-light)', fontWeight: 400 }}>({byMonth[m]?.length})</span>
+                </button>
               ))}
             </div>
+            {/* Dates for active month */}
+            {activeMonth && byMonth[activeMonth] && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {byMonth[activeMonth].map(slot => (
+                  <button key={slot.date} onClick={() => { if (slot.status !== 'sold-out') setDepartureDate(slot.date) }}
+                    disabled={slot.status === 'sold-out'}
+                    style={{
+                      padding: '9px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      border: departureDate === slot.date ? '1.5px solid var(--teal)' : '1.5px solid var(--rule)',
+                      background: departureDate === slot.date ? 'var(--teal-lt)' : 'white',
+                      cursor: slot.status === 'sold-out' ? 'not-allowed' : 'pointer',
+                      opacity: slot.status === 'sold-out' ? 0.5 : 1,
+                      fontFamily: 'Inter, sans-serif', transition: 'all 0.15s',
+                    }}>
+                    <span style={{ fontSize: 13, fontWeight: departureDate === slot.date ? 700 : 500, color: departureDate === slot.date ? 'var(--teal)' : 'var(--ink-mid)' }}>
+                      {new Date(slot.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    </span>
+                    <span style={{ ...STATUS_STYLE[slot.status], padding: '2px 8px', fontSize: 9, fontWeight: 700, borderRadius: 3 }}>
+                      {STATUS_LABEL[slot.status]}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Adults */}
