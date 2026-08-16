@@ -9,8 +9,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-              <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png"
-                alt="GTF Holidays" style={{ height: 30, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+              <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 30, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
               <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 17, fontWeight: 700, color: '#fff' }}>GTF Portal</span>
             </div>
             <p style={{ fontSize: 13, lineHeight: 1.8, maxWidth: 260, marginBottom: 24, fontWeight: 300 }}>
@@ -68,7 +67,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <span style={{ fontSize: 11, letterSpacing: '0.04em' }}>
-            © 2025 GTF Portal · Global Travel Fusion (GTF Holidays LLP) · All rights reserved
+            © 2026 GTF Holidays LLP (Global Travel Fusion) · All rights reserved
           </span>
           <div style={{ display: 'flex', gap: 8 }}>
             {['ETOA', 'TAAI', 'OTOAI', 'PATA'].map(b => (

@@ -81,7 +81,7 @@ export default function AdminPage() {
       <div style={{ width: 240, background: 'var(--ink)', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '28px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 30, height: 30, background: 'var(--teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#fff', fontFamily: 'Inter Tight, sans-serif' }}>G</div>
+            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
             <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff' }}>GTF <span style={{ fontWeight: 300 }}>Admin</span></span>
           </Link>
           <div style={{ marginTop: 12, padding: '4px 10px', background: 'rgba(232,97,58,0.2)', border: '1px solid rgba(232,97,58,0.4)', display: 'inline-block', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--orange)' }}>ADMIN PANEL</div>

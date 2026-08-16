@@ -47,8 +47,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
 
           {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginRight: 32, flexShrink: 0 }}>
-            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png"
-              alt="GTF" style={{ height: 28, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
             <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 15, fontWeight: 700, color: '#fff' }}>
               GTF <span style={{ fontWeight: 300 }}>Portal</span>
             </span>
@@ -99,7 +98,20 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Page content */}
-      <div>{children}</div>
+      <div style={{ flex: 1 }}>{children}</div>
+
+      {/* Slim agent footer */}
+      <div style={{ background: 'var(--ink)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF" style={{ height: 22, width: 'auto', filter: 'brightness(0) invert(1)', opacity: 0.7 }} />
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.02em' }}>© 2026 GTF Holidays LLP</span>
+        </div>
+        <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+          <a href="mailto:sales@gtfholidays.com" style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontWeight: 500 }}>sales@gtfholidays.com</a>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>+91 89288 72400</span>
+          <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, padding: '4px 12px', background: 'rgba(10,123,108,0.3)', border: '1px solid rgba(10,123,108,0.5)', color: 'var(--teal)', fontWeight: 600, textDecoration: 'none', letterSpacing: '0.04em' }}>WHATSAPP</a>
+        </div>
+      </div>
     </div>
   )
 }
