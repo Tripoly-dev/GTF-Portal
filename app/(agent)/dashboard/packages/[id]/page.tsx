@@ -212,11 +212,14 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
     <>
       <div style={{ background: 'white', border: '1px solid var(--rule)', overflow: 'hidden', position: 'sticky', top: 20 }}>
         {/* Header */}
-        <div style={{ background: 'var(--ink)', padding: '18px 22px' }}>
-          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.14em', marginBottom: 6 }}>QUOTE BUILDER</div>
-          <div className="font-tight" style={{ fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1 }}>{fmt(clientTotal)}</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>
-            {fmt(Math.round(clientTotal / adults))}/pp · incl. 4% markup
+        <div style={{ background: 'linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%)', padding: '20px 22px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.14em', fontWeight: 700 }}>QUOTE BUILDER</div>
+            <div style={{ padding: '3px 8px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>4% MARKUP</div>
+          </div>
+          <div className="font-tight" style={{ fontSize: 32, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 4 }}>{fmt(clientTotal)}</div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', fontWeight: 300 }}>
+            {fmt(Math.round(clientTotal / adults))} per person · {adults} adult{adults > 1 ? 's' : ''}
           </div>
         </div>
 
@@ -224,7 +227,7 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
 
           {/* Departure — month tabs + date grid */}
           <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--ink-mid)', letterSpacing: '0.1em', marginBottom: 10 }}>SELECT DEPARTURE</div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 10 }}>SELECT DEPARTURE</div>
             {/* Month tab strip */}
             <div style={{ display: 'flex', overflowX: 'auto', gap: 0, borderBottom: '2px solid var(--rule)', marginBottom: 12 }}>
               {monthKeys.map(m => (
@@ -269,7 +272,7 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
 
           {/* Adults */}
           <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--ink-mid)', letterSpacing: '0.1em', marginBottom: 10 }}>NUMBER OF ADULTS</div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 10 }}>NUMBER OF ADULTS</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 34, height: 34, border: '1.5px solid var(--rule)', background: 'white', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif' }}>−</button>
               <span className="font-tight" style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', minWidth: 28, textAlign: 'center' }}>{adults}</span>
@@ -280,7 +283,7 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
 
           {/* Room type */}
           <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--ink-mid)', letterSpacing: '0.1em', marginBottom: 10 }}>ROOM TYPE</div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 10 }}>ROOM TYPE</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {[
                 { id: 'double', label: 'Double / Twin', note: 'Base price' },
@@ -303,7 +306,7 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
           {/* Add-ons */}
           {pkg.addOns.length > 0 && (
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--ink-mid)', letterSpacing: '0.1em', marginBottom: 10 }}>OPTIONAL ADD-ONS</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 10 }}>OPTIONAL ADD-ONS</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
                 {pkg.addOns.map(a => (
                   <label key={a.id} style={{
@@ -327,8 +330,8 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
           )}
 
           {/* Price breakdown */}
-          <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: '14px 16px' }}>
-            <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', marginBottom: 10 }}>PRICE BREAKDOWN (NET)</div>
+          <div style={{ background: 'var(--teal-lt)', border: '1px solid var(--rule)', padding: '14px 16px' }}>
+            <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 10 }}>PRICE BREAKDOWN (NET)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-mid)' }}>
                 <span>{fmt(pricePerPerson)} × {adults} pax</span><span>{fmt(landTotal)}</span>
@@ -348,10 +351,13 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
             </div>
           </div>
 
-          <button onClick={() => setShowModal(true)} className="btn-orange" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: 13 }}>
+          <button onClick={() => setShowModal(true)} className="btn-orange" style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: 13, letterSpacing: '0.06em', fontWeight: 700 }}>
             SAVE AS PROPOSAL →
           </button>
-          <p style={{ fontSize: 11, color: 'var(--ink-light)', textAlign: 'center' }}>Adjust markup in the next step</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+            <div style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--teal-lt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'var(--teal)', fontWeight: 800 }}>i</div>
+            <p style={{ fontSize: 11, color: 'var(--ink-light)' }}>Markup is adjustable in the next step</p>
+          </div>
         </div>
       </div>
 

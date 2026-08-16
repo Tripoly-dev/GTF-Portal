@@ -27,7 +27,13 @@ const DURATION_RANGES = [
 
 function Checkbox({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
   return (
-    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '3px 0', fontSize: 12, color: checked ? 'var(--teal)' : 'var(--ink-mid)', fontWeight: checked ? 600 : 400 }}>
+    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '3px 0', fontSize: 12, color: checked ? 'var(--teal)' : 'var(--ink-mid)', fontWeight: checked ? 600 : 400, userSelect: 'none' }}>
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{ position: 'absolute', opacity: 0, width: 0, height: 0, pointerEvents: 'none' }}
+      />
       <div style={{ width: 15, height: 15, border: `2px solid ${checked ? 'var(--teal)' : 'var(--rule)'}`, background: checked ? 'var(--teal)' : 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}>
         {checked && <span style={{ color: 'white', fontSize: 9, fontWeight: 800, lineHeight: 1 }}>✓</span>}
       </div>
