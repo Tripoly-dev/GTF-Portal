@@ -40,13 +40,13 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{
-            width: 32, height: 32, background: overPhoto ? 'rgba(10,123,108,0.8)' : 'var(--teal)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, fontWeight: 800, color: '#fff',
-            fontFamily: 'Inter Tight, sans-serif',
-          }}>G</div>
+            width: 44, height: 35, display: 'flex', alignItems: 'center',
+          }}>
+            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png"
+              alt="GTF Holidays" style={{ height: 32, width: 'auto', objectFit: 'contain', filter: overPhoto ? 'brightness(0) invert(1)' : 'none' }} />
+          </div>
           <span style={{
-            fontFamily: 'Inter Tight, sans-serif', fontSize: 18, fontWeight: 700,
+            fontFamily: 'Inter Tight, sans-serif', fontSize: 17, fontWeight: 700,
             color: overPhoto ? '#fff' : 'var(--ink)', letterSpacing: '-0.01em',
           }}>
             GTF <span style={{ fontWeight: 300, color: overPhoto ? 'rgba(255,255,255,0.75)' : 'var(--teal)' }}>Portal</span>

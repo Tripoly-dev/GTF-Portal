@@ -377,6 +377,41 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
 }
 
 // ── MAIN PAGE ─────────────────────────────────────────────────────────────────
+
+// Hotel images per city
+const HOTEL_IMAGES: Record<string, string> = {
+  'Paris':        'https://static.wixstatic.com/media/226760_aaf73d04b8b845e488c4736ee77ba918~mv2.jpg',
+  'Amsterdam':    'https://static.wixstatic.com/media/226760_707548668df94335af359cb5fad6fc5c~mv2.jpg',
+  'Rome':         'https://static.wixstatic.com/media/226760_9cbf836a8b9e4896844bfd57f3ef8213~mv2.jpg',
+  'Venice / Mestre': 'https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=400&q=80',
+  'Florence Area':'https://images.unsplash.com/photo-1543429257-3eb0b9c580b4?w=400&q=80',
+  'Zurich':       'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?w=400&q=80',
+  'Interlaken':   'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400&q=80',
+  'Brussels':     'https://images.unsplash.com/photo-1491557345352-5929e343eb89?w=400&q=80',
+  'Frankfurt':    'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80',
+  'Prague':       'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=400&q=80',
+  'Vienna':       'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=400&q=80',
+  'Barcelona':    'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?w=400&q=80',
+  'Madrid':       'https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=400&q=80',
+  'London':       'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80',
+  'Oslo':         'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400&q=80',
+  'Stockholm':    'https://images.unsplash.com/photo-1538332576228-eb5b4c4de6f5?w=400&q=80',
+  'Copenhagen':   'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=400&q=80',
+  'Milan':        'https://images.unsplash.com/photo-1478005405000-f02f57bb0769?w=400&q=80',
+  'Lucerne':      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
+  'Arusha':       'https://static.wixstatic.com/media/226760_7ca6ca64382c4255bbf3c91c7109a4e4~mv2.jpg',
+  'Serengeti':    'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=80',
+  'Ngorongoro':   'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&q=80',
+  'Zanzibar':     'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&q=80',
+  'Nairobi':      'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&q=80',
+  'Masai Mara':   'https://images.unsplash.com/photo-1551655510-555dc3be8633?w=400&q=80',
+  'Amboseli':     'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=80',
+  'Lake Nakuru':  'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=400&q=80',
+  'Sydney':       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
+  'Melbourne':    'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&q=80',
+  'Cairns':       'https://images.unsplash.com/photo-1538614484459-75c7cfc2df6f?w=400&q=80',
+}
+
 export default function PackageDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
@@ -509,20 +544,32 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                 <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>ACCOMMODATION</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                   {pkg.hotels.map((h, i) => (
-                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '140px 1fr 100px 120px', gap: 16, padding: '14px 0', borderBottom: i < pkg.hotels.length - 1 ? '1px solid var(--rule)' : 'none', alignItems: 'center' }}>
+                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 120px 1fr 110px 110px', gap: 14, padding: '14px 0', borderBottom: i < pkg.hotels.length - 1 ? '1px solid var(--rule)' : 'none', alignItems: 'center' }}>
+                      {/* Hotel image */}
+                      <div style={{ width: 80, height: 60, overflow: 'hidden', flexShrink: 0 }}>
+                        <img
+                          src={HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'}
+                          alt={h.city}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      </div>
+                      {/* City + nights */}
                       <div>
                         <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>CITY</div>
                         <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{h.city}</div>
                         <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
                       </div>
+                      {/* Hotel name + stars */}
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)' }}>{h.name}</div>
-                        <div style={{ display: 'flex', gap: 1, marginTop: 3 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)', marginBottom: 3 }}>{h.name}</div>
+                        <div style={{ display: 'flex', gap: 1 }}>
                           {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 11 }}>★</span>)}
                         </div>
                       </div>
+                      {/* Room type */}
                       <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{h.roomType}</div>
-                      <div style={{ fontSize: 11, padding: '3px 8px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, textAlign: 'center' }}>{h.meal}</div>
+                      {/* Meal */}
+                      <div style={{ fontSize: 11, padding: '4px 10px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, textAlign: 'center' }}>{h.meal}</div>
                     </div>
                   ))}
                 </div>
