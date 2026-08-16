@@ -60,11 +60,11 @@ export default function DashboardPage() {
         <nav style={{ padding: '16px 0', flex: 1 }}>
           {[
             { icon: '⊞', label: 'Dashboard', href: '/dashboard', active: true },
-            { icon: '✈', label: 'Europe', href: '/departures/europe', active: false },
-            { icon: '🦁', label: 'Africa', href: '/departures/africa', active: false },
-            { icon: '🌏', label: 'Oceania', href: '/departures/oceania', active: false },
-            { icon: '🗾', label: 'Asia', href: '/departures/asia', active: false },
-            { icon: '🗽', label: 'Americas', href: '/departures/americas', active: false },
+            { icon: '📦', label: 'Browse Packages', href: '/dashboard/packages', active: false },
+            { icon: '📋', label: 'My Quotes', href: '/dashboard/quotes', active: false },
+            { icon: '✈', label: 'Europe', href: '/dashboard/packages?region=europe', active: false },
+            { icon: '🦁', label: 'Africa', href: '/dashboard/packages?region=africa', active: false },
+            { icon: '🌏', label: 'Oceania', href: '/dashboard/packages?region=oceania', active: false },
           ].map(item => (
             <Link key={item.label} href={item.href} style={{
               display: 'flex', alignItems: 'center', gap: 12,
@@ -106,8 +106,8 @@ export default function DashboardPage() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
-            <a href="mailto:sales@gtfholidays.com" style={{ padding: '8px 18px', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 12, fontWeight: 600, textDecoration: 'none', letterSpacing: '0.04em' }}>EMAIL SALES TEAM</a>
-            <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" className="btn-teal" style={{ padding: '8px 18px', fontSize: 12 }}>WHATSAPP US</a>
+            <Link href="/dashboard/quotes" style={{ padding: '8px 18px', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 12, fontWeight: 600, textDecoration: 'none', letterSpacing: '0.04em' }}>MY QUOTES</Link>
+            <Link href="/dashboard/packages" className="btn-teal" style={{ padding: '8px 18px', fontSize: 12 }}>+ NEW QUOTE</Link>
           </div>
         </div>
 
