@@ -3,85 +3,350 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
+// Base: zip HTML prototype design (organic blobs, white bg, floating animations)
+// Upgrades per PDF brief: real photos inside blobs, stronger headline, editorial feel
 function Hero() {
-  const ref = useRef<HTMLElement>(null)
-  return (
-    <section ref={ref} style={{
-      position: 'relative', width: '100%', height: '100vh',
-      minHeight: 640, overflow: 'hidden',
-      display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-    }}>
-      <div style={{ position: 'absolute', inset: 0 }}>
-        <img
-          src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1800&q=85"
-          alt="GTF Portal destinations"
-          className="animate-img-scale"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
-        />
-        <div className="hero-overlay" style={{ position: 'absolute', inset: 0 }} />
-      </div>
+  const [loaded, setLoaded] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 80)
+    return () => clearTimeout(t)
+  }, [])
 
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 2, padding: '0 56px 80px', maxWidth: 860 }}>
-        <div className="animate-fade-up" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 24,
+  return (
+    <section style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0,
+      padding: '120px 56px 80px',
+      position: 'relative',
+      background: '#FAFAF8', // warm editorial off-white — photography dominates
+      overflow: 'hidden',
+    }}>
+
+      {/* ── LEFT — Typography / Brand (47%) ──────────────────────────────── */}
+      <div style={{
+        flex: '0 0 47%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0,
+        position: 'relative',
+        zIndex: 2,
+      }}>
+
+        {/* Eyebrow */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28,
+          opacity: loaded ? 1 : 0,
+          transform: loaded ? 'translateY(0)' : 'translateY(16px)',
+          transition: 'opacity 0.6s ease, transform 0.6s ease',
         }}>
-          <span style={{ width: 28, height: 1, background: 'rgba(255,255,255,0.5)', display: 'inline-block' }} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.16em', fontWeight: 600 }}>
-            100% B2B · GLOBAL TRAVEL FUSION · ETOA MEMBER
-          </span>
+          <span style={{ width: 22, height: 1.5, background: '#0A7B6C', display: 'inline-block', flexShrink: 0 }} />
+          <span style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.16em',
+            color: '#0A7B6C', fontFamily: 'Inter, sans-serif',
+          }}>100% B2B · GTF HOLIDAYS</span>
         </div>
 
-        <h1 className="font-tight animate-fade-up" style={{
-          fontSize: 'clamp(52px, 7.5vw, 100px)', fontWeight: 800,
-          lineHeight: 0.92, color: '#fff', marginBottom: 32,
-          letterSpacing: '-0.03em', animationDelay: '0.1s',
+        {/* Headline — solid ink, no gradient, very large */}
+        <h1 className="font-tight" style={{
+          margin: 0,
+          fontSize: 'clamp(64px, 5.8vw, 92px)',
+          fontWeight: 800,
+          lineHeight: 1.04,
+          letterSpacing: '-0.03em',
+          color: '#0F172A',
+          opacity: loaded ? 1 : 0,
+          transform: loaded ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'opacity 0.7s 0.08s ease, transform 0.7s 0.08s ease',
         }}>
           The World,<br />
-          <span style={{ fontWeight: 300, fontStyle: 'italic' }}>For Your Clients.</span>
+          <span style={{ color: '#0F172A' }}>For Your Clients.</span>
         </h1>
 
-        <p className="animate-fade-up" style={{
-          fontSize: 17, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7,
-          maxWidth: 480, marginBottom: 40, fontWeight: 300,
-          animationDelay: '0.2s',
+        {/* Teal accent rule — restrained brand accent per PDF brief */}
+        <div style={{
+          width: 48, height: 2, background: '#0A7B6C',
+          margin: '24px 0',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.6s 0.2s ease',
+        }} />
+
+        {/* Supporting copy */}
+        <p style={{
+          margin: '0 0 32px',
+          maxWidth: 460,
+          fontSize: 16,
+          lineHeight: 1.72,
+          color: '#475569',
+          fontWeight: 400,
+          fontFamily: 'Inter, sans-serif',
+          opacity: loaded ? 1 : 0,
+          transform: loaded ? 'translateY(0)' : 'translateY(16px)',
+          transition: 'opacity 0.7s 0.18s ease, transform 0.7s 0.18s ease',
         }}>
-          Series Departures · White Label Solutions · ADHOC Groups · Bespoke Holidays.<br />
-          One B2B platform. Five continents. Zero B2C.
+          Curated global departures and travel products built exclusively for travel professionals. Series Departures · White Label · Bespoke Holidays.
         </p>
 
-        <div className="animate-fade-up" style={{ display: 'flex', gap: 14, flexWrap: 'wrap', animationDelay: '0.3s' }}>
-          <Link href="/register" className="btn-teal" style={{ background: '#fff', color: 'var(--ink)' }}>
+        {/* CTAs — modest rounding per PDF (not full pill, not zero) */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 16, marginBottom: 36,
+          opacity: loaded ? 1 : 0,
+          transform: loaded ? 'translateY(0)' : 'translateY(16px)',
+          transition: 'opacity 0.7s 0.28s ease, transform 0.7s 0.28s ease',
+        }}>
+          <Link href="/register" style={{
+            textDecoration: 'none',
+            fontSize: 14, fontWeight: 700, letterSpacing: '0.02em',
+            color: '#fff',
+            padding: '16px 30px',
+            borderRadius: 8,
+            background: '#E8613A',
+            boxShadow: '0 6px 20px rgba(232,97,58,0.35)',
+            display: 'inline-block',
+            fontFamily: 'Inter, sans-serif',
+            transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
+            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 12px 28px rgba(232,97,58,0.45)'
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
+            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(232,97,58,0.35)'
+          }}>
             JOIN AS PARTNER →
           </Link>
-          <Link href="/departures/europe" className="btn-outline-white">
-            VIEW DEPARTURES
+          <Link href="/departures/europe" style={{
+            textDecoration: 'none',
+            fontSize: 14, fontWeight: 700, letterSpacing: '0.02em',
+            color: '#0F172A',
+            padding: '15px 28px',
+            borderRadius: 8,
+            border: '1.5px solid #CBD5E1',
+            display: 'inline-block',
+            fontFamily: 'Inter, sans-serif',
+            transition: 'border-color 0.2s ease, transform 0.25s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.borderColor = '#0F172A'
+            ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.borderColor = '#CBD5E1'
+            ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
+          }}>
+            EXPLORE DEPARTURES
           </Link>
         </div>
 
-        {/* Stats */}
-        <div className="animate-fade-up" style={{
-          marginTop: 56, display: 'flex', gap: 40, animationDelay: '0.4s',
+        {/* Stats row with vertical dividers — from zip prototype */}
+        <div style={{
+          display: 'flex', gap: 0,
+          borderTop: '1px solid #E2E8F0',
+          paddingTop: 24,
+          marginBottom: 20,
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.7s 0.38s ease',
         }}>
           {[
-            { n: '5', l: 'Continents' },
-            { n: '25+', l: 'Active Packages' },
-            { n: '100%', l: 'B2B Only' },
-            { n: '24/7', l: 'Ops Support' },
-          ].map(s => (
-            <div key={s.n}>
-              <div className="font-tight" style={{ fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.03em' }}>{s.n}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 4, fontWeight: 500, letterSpacing: '0.08em' }}>{s.l.toUpperCase()}</div>
+            { n: '5', l: 'CONTINENTS' },
+            { n: '25+', l: 'PACKAGES' },
+            { n: '100%', l: 'B2B ONLY' },
+            { n: '24/7', l: 'OPS SUPPORT' },
+          ].map((s, i) => (
+            <div key={s.n} style={{
+              paddingRight: i < 3 ? 24 : 0,
+              paddingLeft: i > 0 ? 24 : 0,
+              borderRight: i < 3 ? '1px solid #E2E8F0' : 'none',
+            }}>
+              <div className="font-tight" style={{ fontSize: 24, fontWeight: 800, color: '#0F172A', lineHeight: 1, letterSpacing: '-0.02em' }}>{s.n}</div>
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', color: '#64748B', marginTop: 5, fontFamily: 'Inter, sans-serif' }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* B2B credibility line */}
+        <div style={{
+          fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
+          color: '#94A3B8', fontFamily: 'Inter, sans-serif',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.7s 0.5s ease',
+        }}>
+          ETOA MEMBER · TAAI · OTOAI · PATA · GLOBAL DEPARTURES
+        </div>
+      </div>
+
+      {/* ── RIGHT — Organic blob collage with real photos (53%) ───────────── */}
+      <div style={{
+        flex: '0 0 53%',
+        position: 'relative',
+        height: 700,
+        marginLeft: 32,
+      }}>
+
+        {/* Dashed vertical route line — from zip prototype, atmospheric */}
+        <div style={{
+          position: 'absolute',
+          top: '14%', left: '16%',
+          width: 2, height: '52%',
+          background: 'repeating-linear-gradient(180deg, rgba(10,123,108,0.35) 0px 6px, transparent 6px 12px)',
+          zIndex: 1,
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.8s 0.8s ease',
+        }} />
+
+        {/* PRIMARY BLOB — Europe. Large, top-right. floatA animation */}
+        {/* Shape: organic irregular border-radius from zip prototype */}
+        <div style={{
+          position: 'absolute',
+          top: 0, right: 0,
+          width: '76%', height: '70%',
+          borderRadius: '40% 60% 44% 56% / 52% 46% 54% 48%',
+          overflow: 'hidden',
+          boxShadow: '0 40px 90px rgba(6,20,20,0.28)',
+          animation: 'floatA 8s ease-in-out infinite',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.8s 0.2s ease',
+          zIndex: 2,
+        }}>
+          <img
+            src="https://images.unsplash.com/photo-1499856374079-1fcd7bf1bf0e?w=900&q=90"
+            alt="Paris, Europe"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
+          />
+          {/* Subtle dark gradient for coordinate label legibility */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(200deg, transparent 55%, rgba(3,10,10,0.55) 100%)', pointerEvents: 'none' }} />
+          {/* Coordinate label — tiny, atmospheric, glass */}
+          <div style={{
+            position: 'absolute', bottom: 22, left: 26,
+            color: '#fff', fontSize: 10, letterSpacing: '0.06em',
+            fontFamily: 'ui-monospace, monospace',
+            background: 'rgba(10,123,108,0.3)', backdropFilter: 'blur(6px)',
+            padding: '4px 9px', border: '1px solid rgba(255,255,255,0.18)',
+          }}>
+            PAR · 48.8566° N
+          </div>
+        </div>
+
+        {/* SECONDARY BLOB — Mediterranean/Swiss Alps. Bottom-left. floatC animation */}
+        <div style={{
+          position: 'absolute',
+          bottom: 0, left: 0,
+          width: '50%', height: '44%',
+          borderRadius: '48% 52% 58% 42% / 55% 45% 55% 45%',
+          overflow: 'hidden',
+          boxShadow: '0 30px 70px rgba(8,16,14,0.32)',
+          border: '3px solid #fff',
+          zIndex: 3,
+          animation: 'floatC 7s ease-in-out infinite',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.8s 0.45s ease',
+        }}>
+          <img
+            src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=700&q=90"
+            alt="Swiss Alps"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(200deg, transparent 55%, rgba(3,10,10,0.5) 100%)', pointerEvents: 'none' }} />
+          <div style={{
+            position: 'absolute', bottom: 16, left: 18,
+            color: '#fff', fontSize: 10, letterSpacing: '0.06em',
+            fontFamily: 'ui-monospace, monospace',
+            background: 'rgba(10,123,108,0.3)', backdropFilter: 'blur(6px)',
+            padding: '4px 9px', border: '1px solid rgba(255,255,255,0.18)',
+          }}>
+            ZRH · 47.3° N
+          </div>
+        </div>
+
+        {/* TERTIARY — Kenya Safari. Small circle, top-left. floatB animation */}
+        <div style={{
+          position: 'absolute',
+          top: '9%', left: '5%',
+          width: 136, height: 136,
+          borderRadius: '50%',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px rgba(4,20,20,0.35)',
+          border: '3px solid #fff',
+          zIndex: 4,
+          animation: 'floatB 6s ease-in-out infinite',
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.8s 0.65s ease',
+        }}>
+          <img
+            src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=90"
+            alt="Kenya Safari"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 55%' }}
+          />
+        </div>
+
+        {/* NBO label — below circle, teal */}
+        <div style={{
+          position: 'absolute',
+          top: 'calc(9% + 148px)', left: 'calc(5% + 46px)',
+          color: '#0A7B6C',
+          fontSize: 10, fontFamily: 'ui-monospace, monospace',
+          fontWeight: 700, letterSpacing: '0.08em',
+          zIndex: 4,
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.7s 0.9s ease',
+        }}>NBO</div>
+
+        {/* 5 CONTINENTS badge — top-right of collage */}
+        <div style={{
+          position: 'absolute',
+          top: 16, right: 16,
+          background: 'rgba(10,123,108,0.92)',
+          backdropFilter: 'blur(6px)',
+          color: '#fff',
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.1em',
+          padding: '7px 14px',
+          borderRadius: 999,
+          zIndex: 5,
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 0.7s 1s ease',
+          border: '1px solid rgba(255,255,255,0.2)',
+        }}>
+          5 CONTINENTS
+        </div>
+
+        {/* Airport codes strip — atmospheric, bottom of collage */}
+        <div style={{
+          position: 'absolute',
+          bottom: 20, right: 20,
+          display: 'flex', alignItems: 'center', gap: 8,
+          zIndex: 5,
+          opacity: loaded ? 0.65 : 0,
+          transition: 'opacity 0.7s 1.1s ease',
+        }}>
+          {['PAR', 'NBO', 'TYO', 'ZRH'].map((code, i) => (
+            <div key={code} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 10, color: '#0F172A', fontFamily: 'ui-monospace, monospace', fontWeight: 700, letterSpacing: '0.1em' }}>{code}</span>
+              {i < 3 && <span style={{ fontSize: 8, color: '#CBD5E1' }}>→</span>}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div style={{ position: 'absolute', bottom: 36, right: 56, zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', writingMode: 'vertical-rl' }}>SCROLL</span>
-        <div style={{ width: 1, height: 40, background: 'rgba(255,255,255,0.25)' }} />
-      </div>
+      {/* Floating animations — from zip prototype */}
+      <style>{`
+        @keyframes floatA {
+          0%, 100% { transform: translateY(0) rotate(-3deg); }
+          50% { transform: translateY(-18px) rotate(-1deg); }
+        }
+        @keyframes floatB {
+          0%, 100% { transform: translateY(0) rotate(4deg); }
+          50% { transform: translateY(16px) rotate(6deg); }
+        }
+        @keyframes floatC {
+          0%, 100% { transform: translateY(0) rotate(-2deg); }
+          50% { transform: translateY(-12px) rotate(1deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * { animation-duration: 0.001s !important; animation-iteration-count: 1 !important; }
+        }
+      `}</style>
     </section>
   )
 }
