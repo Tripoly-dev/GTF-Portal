@@ -296,7 +296,7 @@ function DestinationMarquee() {
 function ProductStream() {
   const [active, setActive] = useState(0)
   const products = [
-    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '15', price: '₹78,000', next: '12 SEP', image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1000&q=85', href: '/departures/europe', popular: ['European Delights — 9D', 'Swiss Alpine Escape — 8D', 'Mediterranean Discovery — 10D'] },
+    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '15', price: '₹78,000', next: '12 SEP', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['European Delights — 9D', 'Swiss Alpine Escape — 8D', 'Mediterranean Discovery — 10D'] },
     { name: 'Africa', category: 'SAFARI & GROUP TOURS', packages: '9', price: '₹65,000', next: '18 OCT', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1000&q=85', href: '/departures/africa', popular: ["Kenya's Ultimate Safari — 8D", 'Tanzania Untamed — 5D', 'Wild Serenade — 4D'] },
     { name: 'Oceania', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,10,000', next: '08 NOV', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=1000&q=85', href: '/departures/oceania', popular: ['Best of Australia — 10D', 'Discover Australia — 10D'] },
     { name: 'Asia', category: 'COMING SOON', packages: '—', price: 'ENQUIRE', next: 'TBA', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&q=85', href: '/departures/asia', popular: ['Japan — coming soon', 'South Korea — coming soon'] },
