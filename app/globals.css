@@ -223,6 +223,11 @@ body {
 @media (max-width: 560px) { .bento-approved-grid { grid-template-columns: 1fr; grid-template-rows: auto; } .approved-hero, .approved-routes, .approved-platform, .approved-ticket, .approved-flow, .approved-white-label, .approved-network { grid-column: 1; grid-row: auto; min-height: 180px; } .approved-hero { min-height: 440px; } .approved-routes { min-height: 230px; } }
 
 /* Customer Journey */
+.product-stream-heading { font-family: Georgia, 'Times New Roman', serif !important; font-weight: 500 !important; letter-spacing: -.045em !important; }
+#product-stream { position: relative; }
+#product-stream::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: radial-gradient(circle at 12% 18%, #79D8C5 0 1px, transparent 2px), radial-gradient(circle at 76% 65%, #C9A96E 0 1px, transparent 2px), linear-gradient(112deg, transparent 0 48%, rgba(121,216,197,.24) 48.2%, transparent 48.6%); background-size: 180px 180px, 240px 240px, 100% 100%; animation: product-stream-drift 18s linear infinite; }
+#product-stream > div { position: relative; z-index: 1; }
+@keyframes product-stream-drift { from { transform: translateX(-18px); } to { transform: translateX(18px); } }
 .customer-journey { padding: 112px 48px 124px; background: #fff; color: var(--ink); }
 .customer-journey-intro { max-width: 620px; margin: 0 auto 38px; text-align: center; }
 .customer-journey-intro h2 { margin: 10px 0 16px; font: 500 clamp(36px, 4vw, 54px)/.96 Georgia, 'Times New Roman', serif; letter-spacing: -.035em; }
@@ -233,7 +238,7 @@ body {
 .customer-journey-track { display: flex; gap: 18px; overflow-x: auto; scroll-behavior: smooth; padding: 10px 4px 22px; scrollbar-width: thin; scrollbar-color: #CBD5E1 transparent; }
 .customer-journey-card { position: relative; flex: 0 0 230px; aspect-ratio: 9 / 15; overflow: hidden; clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px)); background: #0B1120; border: 0; padding: 0; color: #fff; text-align: left; cursor: pointer; animation: journey-card-in .7s cubic-bezier(.22,1,.36,1) both; }
 .customer-journey-image, .customer-journey-shade { position: absolute; inset: 0; }
-.customer-journey-image { background-position: center; background-size: cover; transition: transform 1s ease; }
+.customer-journey-image { background-position: center; background-size: cover; transition: transform 1s ease; animation: journey-film 10s ease-in-out infinite alternate; }
 .customer-journey-card:hover .customer-journey-image { transform: scale(1.06); }
 .customer-journey-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 5px; }
 .customer-journey-shade { background: linear-gradient(180deg, rgba(2,10,10,.02), rgba(2,10,10,.78)); }
@@ -245,7 +250,8 @@ body {
 .customer-journey-card-copy p { margin: 0; color: rgba(255,255,255,.86); font: italic 13px/1.35 Georgia, serif; }
 .customer-journey-card-copy small { color: rgba(255,255,255,.72); letter-spacing: .04em; line-height: 1.35; }
 @keyframes journey-card-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-@media (prefers-reduced-motion: reduce) { .customer-journey-card { animation: none; } .customer-journey-image { transition: none; } }
+@keyframes journey-film { from { transform: scale(1.02) translate3d(-1%, -1%, 0); } to { transform: scale(1.1) translate3d(1%, 1%, 0); } }
+@media (prefers-reduced-motion: reduce) { .customer-journey-card { animation: none; } .customer-journey-image { transition: none; animation: none; } #product-stream::before { animation: none; } }
 @media (max-width: 700px) { .customer-journey { padding: 80px 20px 88px; } .customer-journey-carousel { gap: 8px; } .customer-journey-carousel > button { flex-basis: 40px; width: 40px; height: 40px; } .customer-journey-card { flex-basis: 205px; } }
 
 /* Editorial hierarchy: display serif, operational copy sans, metadata mono. */

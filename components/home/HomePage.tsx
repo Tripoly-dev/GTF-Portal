@@ -305,14 +305,14 @@ function ProductStream() {
   ]
 
   return (
-    <section id="product-stream" style={{ padding: '112px 48px 124px', background: 'linear-gradient(180deg,#031e1e,#04262b 55%,#031a1e)', color: '#fff', overflow: 'hidden' }}>
+    <section id="product-stream" style={{ padding: '96px 48px 112px', background: 'linear-gradient(135deg,#071F20 0%,#0D3435 58%,#123F3D 100%)', color: '#FFFDF8', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1240, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 24, marginBottom: 42, flexWrap: 'wrap' }}>
           <div>
-            <div className="eyebrow" style={{ color: '#5EEAD4', marginBottom: 12 }}>THE SIGNATURE FEATURE</div>
-            <h2 className="font-tight" style={{ margin: 0, fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em' }}>5 Continents. <span style={{ color: '#5EEAD4', fontWeight: 300, fontStyle: 'italic' }}>Guaranteed departures.</span></h2>
+            <div className="eyebrow" style={{ color: '#79D8C5', marginBottom: 12 }}>THE SIGNATURE FEATURE</div>
+            <h2 className="font-tight product-stream-heading" style={{ margin: 0, fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em' }}>Five continents. <span style={{ color: '#79D8C5', fontWeight: 300, fontStyle: 'italic' }}>Ready-to-sell departures.</span></h2>
           </div>
-          <Link href="/departures/europe" style={{ color: '#5EEAD4', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>BROWSE ALL DEPARTURES →</Link>
+          <Link href="/departures/europe" style={{ color: '#79D8C5', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>BROWSE ALL DEPARTURES →</Link>
         </div>
         <div style={{ display: 'flex', alignItems: 'stretch', gap: 14, overflowX: 'auto', padding: '8px 4px 18px', scrollbarWidth: 'thin' }}>
           {products.map((p, i) => {
@@ -322,7 +322,7 @@ function ProductStream() {
                 <span style={{ position: 'absolute', top: 16, left: 16, padding: '5px 9px', borderRadius: 999, background: 'rgba(3,10,16,.58)', border: '1px solid rgba(255,255,255,.22)', fontSize: 9, fontWeight: 700, letterSpacing: '.08em' }}>{p.category}</span>
                 <div>
                   <div className="font-tight" style={{ fontSize: 27, fontWeight: 800, marginBottom: 8 }}>{p.name}</div>
-                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,.88)' }}><span>{p.packages} DEPARTURES</span><span style={{ color: '#5EEAD4' }}>FROM {p.price}</span></div>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 12, fontWeight: 700, color: 'rgba(255,253,248,.9)' }}><span>{p.packages} DEPARTURES</span><span style={{ color: '#79D8C5' }}>FROM {p.price}</span></div>
                   <div style={{ marginTop: 7, fontSize: 11.5, color: 'rgba(255,255,255,.7)', fontWeight: 600 }}>NEXT: {p.next}</div>
                   {expanded && <div style={{ marginTop: 14, paddingTop: 13, borderTop: '1px solid rgba(255,255,255,.26)' }}><div style={{ fontSize: 10, letterSpacing: '.1em', fontWeight: 700, color: 'rgba(255,255,255,.62)', marginBottom: 8 }}>POPULAR DEPARTURES</div>{p.popular.map(item => <div key={item} style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>{item}</div>)}<div style={{ marginTop: 12, fontSize: 12, fontWeight: 700 }}>VIEW PRODUCTS →</div></div>}
                 </div>
@@ -334,7 +334,7 @@ function ProductStream() {
           <button type="button" aria-label="Previous destination" onClick={() => setActive((active + products.length - 1) % products.length)} style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid rgba(255,255,255,.26)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer' }}>←</button>
           <button type="button" aria-label="Next destination" onClick={() => setActive((active + 1) % products.length)} style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid rgba(255,255,255,.26)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer' }}>→</button>
         </div>
-        <div aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', gap: 7, marginTop: 28 }}>{products.map((p, i) => <span key={p.name} style={{ width: active === i ? 24 : 6, height: 6, borderRadius: 99, background: active === i ? '#5EEAD4' : 'rgba(255,255,255,.26)', transition: 'all .25s ease' }} />)}</div>
+        <div aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', gap: 7, marginTop: 28 }}>{products.map((p, i) => <span key={p.name} style={{ width: active === i ? 24 : 6, height: 6, borderRadius: 99, background: active === i ? '#79D8C5' : 'rgba(255,253,248,.28)', transition: 'all .25s ease' }} />)}</div>
       </div>
     </section>
   )
@@ -344,21 +344,21 @@ function ProductStream() {
 function CustomerJourney() {
   const journeyRef = useRef<HTMLDivElement | null>(null)
   const clips = [
-    { title: 'The Enquiry', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&q=85', quote: '“GTF turned our first brief into a confident proposal.”', partner: 'Wanderlust Travel · Mumbai', duration: '0:32' },
-    { title: 'The Booking', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=700&q=85', quote: '“The confirmation flow is clear, fast, and reassuring.”', partner: 'Atlas Journeys · Dubai', duration: '0:41' },
-    { title: 'The Departure', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1436491865332-c23e76319801?w=700&q=85', quote: '“Our clients know exactly what happens next.”', partner: 'Northstar Tours · London', duration: '0:38' },
-    { title: 'The Experience', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=700&q=85', quote: '“The local support makes every arrival feel effortless.”', partner: 'Mosaic Travel · Singapore', duration: '0:46' },
-    { title: 'The Feedback', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=85', quote: '“We sell more confidently because the details are covered.”', partner: 'Vista Voyages · Delhi', duration: '0:29' },
-    { title: 'The Brand', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=700&q=85', quote: '“White-label delivery keeps our brand in the spotlight.”', partner: 'Roam Collective · Sydney', duration: '0:35' },
-    { title: 'The Group', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=700&q=85', quote: '“Our groups feel looked after from quote to return.”', partner: 'Compass Groups · Doha', duration: '0:43' },
-    { title: 'The Bespoke', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=700&q=85', quote: '“The team shaped a journey our client could not find elsewhere.”', partner: 'Elsewhere Travel · Paris', duration: '0:51' },
-    { title: 'The Support', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=700&q=85', quote: '“There is always a real person ready when we need one.”', partner: 'Origin Escapes · Nairobi', duration: '0:37' },
-    { title: 'The Partner', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=700&q=85', quote: '“GTF feels like an extension of our own operations team.”', partner: 'Journey House · Bengaluru', duration: '0:44' },
+    { title: 'Kyoto at Dawn', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=700&q=85', quote: '“A quiet morning our clients still talk about.”', partner: 'Japan · GTF guest story', duration: '10 sec' },
+    { title: 'Swiss Alps', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=700&q=85', quote: '“Every view felt like part of the itinerary.”', partner: 'Switzerland · GTF guest story', duration: '10 sec' },
+    { title: 'Tanzania Safari', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=700&q=85', quote: '“The wild moments became our favourite memories.”', partner: 'Tanzania · GTF guest story', duration: '10 sec' },
+    { title: 'Paris by Night', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=700&q=85', quote: '“Paris felt effortless from the first evening.”', partner: 'France · GTF guest story', duration: '10 sec' },
+    { title: 'Australian Coast', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=700&q=85', quote: '“The coast, the pace, and the people were perfect.”', partner: 'Australia · GTF guest story', duration: '10 sec' },
+    { title: 'Iceland in Motion', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1520637836862-4d197d17c90a?w=700&q=85', quote: '“A cinematic trip our whole group remembers.”', partner: 'Iceland · GTF guest story', duration: '10 sec' },
+    { title: 'Rome After Dark', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1529260830199-42c24126f198?w=700&q=85', quote: '“History, food, and the right pace in one journey.”', partner: 'Italy · GTF guest story', duration: '10 sec' },
+    { title: 'African Great Migration', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1549366021-9f761d450615?w=700&q=85', quote: '“The kind of experience that changes how you travel.”', partner: 'Kenya · GTF guest story', duration: '10 sec' },
+    { title: 'Eastern Europe', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1519671282429-b44660ead0a7?w=700&q=85', quote: '“Unexpected cities, beautiful details, brilliant stories.”', partner: 'Prague & Budapest · GTF guest story', duration: '10 sec' },
+    { title: 'European Winter Markets', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1482192505345-5655af888cc4?w=700&q=85', quote: '“A winter escape our clients want to repeat.”', partner: 'Central Europe · GTF guest story', duration: '10 sec' },
   ]
   const scrollJourney = (direction: number) => journeyRef.current?.scrollBy({ left: direction * 300, behavior: 'smooth' })
   return (
     <section id="customer-journey" className="customer-journey" aria-labelledby="customer-journey-title">
-      <div className="customer-journey-intro"><div className="eyebrow">CUSTOMER JOURNEY · REAL PARTNER STORIES</div><h2 id="customer-journey-title">See how agents grow with GTF</h2><p>Ten short stories from the people turning a better booking experience into better business.</p></div>
+      <div className="customer-journey-intro"><div className="eyebrow">CUSTOMER JOURNEY · REAL TRAVEL STORIES</div><h2 id="customer-journey-title">See the world through our partners’ eyes</h2><p>Real journeys. Real places. Real stories from travellers around the globe.</p></div>
       <div className="customer-journey-carousel">
         <button type="button" aria-label="Previous journey step" onClick={() => scrollJourney(-1)}>←</button>
         <div className="customer-journey-track" ref={journeyRef}>
@@ -373,7 +373,7 @@ function CustomerJourney() {
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
   return (
-    <section className="about-portal" style={{ padding: '100px 0' }}>
+    <section className="about-portal" style={{ padding: '64px 0 92px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 56px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'end' }}>
         <div>
           <div className="eyebrow" style={{ marginBottom: 20 }}>ABOUT GTF PORTAL</div>
