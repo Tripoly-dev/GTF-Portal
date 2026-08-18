@@ -340,6 +340,31 @@ function ProductStream() {
   )
 }
 
+// ── CUSTOMER JOURNEY ─────────────────────────────────────────────────────────
+function CustomerJourney() {
+  const journeyRef = useRef<HTMLDivElement | null>(null)
+  const clips = [
+    { title: 'The Enquiry', label: 'ENQUIRY & QUOTE', image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&q=85', copy: 'A clear brief becomes a sellable proposal.' },
+    { title: 'The Booking', label: 'BOOKING CONFIRMATION', image: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=700&q=85', copy: 'Confirm dates, availability, and partner pricing.' },
+    { title: 'The Departure', label: 'DEPARTURE DAY', image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=700&q=85', copy: 'Every fixed series departure is ready to travel.' },
+    { title: 'The Experience', label: 'ON THE GROUND', image: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=700&q=85', copy: 'Local support keeps the journey moving.' },
+    { title: 'The Partner', label: 'PARTNER SUCCESS', image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=700&q=85', copy: 'Your brand stays front and centre throughout.' },
+  ]
+  const scrollJourney = (direction: number) => journeyRef.current?.scrollBy({ left: direction * 300, behavior: 'smooth' })
+  return (
+    <section id="customer-journey" className="customer-journey" aria-labelledby="customer-journey-title">
+      <div className="customer-journey-intro"><div className="eyebrow">CUSTOMER JOURNEY</div><h2 id="customer-journey-title">See how agents book with GTF</h2><p>From enquiry to confirmed departure — the GTF booking experience, end to end.</p></div>
+      <div className="customer-journey-carousel">
+        <button type="button" aria-label="Previous journey step" onClick={() => scrollJourney(-1)}>←</button>
+        <div className="customer-journey-track" ref={journeyRef}>
+          {clips.map((clip, index) => <article className="customer-journey-card" key={clip.title} style={{ animationDelay: `${index * 100}ms` }}><div className="customer-journey-image" style={{ backgroundImage: `url('${clip.image}')` }} /><div className="customer-journey-shade" /><div className="customer-journey-card-copy"><span>{clip.label}</span><strong>{clip.title}</strong><p>{clip.copy}</p><small>0:{32 + index * 4}</small></div></article>)}
+        </div>
+        <button type="button" aria-label="Next journey step" onClick={() => scrollJourney(1)}>→</button>
+      </div>
+    </section>
+  )
+}
+
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
   return (
@@ -952,8 +977,9 @@ export default function HomePage() {
       <Hero />
       <DestinationMarquee />
       <ProductStream />
-      <EditorialIntro />
+      <CustomerJourney />
       <ApprovedBento />
+      <EditorialIntro />
       <FinalCTA />
     </main>
   )
