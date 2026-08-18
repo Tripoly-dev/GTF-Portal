@@ -41,11 +41,11 @@ export default function LoginPage() {
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '48px 52px' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 32, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff' }}>GTF <span style={{ fontWeight: 300 }}>Portal</span></span>
+            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 19, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>GTF <span style={{ fontWeight: 300 }}>Connect</span></span>
           </Link>
           <div>
             <h2 className="font-tight" style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 20 }}>
-              Welcome back<br />to GTF Portal.
+              Welcome back<br />to GTF Connect.
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, fontWeight: 300, maxWidth: 360 }}>
               Access your partner dashboard, browse packages, download itineraries and manage your business with GTF.

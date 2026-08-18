@@ -10,7 +10,7 @@ export default function Footer() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
               <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 30, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-              <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 17, fontWeight: 700, color: '#fff' }}>GTF Portal</span>
+              <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 19, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>GTF <span style={{ fontWeight: 300, color: 'var(--teal-lt)' }}>Connect</span></span>
             </div>
             <p style={{ fontSize: 13, lineHeight: 1.8, maxWidth: 260, marginBottom: 24, fontWeight: 300 }}>
               The B2B travel platform for professional tour operators and travel agencies. 100% B2B. Non-compete. Global.

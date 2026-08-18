@@ -51,7 +51,7 @@ export default function RegisterPage() {
           <div style={{ width: 64, height: 64, background: 'var(--teal-lt)', border: '2px solid var(--teal)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 28px', fontSize: 28 }}>✓</div>
           <h2 className="font-tight" style={{ fontSize: 28, fontWeight: 800, color: 'var(--ink)', marginBottom: 16, letterSpacing: '-0.02em' }}>Application Submitted!</h2>
           <p style={{ fontSize: 15, color: 'var(--ink-light)', lineHeight: 1.8, marginBottom: 32, fontWeight: 300 }}>
-            Thank you for applying to become a GTF Portal partner. Our team will review your application and approve your account within <strong style={{ color: 'var(--ink)' }}>24–48 hours</strong>.
+            Thank you for applying to become a GTF Connect partner. Our team will review your application and approve your account within <strong style={{ color: 'var(--ink)' }}>24–48 hours</strong>.
           </p>
           <div style={{ padding: '20px 24px', background: 'var(--teal-lt)', border: '1px solid var(--rule)', marginBottom: 32, textAlign: 'left' }}>
             <div style={{ fontSize: 12, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.08em', marginBottom: 10 }}>WHAT HAPPENS NEXT</div>
@@ -79,7 +79,7 @@ export default function RegisterPage() {
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '48px 52px' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 32, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 18, fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>GTF <span style={{ fontWeight: 300 }}>Portal</span></span>
+            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 19, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>GTF <span style={{ fontWeight: 300 }}>Connect</span></span>
           </Link>
           <div>
             <h2 className="font-tight" style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 24 }}>

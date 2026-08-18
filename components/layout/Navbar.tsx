@@ -26,16 +26,16 @@ export default function Navbar() {
       backdropFilter: 'blur(16px)',
       transition: 'all 0.4s ease',
     }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', height: '100%', padding: '0 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ width: '100%', height: '100%', padding: '0 64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 34, width: 'auto', objectFit: 'contain' }} />
           <span style={{
-            fontFamily: 'Inter Tight, sans-serif', fontSize: 17, fontWeight: 700,
+            fontFamily: 'Inter Tight, sans-serif', fontSize: 20, fontWeight: 800,
             color: overPhoto ? '#fff' : 'var(--ink)', letterSpacing: '-0.01em',
           }}>
-            GTF <span style={{ fontWeight: 300, color: overPhoto ? 'rgba(255,255,255,0.75)' : 'var(--teal)' }}>Portal</span>
+            GTF <span style={{ fontWeight: 300, color: overPhoto ? 'rgba(255,255,255,0.75)' : 'var(--teal)', letterSpacing: '-0.04em' }}>Connect</span>
           </span>
         </Link>
 
