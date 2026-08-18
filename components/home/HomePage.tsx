@@ -397,30 +397,52 @@ function BentoExperience() {
   const [active, setActive] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [photoIndex, setPhotoIndex] = useState(0)
+  const [routeMapVisible, setRouteMapVisible] = useState(false)
+  const [flowStep, setFlowStep] = useState(0)
+  const bentoSectionRef = useRef<HTMLElement | null>(null)
   const destinationPhotos = [
     { image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85', label: 'SWISS ALPS · 46.8°N', title: <>Alpine<br />clarity.</> },
     { image: 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=1200&q=85', label: 'MEDITERRANEAN · 43.3°N', title: <>Coastal<br />intent.</> },
     { image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=85', label: 'JAPAN · 35.0°N', title: <>Quiet<br />wonder.</> },
   ]
   useEffect(() => {
-    const timer = setTimeout(() => setRevealed(true), 90)
-    return () => clearTimeout(timer)
+    const node = bentoSectionRef.current
+    if (!node || typeof IntersectionObserver === 'undefined') {
+      setRevealed(true)
+      return
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setRevealed(true)
+        observer.disconnect()
+      }
+    }, { threshold: 0.18 })
+    observer.observe(node)
+    return () => observer.disconnect()
   }, [])
   useEffect(() => {
     const timer = setInterval(() => setPhotoIndex(index => (index + 1) % destinationPhotos.length), 4800)
     return () => clearInterval(timer)
   }, [destinationPhotos.length])
+  useEffect(() => {
+    const timer = setInterval(() => setRouteMapVisible(value => !value), 3200)
+    return () => clearInterval(timer)
+  }, [])
+  useEffect(() => {
+    const timer = setInterval(() => setFlowStep(step => (step + 1) % 4), 1200)
+    return () => clearInterval(timer)
+  }, [])
 
   const activate = (index: number) => setActive(index)
   const revealClass = revealed ? 'bento-reveal bento-revealed' : 'bento-reveal'
 
   return (
-    <section className="bento-experience" aria-labelledby="bento-title">
+    <section ref={bentoSectionRef} className="bento-experience" aria-labelledby="bento-title">
       <div className="bento-experience-inner">
         <div className="bento-heading">
           <div className="eyebrow">THE GTF ADVANTAGE</div>
           <h2 id="bento-title" className="font-tight">Built for professionals. <em>Designed for scale.</em></h2>
-          <p>A global travel network with the confidence, products and support to help partners sell further.</p>
+          <p>A global travel network with the confidence, products and support to help partners sell further. Motion runs automatically.</p>
         </div>
 
         <div className="bento-experience-grid">
@@ -434,12 +456,17 @@ function BentoExperience() {
 
           <button type="button" className={`${revealClass} bento-tile bento-routes ${active === 1 ? 'bento-active' : ''}`} style={{ animationDelay: '180ms' }} onMouseEnter={() => activate(1)} onFocus={() => activate(1)} onClick={() => activate(1)} aria-pressed={active === 1}>
             <div className="bento-tile-label"><span>◎</span> GLOBAL ROUTES</div>
-            <svg className="bento-map" viewBox="0 0 520 220" role="img" aria-label="Routes connecting Europe, Africa, Japan and Australia">
-              <path d="M40 125 C135 40, 168 175, 270 92 S392 50, 470 125" />
-              <path d="M170 166 C230 84, 330 160, 390 78" />
-              <circle cx="170" cy="96" r="5" /><circle cx="270" cy="92" r="5" /><circle cx="390" cy="78" r="5" /><circle cx="430" cy="140" r="5" />
-            </svg>
-            <div className="bento-route-labels"><span>EUROPE</span><span>AFRICA</span><span>JAPAN</span><span>AUSTRALIA</span></div>
+            <div className={`bento-route-stage ${routeMapVisible ? 'is-map' : ''}`}>
+              <strong className="bento-route-title">One partner.<br />Five continents.</strong>
+              <div className="bento-route-map-content">
+                <svg className="bento-map" viewBox="0 0 520 220" role="img" aria-label="Routes connecting Europe, Africa, Japan and Australia">
+                  <path d="M40 125 C135 40, 168 175, 270 92 S392 50, 470 125" />
+                  <path d="M170 166 C230 84, 330 160, 390 78" />
+                  <circle cx="170" cy="96" r="5" /><circle cx="270" cy="92" r="5" /><circle cx="390" cy="78" r="5" /><circle cx="430" cy="140" r="5" />
+                </svg>
+                <div className="bento-route-labels"><span>EUROPE</span><span>AFRICA</span><span>JAPAN</span><span>AUSTRALIA</span></div>
+              </div>
+            </div>
             <div className="bento-tile-foot">5 CONTINENTS · ONE PARTNER</div>
           </button>
 
@@ -451,20 +478,20 @@ function BentoExperience() {
 
           <button type="button" className={`${revealClass} bento-tile bento-departure ${active === 3 ? 'bento-active' : ''}`} style={{ animationDelay: '380ms' }} onMouseEnter={() => activate(3)} onFocus={() => activate(3)} onClick={() => activate(3)} aria-pressed={active === 3}>
             <div className="bento-ticket-top"><span>NEXT DEPARTURE</span><span>12 SEP</span></div>
-            <strong>European<br />Delights</strong>
+            <strong className="bento-departure-title">European<br />Delights</strong>
             <div className="bento-ticket-meta"><span>GATE<br /><b>B2B</b></span><span>BOARDING<br /><b>09:00</b></span><span>CLASS<br /><b>PARTNER</b></span></div>
             <div className="bento-barcode" aria-hidden="true" />
           </button>
 
           <button type="button" className={`${revealClass} bento-tile bento-flow ${active === 4 ? 'bento-active' : ''}`} style={{ animationDelay: '480ms' }} onMouseEnter={() => activate(4)} onFocus={() => activate(4)} onClick={() => activate(4)} aria-pressed={active === 4}>
             <div className="bento-tile-label">THE OPERATING MODEL</div>
-            <div className="bento-flow-steps"><span>⌕<small>DISCOVER</small></span><i>→</i><span>▣<small>QUOTE</small></span><i>→</i><span>✓<small>CONFIRM</small></span><i>→</i><span>◉<small>SUPPORT</small></span></div>
+            <div className="bento-flow-steps"><span className={flowStep === 0 ? 'is-step-active' : ''}>⌕<small>DISCOVER</small></span><i>→</i><span className={flowStep === 1 ? 'is-step-active' : ''}>▣<small>QUOTE</small></span><i>→</i><span className={flowStep === 2 ? 'is-step-active' : ''}>✓<small>CONFIRM</small></span><i>→</i><span className={flowStep === 3 ? 'is-step-active' : ''}>◉<small>SUPPORT</small></span></div>
             <div className="bento-tile-foot">ONE BRIEF · ONE COMPREHENSIVE PROPOSAL</div>
           </button>
 
           <button type="button" className={`${revealClass} bento-tile bento-white-label ${active === 5 ? 'bento-active' : ''}`} style={{ animationDelay: '580ms' }} onMouseEnter={() => activate(5)} onFocus={() => activate(5)} onClick={() => activate(5)} aria-pressed={active === 5}>
             <span className="bento-white-label-kicker">WHITE LABEL SOLUTIONS</span>
-            <strong>YOUR BRAND.<br /><i>OUR BACKEND.</i></strong>
+            <strong className="bento-white-label-title">YOUR BRAND.<br /><i>OUR BACKEND.</i></strong>
             <span className="bento-white-label-stamp">GTF OPERATIONS<br />BEHIND THE SCENES</span>
           </button>
 
