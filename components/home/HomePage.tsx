@@ -14,11 +14,11 @@ function Hero() {
 
   return (
     <section style={{
-      minHeight: 940,
+      minHeight: 760,
       display: 'flex',
       alignItems: 'center',
       gap: 64,
-      padding: '160px 56px 70px',
+      padding: '120px 56px 60px',
       position: 'relative',
       background: '#FFFFFF',
       overflow: 'hidden',
@@ -193,7 +193,7 @@ function Hero() {
         {/* SECONDARY BLOB — Mediterranean coast, bottom-left, floatC */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0,
-          width: '50%', height: '44%',
+          width: '65%', height: '58%',
           borderRadius: '48% 52% 58% 42% / 55% 45% 55% 45%',
           overflow: 'hidden',
           boxShadow: '0 30px 70px rgba(8,16,14,0.4)',
@@ -204,8 +204,8 @@ function Hero() {
           transition: 'opacity 0.8s 0.45s ease',
         }}>
           <img
-            src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=700&q=90"
-            alt="Mediterranean coast"
+            src="https://images.unsplash.com/photo-1524396309943-e03f5249f002?w=700&q=90"
+            alt="Paris, Eiffel Tower"
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
           />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(200deg, transparent 55%, rgba(3,10,10,0.55) 100%)', pointerEvents: 'none' }} />
@@ -213,7 +213,7 @@ function Hero() {
             position: 'absolute', bottom: 16, left: 18,
             color: '#fff', fontSize: 10.5, letterSpacing: '0.04em',
             fontFamily: 'ui-monospace, monospace', opacity: 0.9,
-          }}>ATH · 37.9°N</div>
+          }}>PAR · 48.8566°N</div>
         </div>
 
         {/* CIRCLE — Kenya Safari, top-left, floatB */}
@@ -228,8 +228,8 @@ function Hero() {
           transition: 'opacity 0.8s 0.65s ease',
         }}>
           <img
-            src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=90"
-            alt="Kenya Safari"
+            src="https://images.unsplash.com/photo-1522547902298-51566e4fb383?w=400&q=90"
+            alt="Japan cherry blossom pagoda"
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 55%' }}
           />
         </div>
