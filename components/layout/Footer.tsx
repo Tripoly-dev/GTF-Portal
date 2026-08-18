@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer style={{ background: '#0B292A', color: 'rgba(245,240,232,0.68)', padding: '72px 0 40px' }}>
+    <footer style={{ background: '#0B292A', color: 'rgba(245,240,232,0.68)', padding: '58px 0 32px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48, marginBottom: 64 }}>
 

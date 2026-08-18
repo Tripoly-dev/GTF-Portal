@@ -373,7 +373,7 @@ function CustomerJourney() {
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
   return (
-    <section className="about-portal" style={{ padding: '64px 0 92px' }}>
+    <section className="about-portal" style={{ padding: '48px 0 72px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 56px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
         <div>
           <div className="eyebrow" style={{ marginBottom: 20 }}>ABOUT GTF PORTAL</div>

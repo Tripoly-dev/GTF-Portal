@@ -87,7 +87,7 @@ body {
 
 .eyebrow { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--teal); }
 
-.marquee-strip { overflow:hidden; padding:22px 0; background:linear-gradient(90deg,#0F766E,#0E7490); }
+.marquee-strip { overflow:hidden; padding:18px 0; background:linear-gradient(90deg,#0F766E,#0E7490); }
 .marquee-track { display:flex; gap:56px; width:max-content; animation:marquee-left 28s linear infinite; }
 .marquee-item { display:flex; align-items:center; gap:56px; color:#fff; font-size:15px; font-weight:700; letter-spacing:.06em; white-space:nowrap; }
 .marquee-star { color:#FBBF24; font-size:12px; }
@@ -166,7 +166,7 @@ body {
 }
 
 /* Approved image-first Bento layout */
-.bento-approved { background: #f3eee5; color: #281e2c; padding: 92px 48px 108px; overflow: hidden; }
+.bento-approved { background: #f3eee5; color: #281e2c; padding: 72px 48px 88px; overflow: hidden; }
 .bento-approved-inner { max-width: 1240px; margin: 0 auto; }
 .bento-approved-heading { margin-bottom: 22px; opacity: 0; transform: translateY(18px); }
 .bento-approved-heading.approved-in { animation: approved-reveal .8s cubic-bezier(.22,1,.36,1) forwards; }
@@ -228,7 +228,7 @@ body {
 #product-stream::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .2; background-image: radial-gradient(circle at 12% 18%, #79D8C5 0 1px, transparent 2px), radial-gradient(circle at 76% 65%, #C9A96E 0 1px, transparent 2px), linear-gradient(112deg, transparent 0 48%, rgba(121,216,197,.24) 48.2%, transparent 48.6%); background-size: 180px 180px, 240px 240px, 100% 100%; animation: product-stream-drift 18s linear infinite; }
 #product-stream > div { position: relative; z-index: 1; }
 @keyframes product-stream-drift { from { transform: translateX(-18px); } to { transform: translateX(18px); } }
-.customer-journey { padding: 112px 48px 124px; background: #fff; color: var(--ink); }
+.customer-journey { padding: 80px 48px 92px; background: #fff; color: var(--ink); }
 .customer-journey-intro { max-width: 620px; margin: 0 auto 38px; text-align: center; }
 .customer-journey-intro h2 { margin: 10px 0 16px; font: 500 clamp(36px, 4vw, 54px)/.96 Georgia, 'Times New Roman', serif; letter-spacing: -.035em; }
 .customer-journey-intro p { margin: 0; color: var(--ink-mid); font-size: 16px; line-height: 1.6; }
