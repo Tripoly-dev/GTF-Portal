@@ -912,8 +912,8 @@ function Testimonials() {
 function FinalCTA() {
   return (
     <section style={{ position: 'relative', height: 560, overflow: 'hidden' }}>
-      <img src="https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=1600&q=85" alt="travel" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 60%' }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.82) 0%, rgba(7,26,23,0.2) 100%)' }} />
+      <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1800&q=90" alt="Travel professionals collaborating around a table" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 42%' }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.9) 0%, rgba(7,26,23,0.48) 52%, rgba(7,26,23,0.18) 100%)' }} />
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 56px', maxWidth: 700 }}>
         <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)', marginBottom: 16 }}>JOIN THE NETWORK</div>
         <h2 className="font-tight" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, lineHeight: 0.95, color: '#fff', marginBottom: 24, letterSpacing: '-0.03em' }}>
