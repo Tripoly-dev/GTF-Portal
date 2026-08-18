@@ -344,20 +344,25 @@ function ProductStream() {
 function CustomerJourney() {
   const journeyRef = useRef<HTMLDivElement | null>(null)
   const clips = [
-    { title: 'The Enquiry', label: 'ENQUIRY & QUOTE', image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&q=85', copy: 'A clear brief becomes a sellable proposal.' },
-    { title: 'The Booking', label: 'BOOKING CONFIRMATION', image: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=700&q=85', copy: 'Confirm dates, availability, and partner pricing.' },
-    { title: 'The Departure', label: 'DEPARTURE DAY', image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=700&q=85', copy: 'Every fixed series departure is ready to travel.' },
-    { title: 'The Experience', label: 'ON THE GROUND', image: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=700&q=85', copy: 'Local support keeps the journey moving.' },
-    { title: 'The Partner', label: 'PARTNER SUCCESS', image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=700&q=85', copy: 'Your brand stays front and centre throughout.' },
+    { title: 'The Enquiry', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&q=85', quote: '“GTF turned our first brief into a confident proposal.”', partner: 'Wanderlust Travel · Mumbai', duration: '0:32' },
+    { title: 'The Booking', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=700&q=85', quote: '“The confirmation flow is clear, fast, and reassuring.”', partner: 'Atlas Journeys · Dubai', duration: '0:41' },
+    { title: 'The Departure', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1436491865332-c23e76319801?w=700&q=85', quote: '“Our clients know exactly what happens next.”', partner: 'Northstar Tours · London', duration: '0:38' },
+    { title: 'The Experience', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=700&q=85', quote: '“The local support makes every arrival feel effortless.”', partner: 'Mosaic Travel · Singapore', duration: '0:46' },
+    { title: 'The Feedback', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=85', quote: '“We sell more confidently because the details are covered.”', partner: 'Vista Voyages · Delhi', duration: '0:29' },
+    { title: 'The Brand', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=700&q=85', quote: '“White-label delivery keeps our brand in the spotlight.”', partner: 'Roam Collective · Sydney', duration: '0:35' },
+    { title: 'The Group', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=700&q=85', quote: '“Our groups feel looked after from quote to return.”', partner: 'Compass Groups · Doha', duration: '0:43' },
+    { title: 'The Bespoke', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=700&q=85', quote: '“The team shaped a journey our client could not find elsewhere.”', partner: 'Elsewhere Travel · Paris', duration: '0:51' },
+    { title: 'The Support', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=700&q=85', quote: '“There is always a real person ready when we need one.”', partner: 'Origin Escapes · Nairobi', duration: '0:37' },
+    { title: 'The Partner', label: 'PARTNER TESTIMONIAL', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=700&q=85', quote: '“GTF feels like an extension of our own operations team.”', partner: 'Journey House · Bengaluru', duration: '0:44' },
   ]
   const scrollJourney = (direction: number) => journeyRef.current?.scrollBy({ left: direction * 300, behavior: 'smooth' })
   return (
     <section id="customer-journey" className="customer-journey" aria-labelledby="customer-journey-title">
-      <div className="customer-journey-intro"><div className="eyebrow">CUSTOMER JOURNEY</div><h2 id="customer-journey-title">See how agents book with GTF</h2><p>From enquiry to confirmed departure — the GTF booking experience, end to end.</p></div>
+      <div className="customer-journey-intro"><div className="eyebrow">CUSTOMER JOURNEY · REAL PARTNER STORIES</div><h2 id="customer-journey-title">See how agents grow with GTF</h2><p>Ten short stories from the people turning a better booking experience into better business.</p></div>
       <div className="customer-journey-carousel">
         <button type="button" aria-label="Previous journey step" onClick={() => scrollJourney(-1)}>←</button>
         <div className="customer-journey-track" ref={journeyRef}>
-          {clips.map((clip, index) => <article className="customer-journey-card" key={clip.title} style={{ animationDelay: `${index * 100}ms` }}><div className="customer-journey-image" style={{ backgroundImage: `url('${clip.image}')` }} /><div className="customer-journey-shade" /><div className="customer-journey-card-copy"><span>{clip.label}</span><strong>{clip.title}</strong><p>{clip.copy}</p><small>0:{32 + index * 4}</small></div></article>)}
+          {clips.map((clip, index) => <button type="button" className="customer-journey-card" key={clip.title} aria-label={`Play testimonial: ${clip.title}`} style={{ animationDelay: `${index * 100}ms` }}><div className="customer-journey-image" style={{ backgroundImage: `url('${clip.image}')` }} /><div className="customer-journey-shade" /><span className="customer-journey-play" aria-hidden="true">▶</span><div className="customer-journey-card-copy"><span>{clip.label}</span><strong>{clip.title}</strong><p>{clip.quote}</p><small>{clip.partner} · {clip.duration}</small></div></button>)}
         </div>
         <button type="button" aria-label="Next journey step" onClick={() => scrollJourney(1)}>→</button>
       </div>
@@ -368,25 +373,25 @@ function CustomerJourney() {
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
   return (
-    <section style={{ padding: '100px 0' }}>
+    <section className="about-portal" style={{ padding: '100px 0' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 56px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'end' }}>
         <div>
           <div className="eyebrow" style={{ marginBottom: 20 }}>ABOUT GTF PORTAL</div>
-          <h2 className="font-tight" style={{
+          <h2 className="font-tight about-portal-heading" style={{
             fontSize: 'clamp(36px, 4.5vw, 60px)', fontWeight: 800, lineHeight: 1.0,
             color: 'var(--ink)', letterSpacing: '-0.03em',
           }}>
-            One platform.<br />
-            One invoice.<br />
-            <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>Every corner<br />of the world.</span>
+            One partner.<br />
+            Every departure.<br />
+            <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>Global confidence.</span>
           </h2>
         </div>
         <div>
-          <p style={{ fontSize: 17, lineHeight: 1.8, color: 'var(--ink-mid)', marginBottom: 28, fontWeight: 300 }}>
-            GTF Holidays LLP, operating globally as Global Travel Fusion, is a forward-thinking 100% B2B travel company specializing in Group Series Departures, White Label Solutions, and Custom-Built Travel Experiences.
+          <p className="about-portal-copy" style={{ fontSize: 17, lineHeight: 1.8, color: 'var(--ink-mid)', marginBottom: 28, fontWeight: 300 }}>
+            GTF Connect gives travel agents and tour operators one dependable B2B partner for guaranteed series departures, white-label operations, and bespoke journeys.
           </p>
           <p style={{ fontSize: 15, lineHeight: 1.8, color: 'var(--ink-light)', marginBottom: 40, fontWeight: 300 }}>
-            A proud member of ETOA (European Tourism Association), we deliver connection, comfort, and confidence — with every itinerary, across every continent.
+            We coordinate the details behind the scenes so your team can sell with clarity, protect the client relationship, and grow across continents.
           </p>
           <div style={{ display: 'flex', gap: 16 }}>
             <Link href="/register" className="btn-teal">BECOME A PARTNER</Link>
@@ -911,16 +916,16 @@ function Testimonials() {
 // ── FINAL CTA ─────────────────────────────────────────────────────────────────
 function FinalCTA() {
   return (
-    <section style={{ position: 'relative', height: 560, overflow: 'hidden' }}>
+    <section className="join-network-cta" style={{ position: 'relative', height: 560, overflow: 'hidden' }}>
       <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1800&q=90" alt="Travel professionals collaborating around a table" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 42%' }} />
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.9) 0%, rgba(7,26,23,0.48) 52%, rgba(7,26,23,0.18) 100%)' }} />
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 56px', maxWidth: 700 }}>
-        <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)', marginBottom: 16 }}>JOIN THE NETWORK</div>
+        <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 16 }}>JOIN THE GTF NETWORK</div>
         <h2 className="font-tight" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, lineHeight: 0.95, color: '#fff', marginBottom: 24, letterSpacing: '-0.03em' }}>
-          Ready to sell<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>the world?</span>
+          Your next best-seller<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>starts here.</span>
         </h2>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 40, fontWeight: 300, maxWidth: 460 }}>
-          Join GTF Holidays and access a global portfolio built exclusively for travel professionals.
+          Join a global partner network built to help travel professionals sell further — while GTF coordinates the world behind the scenes.
         </p>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
           <Link href="/register" className="btn-teal" style={{ background: '#fff', color: 'var(--ink)' }}>
