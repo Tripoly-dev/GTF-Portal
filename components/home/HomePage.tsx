@@ -396,10 +396,20 @@ function Bento() {
 function BentoExperience() {
   const [active, setActive] = useState(0)
   const [revealed, setRevealed] = useState(false)
+  const [photoIndex, setPhotoIndex] = useState(0)
+  const destinationPhotos = [
+    { image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85', label: 'SWISS ALPS · 46.8°N', title: <>Alpine<br />clarity.</> },
+    { image: 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=1200&q=85', label: 'MEDITERRANEAN · 43.3°N', title: <>Coastal<br />intent.</> },
+    { image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=85', label: 'JAPAN · 35.0°N', title: <>Quiet<br />wonder.</> },
+  ]
   useEffect(() => {
     const timer = setTimeout(() => setRevealed(true), 90)
     return () => clearTimeout(timer)
   }, [])
+  useEffect(() => {
+    const timer = setInterval(() => setPhotoIndex(index => (index + 1) % destinationPhotos.length), 4800)
+    return () => clearInterval(timer)
+  }, [destinationPhotos.length])
 
   const activate = (index: number) => setActive(index)
   const revealClass = revealed ? 'bento-reveal bento-revealed' : 'bento-reveal'
@@ -433,9 +443,10 @@ function BentoExperience() {
             <div className="bento-tile-foot">5 CONTINENTS · ONE PARTNER</div>
           </button>
 
-          <div className={`${revealClass} bento-tile bento-destination-photo`} style={{ animationDelay: '280ms', backgroundImage: "url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&q=85')" }}>
+          <div className={`${revealClass} bento-tile bento-destination-photo`} style={{ animationDelay: '280ms' }}>
+            {destinationPhotos.map((photo, index) => <div key={photo.label} className={`bento-photo-slide ${index === photoIndex ? 'bento-photo-slide-active' : ''}`} style={{ backgroundImage: `url('${photo.image}')` }} aria-hidden={index !== photoIndex} />)}
             <div className="bento-photo-overlay" />
-            <div className="bento-photo-copy"><span>CURATED JOURNEYS</span><strong>Europe,<br />with intent.</strong><small>PAR · 48.8566°N</small></div>
+            <div className="bento-photo-copy"><span>CURATED JOURNEYS</span><strong>{destinationPhotos[photoIndex].title}</strong><small>{destinationPhotos[photoIndex].label}</small><div className="bento-photo-dots" aria-label="Destination photo selector">{destinationPhotos.map((photo, index) => <button type="button" key={photo.label} aria-label={`Show ${photo.label}`} className={index === photoIndex ? 'active' : ''} onClick={() => setPhotoIndex(index)} />)}</div></div>
           </div>
 
           <button type="button" className={`${revealClass} bento-tile bento-departure ${active === 3 ? 'bento-active' : ''}`} style={{ animationDelay: '380ms' }} onMouseEnter={() => activate(3)} onFocus={() => activate(3)} onClick={() => activate(3)} aria-pressed={active === 3}>
@@ -451,12 +462,11 @@ function BentoExperience() {
             <div className="bento-tile-foot">ONE BRIEF · ONE COMPREHENSIVE PROPOSAL</div>
           </button>
 
-          <div className={`${revealClass} bento-tile bento-connect`} style={{ animationDelay: '580ms' }}>
-            <span className="bento-connect-mark">GTF</span>
-            <strong>Connect</strong>
-            <span className="bento-connect-line" />
-            <small>PARTNER NETWORK · EST. 2026</small>
-          </div>
+          <button type="button" className={`${revealClass} bento-tile bento-white-label ${active === 5 ? 'bento-active' : ''}`} style={{ animationDelay: '580ms' }} onMouseEnter={() => activate(5)} onFocus={() => activate(5)} onClick={() => activate(5)} aria-pressed={active === 5}>
+            <span className="bento-white-label-kicker">WHITE LABEL SOLUTIONS</span>
+            <strong>YOUR BRAND.<br /><i>OUR BACKEND.</i></strong>
+            <span className="bento-white-label-stamp">GTF OPERATIONS<br />BEHIND THE SCENES</span>
+          </button>
 
           <button type="button" className={`${revealClass} bento-tile bento-network ${active === 6 ? 'bento-active' : ''}`} style={{ animationDelay: '680ms' }} onMouseEnter={() => activate(6)} onFocus={() => activate(6)} onClick={() => activate(6)} aria-pressed={active === 6}>
             <div className="bento-tile-label">YOUR GLOBAL AGENT NETWORK</div>
