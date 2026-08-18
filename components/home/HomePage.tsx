@@ -216,10 +216,10 @@ function Hero() {
           }}>PAR · 48.8566°N</div>
         </div>
 
-        {/* CIRCLE — Kenya Safari, top-left, floatB */}
+        {/* CIRCLE — Japan, top-left, enlarged for a stronger destination signal */}
         <div style={{
           position: 'absolute', top: '9%', left: '5%',
-          width: 130, height: 130,
+          width: 190, height: 190,
           borderRadius: '50%', overflow: 'hidden',
           boxShadow: '0 20px 40px rgba(4,20,20,0.4)',
           border: '3px solid #fff', zIndex: 3,
@@ -228,8 +228,8 @@ function Hero() {
           transition: 'opacity 0.8s 0.65s ease',
         }}>
           <img
-            src="https://images.unsplash.com/photo-1522547902298-51566e4fb383?w=400&q=90"
-            alt="Japan cherry blossom pagoda"
+            src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500&q=90"
+            alt="Japan cherry blossom temple"
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 55%' }}
           />
         </div>
@@ -308,6 +308,51 @@ function DestinationMarquee() {
   )
 }
 
+// ── PRODUCT STREAM ───────────────────────────────────────────────────────────
+// The homepage's primary B2B product-discovery surface. Cards expand on focus
+// or hover so agents can scan commercial details without leaving the homepage.
+function ProductStream() {
+  const [active, setActive] = useState(0)
+  const products = [
+    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '15', price: '₹78,000', next: '12 SEP', image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1000&q=85', href: '/departures/europe', popular: ['European Delights — 9D', 'Swiss Alpine Escape — 8D', 'Mediterranean Discovery — 10D'] },
+    { name: 'Africa', category: 'SAFARI & GROUP TOURS', packages: '9', price: '₹65,000', next: '18 OCT', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1000&q=85', href: '/departures/africa', popular: ["Kenya's Ultimate Safari — 8D", 'Tanzania Untamed — 5D', 'Wild Serenade — 4D'] },
+    { name: 'Oceania', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,10,000', next: '08 NOV', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=1000&q=85', href: '/departures/oceania', popular: ['Best of Australia — 10D', 'Discover Australia — 10D'] },
+    { name: 'Asia', category: 'COMING SOON', packages: '—', price: 'ENQUIRE', next: 'TBA', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&q=85', href: '/departures/asia', popular: ['Japan — coming soon', 'South Korea — coming soon'] },
+    { name: 'Americas', category: 'COMING SOON', packages: '—', price: 'ENQUIRE', next: 'TBA', image: 'https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=1000&q=85', href: '/departures/americas', popular: ['North America — coming soon', 'South America — coming soon'] },
+  ]
+
+  return (
+    <section id="product-stream" style={{ padding: '112px 48px 124px', background: 'linear-gradient(180deg,#031e1e,#04262b 55%,#031a1e)', color: '#fff', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 24, marginBottom: 42, flexWrap: 'wrap' }}>
+          <div>
+            <div className="eyebrow" style={{ color: '#5EEAD4', marginBottom: 12 }}>THE SIGNATURE FEATURE</div>
+            <h2 className="font-tight" style={{ margin: 0, fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em' }}>5 Continents. <span style={{ color: '#5EEAD4', fontWeight: 300, fontStyle: 'italic' }}>Guaranteed departures.</span></h2>
+          </div>
+          <Link href="/departures/europe" style={{ color: '#5EEAD4', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>BROWSE ALL DEPARTURES →</Link>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(190px, 1fr))', gap: 14, alignItems: 'stretch' }}>
+          {products.map((p, i) => {
+            const expanded = active === i
+            return (
+              <Link key={p.name} href={p.href} aria-label={`View ${p.name} departures`} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} style={{ position: 'relative', minHeight: 500, borderRadius: 18, overflow: 'hidden', textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'end', padding: 24, backgroundImage: `linear-gradient(180deg,rgba(3,15,20,0.04) 26%,rgba(3,10,16,0.94) 100%), url(${p.image})`, backgroundPosition: 'center', backgroundSize: 'cover', transform: expanded ? 'translateY(-6px)' : 'translateY(0)', boxShadow: expanded ? '0 24px 54px rgba(0,0,0,0.34)' : '0 12px 28px rgba(0,0,0,0.16)', transition: 'transform .35s ease, box-shadow .35s ease' }}>
+                <span style={{ position: 'absolute', top: 16, left: 16, padding: '5px 9px', borderRadius: 999, background: 'rgba(3,10,16,.58)', border: '1px solid rgba(255,255,255,.22)', fontSize: 9, fontWeight: 700, letterSpacing: '.08em' }}>{p.category}</span>
+                <div>
+                  <div className="font-tight" style={{ fontSize: 27, fontWeight: 800, marginBottom: 8 }}>{p.name}</div>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,.88)' }}><span>{p.packages} DEPARTURES</span><span style={{ color: '#5EEAD4' }}>FROM {p.price}</span></div>
+                  <div style={{ marginTop: 7, fontSize: 11.5, color: 'rgba(255,255,255,.7)', fontWeight: 600 }}>NEXT: {p.next}</div>
+                  {expanded && <div style={{ marginTop: 14, paddingTop: 13, borderTop: '1px solid rgba(255,255,255,.26)' }}><div style={{ fontSize: 10, letterSpacing: '.1em', fontWeight: 700, color: 'rgba(255,255,255,.62)', marginBottom: 8 }}>POPULAR DEPARTURES</div>{p.popular.map(item => <div key={item} style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>{item}</div>)}<div style={{ marginTop: 12, fontSize: 12, fontWeight: 700 }}>VIEW PRODUCTS →</div></div>}
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+        <div aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', gap: 7, marginTop: 28 }}>{products.map((p, i) => <span key={p.name} style={{ width: active === i ? 24 : 6, height: 6, borderRadius: 99, background: active === i ? '#5EEAD4' : 'rgba(255,255,255,.26)', transition: 'all .25s ease' }} />)}</div>
+      </div>
+    </section>
+  )
+}
+
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
   return (
@@ -335,10 +380,26 @@ function EditorialIntro() {
             <Link href="/register" className="btn-teal">BECOME A PARTNER</Link>
             <Link href="/about" className="btn-outline">OUR STORY</Link>
           </div>
+          <div aria-label="GTF operating flow" style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap', marginTop: 28 }}>
+            {['DISCOVER', 'QUOTE', 'CONFIRM', 'SUPPORT'].map((step, i) => <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}><span style={{ padding: '8px 13px', border: '1px solid #CBD5E1', borderRadius: 999, color: 'var(--teal)', fontSize: 10.5, letterSpacing: '.1em', fontWeight: 700 }}>{step}</span>{i < 3 && <span aria-hidden="true" style={{ color: '#CBD5E1' }}>→</span>}</span>)}
+          </div>
         </div>
       </div>
     </section>
   )
+}
+
+// ── BENTO VALUE GRID ─────────────────────────────────────────────────────────
+function Bento() {
+  const cells = [
+    ['100% B2B & NON-COMPETE', 'Your clients stay yours. We never sell direct.', 'NON-COMPETE', 'span 2', 'span 2'],
+    ['GLOBAL PRODUCT', 'Products across continents and travel categories.', '5 CONTINENTS', 'span 2', 'span 1'],
+    ['GUARANTEED DEPARTURES', 'Confirmed dates and ready-to-sell itineraries.', 'FIXED SERIES', 'span 2', 'span 1'],
+    ['COMPETITIVE B2B RATES', 'Commercial pricing designed for travel professionals.', 'PARTNER PRICING', 'span 1', 'span 1'],
+    ['OPERATIONAL SUPPORT', 'Reliable support before and during the journey.', '24/7 OPS', 'span 1', 'span 1'],
+    ['ONE-STOP PLATFORM', 'Discovery, coordination and sales support in one place.', 'ALL-IN-ONE', 'span 2', 'span 1'],
+  ]
+  return <section style={{ padding: '100px 48px', background: '#F8FAFC' }}><div style={{ maxWidth: 1240, margin: '0 auto' }}><div style={{ textAlign: 'center', marginBottom: 48 }}><div className="eyebrow" style={{ marginBottom: 12 }}>WHY GTF</div><h2 className="font-tight" style={{ margin: 0, fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-.03em' }}>Built for professionals. <span style={{ color: 'var(--teal)', fontWeight: 300, fontStyle: 'italic' }}>Designed for scale.</span></h2></div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gridAutoRows: 190, gap: 16 }}>{cells.map(([title, text, coords, col, row], i) => <div key={title} style={{ gridColumn: col, gridRow: row, minHeight: 0, border: '1px solid #E2E8F0', borderRadius: 18, padding: 26, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}><div style={{ position: 'relative', width: 68, height: 52, opacity: .78 }}><div style={{ position: 'absolute', inset: 0, border: `1px solid ${i % 2 ? '#14B8A6' : '#FBBF24'}`, borderRadius: '62% 38% 55% 45% / 48% 58% 42% 52%' }} /><div style={{ position: 'absolute', inset: 10, border: `1px solid ${i % 2 ? '#FBBF24' : '#14B8A6'}`, borderRadius: '45% 55% 40% 60% / 55% 45% 60% 40%' }} /><span style={{ position: 'absolute', right: 4, bottom: 6, width: 5, height: 5, borderRadius: '50%', background: '#0F766E' }} /></div><div><h3 className="font-tight" style={{ margin: '0 0 6px', fontSize: 17, fontWeight: 700 }}>{title}</h3><p style={{ margin: '0 0 10px', color: '#64748B', fontSize: 13.5, lineHeight: 1.5 }}>{text}</p><div style={{ color: '#94A3B8', font: '10px ui-monospace,monospace', letterSpacing: '.04em' }}>{coords}</div></div></div>)}</div></div></section>
 }
 
 // ── USPs ──────────────────────────────────────────────────────────────────────
@@ -662,14 +723,14 @@ function FinalCTA() {
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 56px', maxWidth: 700 }}>
         <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)', marginBottom: 16 }}>JOIN THE NETWORK</div>
         <h2 className="font-tight" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, lineHeight: 0.95, color: '#fff', marginBottom: 24, letterSpacing: '-0.03em' }}>
-          Ready to grow<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>your travel business?</span>
+          Ready to sell<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>the world?</span>
         </h2>
         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 40, fontWeight: 300, maxWidth: 460 }}>
-          Join travel agencies across India and beyond who trust GTF for guaranteed group departures, white label solutions and bespoke holiday creation.
+          Join GTF Holidays and access a global portfolio built exclusively for travel professionals.
         </p>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
           <Link href="/register" className="btn-teal" style={{ background: '#fff', color: 'var(--ink)' }}>
-            CREATE FREE ACCOUNT →
+            JOIN GTF AS A PARTNER →
           </Link>
           <Link href="/contact" className="btn-outline-white">SCHEDULE A CALL</Link>
         </div>
@@ -721,14 +782,9 @@ export default function HomePage() {
     <main>
       <Hero />
       <DestinationMarquee />
+      <ProductStream />
       <EditorialIntro />
-      <USPs />
-      <DestinationsGrid />
-      <WhatWeOffer />
-      <OneStopShop />
-      <StatsStrip />
-      <Themes />
-      <Testimonials />
+      <Bento />
       <FinalCTA />
     </main>
   )
