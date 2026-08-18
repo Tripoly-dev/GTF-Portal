@@ -506,6 +506,72 @@ function BentoExperience() {
   )
 }
 
+// ── APPROVED IMAGE-FIRST BENTO ────────────────────────────────────────────────
+function ApprovedBento() {
+  const [inView, setInView] = useState(false)
+  const [routeMap, setRouteMap] = useState(false)
+  const [photoIndex, setPhotoIndex] = useState(0)
+  const [flowStep, setFlowStep] = useState(0)
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const photos = [
+    { src: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=85', label: 'EUROPE' },
+    { src: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=85', label: 'JAPAN' },
+    { src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85', label: 'ALPS' },
+  ]
+  useEffect(() => {
+    const node = sectionRef.current
+    if (!node || typeof IntersectionObserver === 'undefined') { setInView(true); return }
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setInView(true); observer.disconnect() } }, { threshold: .15 })
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+  useEffect(() => { const t = setInterval(() => setRouteMap(v => !v), 3200); return () => clearInterval(t) }, [])
+  useEffect(() => { const t = setInterval(() => setPhotoIndex(v => (v + 1) % photos.length), 4800); return () => clearInterval(t) }, [photos.length])
+  useEffect(() => { const t = setInterval(() => setFlowStep(v => (v + 1) % 4), 1200); return () => clearInterval(t) }, [])
+  const reveal = inView ? ' approved-in' : ''
+  return (
+    <section ref={sectionRef} className="bento-approved" aria-labelledby="approved-bento-title">
+      <div className="bento-approved-inner">
+        <div className={`bento-approved-heading${reveal}`}>
+          <div className="bento-approved-kicker">GTF CONNECT · GLOBAL TRAVEL SYSTEM</div>
+          <h2 id="approved-bento-title">Built for professionals. <em>Designed for scale.</em></h2>
+        </div>
+        <div className="bento-approved-grid">
+          <article className={`approved-tile approved-hero${reveal}`}>
+            <div className="approved-label">GTF HOLIDAYS · GLOBAL TRAVEL FUSION</div>
+            <div className="approved-hero-images">{photos.map((photo, i) => <div key={photo.label} className={`approved-hero-image hero-image-${i} ${photoIndex === i ? 'photo-active' : ''}`} style={{ backgroundImage: `url('${photo.src}')` }} />)}</div>
+            <strong>The world,<br /><i>ready to sell.</i></strong>
+            <small>100% B2B · NON-COMPETE · ONE PARTNER</small>
+          </article>
+          <article className={`approved-tile approved-routes${reveal} ${routeMap ? 'route-map-on' : ''}`}>
+            <div className="approved-label">GLOBAL ROUTES</div>
+            <strong className="route-copy">One partner.<br />Five continents.</strong>
+            <div className="route-map-copy"><svg viewBox="0 0 260 100" aria-label="Schematic route connecting Europe, Japan and Australia"><path d="M8 70 C50 16 82 78 126 43 S197 18 252 72" /><circle cx="45" cy="43" r="5" /><circle cx="146" cy="43" r="5" /><circle cx="226" cy="63" r="5" /></svg><small>EUROPE · JAPAN · AUSTRALIA</small></div>
+            <small>5 CONTINENTS · LIVE SERIES</small>
+          </article>
+          <article className={`approved-tile approved-platform${reveal}`}>
+            <div className="approved-label">GTF CONNECT · PARTNER PLATFORM</div>
+            <strong>Your clients.<br /><i>Our global engine.</i></strong>
+            <p>White-label departures, coordinated operations, and partner-first support.</p>
+            <small>BUILT FOR TRAVEL PROFESSIONALS</small>
+          </article>
+          <article className={`approved-tile approved-ticket${reveal}`}>
+            <div className="ticket-main"><div className="approved-label">NEXT DEPARTURE · 12 SEP</div><strong>EUROPEAN<br />DELIGHTS</strong><small>GATE B2B · BOARDING 09:00 · GUARANTEED DEPARTURE</small></div>
+            <div className="ticket-stub"><b>GTF</b><span className="ticket-barcode" /><small>B2B / 12 SEP</small></div>
+          </article>
+          <article className={`approved-tile approved-flow${reveal}`}>
+            <div className="approved-label">OPERATING MODEL</div>
+            <div className="flow-line">{['DISCOVER', 'QUOTE', 'CONFIRM', 'SUPPORT'].map((step, i) => <span key={step} className={flowStep === i ? 'flow-active' : ''}>{step}{i < 3 ? ' →' : ''}</span>)}</div>
+            <small>ONE BRIEF · ONE PROPOSAL</small>
+          </article>
+          <article className={`approved-tile approved-white-label${reveal}`}><div className="approved-label">WHITE LABEL SOLUTIONS</div><strong>YOUR BRAND.<br /><i>OUR BACKEND.</i></strong><small>PARTNER-READY · BUILT TO SCALE</small></article>
+          <article className={`approved-tile approved-network${reveal}`}><div className="approved-label">AGENT NETWORK</div><div className="network-nodes">● · ● · ●</div><strong>Stronger together.</strong><small>MOVING NODES · ALWAYS ON</small></article>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ── USPs ──────────────────────────────────────────────────────────────────────
 function USPs() {
   const usps = [
@@ -888,7 +954,7 @@ export default function HomePage() {
       <DestinationMarquee />
       <ProductStream />
       <EditorialIntro />
-      <BentoExperience />
+      <ApprovedBento />
       <FinalCTA />
     </main>
   )
