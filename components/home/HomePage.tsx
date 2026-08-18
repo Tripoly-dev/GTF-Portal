@@ -538,10 +538,9 @@ function ApprovedBento() {
         </div>
         <div className="bento-approved-grid">
           <article className={`approved-tile approved-hero${reveal}`}>
-            <div className="approved-label">GTF HOLIDAYS · GLOBAL TRAVEL FUSION</div>
-            <div className="approved-hero-images">{photos.map((photo, i) => <div key={photo.label} className={`approved-hero-image hero-image-${i} ${photoIndex === i ? 'photo-active' : ''}`} style={{ backgroundImage: `url('${photo.src}')` }} />)}</div>
-            <strong>The world,<br /><i>ready to sell.</i></strong>
-            <small>100% B2B · NON-COMPETE · ONE PARTNER</small>
+            <div className="approved-hero-slides" aria-label="Curated luxury travel imagery">{photos.map((photo, i) => <div key={photo.label} className={`approved-hero-slide ${photoIndex === i ? 'photo-active' : ''}`} style={{ backgroundImage: `url('${photo.src}')` }} aria-hidden={photoIndex !== i} />)}</div>
+            <div className="approved-hero-shade" />
+            <div className="approved-hero-content"><div className="approved-label">GTF HOLIDAYS · GLOBAL TRAVEL FUSION</div><strong>The world,<br /><i>ready to sell.</i></strong><small>100% B2B · NON-COMPETE</small></div>
           </article>
           <article className={`approved-tile approved-routes${reveal} ${routeMap ? 'route-map-on' : ''}`}>
             <div className="approved-label">GLOBAL ROUTES</div>
