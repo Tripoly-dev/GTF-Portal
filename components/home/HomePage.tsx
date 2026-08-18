@@ -50,7 +50,7 @@ function Hero() {
         {/* Headline — zip exact: 72px, 800, line-height 1.03, letter-spacing -0.025em */}
         <h1 style={{
           margin: 0,
-          fontSize: 72,
+          fontSize: 68,
           fontWeight: 800,
           lineHeight: 1.03,
           letterSpacing: '-0.025em',
@@ -178,7 +178,7 @@ function Hero() {
           zIndex: 2,
         }}>
           <img
-            src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=900&q=90"
+            src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=900&q=90"
             alt="Swiss Alps"
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
           />
