@@ -1,22 +1,13 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
   const [depsOpen, setDepsOpen] = useState(false)
-  const pathname = usePathname()
-  const isHome = pathname === '/'
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  const overPhoto = isHome && !scrolled
+  // The homepage hero is a light surface, so the navbar must remain readable
+  // before the first scroll as well as after it.
+  const overPhoto = false
 
   const regions = [
     { name: 'Europe', href: '/departures/europe' },
@@ -30,9 +21,9 @@ export default function Navbar() {
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
       height: 68,
-      background: overPhoto ? 'transparent' : 'rgba(244,248,247,0.96)',
-      borderBottom: overPhoto ? 'none' : '1px solid var(--rule)',
-      backdropFilter: overPhoto ? 'none' : 'blur(16px)',
+      background: 'rgba(244,248,247,0.96)',
+      borderBottom: '1px solid var(--rule)',
+      backdropFilter: 'blur(16px)',
       transition: 'all 0.4s ease',
     }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', height: '100%', padding: '0 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

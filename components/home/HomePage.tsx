@@ -14,11 +14,11 @@ function Hero() {
 
   return (
     <section style={{
-      minHeight: 760,
+      minHeight: 650,
       display: 'flex',
       alignItems: 'center',
       gap: 64,
-      padding: '120px 56px 60px',
+      padding: '88px 56px 42px',
       position: 'relative',
       background: '#FFFFFF',
       overflow: 'hidden',
@@ -153,7 +153,7 @@ function Hero() {
       </div>
 
       {/* RIGHT — Organic blob collage (44%) */}
-      <div style={{ flex: '0 0 44%', position: 'relative', height: 700 }}>
+      <div style={{ flex: '0 0 44%', position: 'relative', height: 600 }}>
 
         {/* Dashed vertical route line */}
         <div style={{
@@ -280,29 +280,11 @@ function Hero() {
 }
 // ── MARQUEE ───────────────────────────────────────────────────────────────────
 function DestinationMarquee() {
-  const row1 = ['European Delights', 'Alpine Wonders', 'Sparkling Europe', 'Grand Europe', 'Best of Scandinavia', 'Vibrant Europe', 'Gems of Europe', 'Whispers of Romance', 'European Dream', 'Amazing Europe']
-  const row2 = ["Kenya's Ultimate Safari", 'Tanzania Untamed', 'Best of Australia', 'Amboseli Wild Trails', 'Predators & Pink Feathers', 'Echoes of the Wild', 'Wild Serenade', 'Into the Heart of the Wild']
+  const items = ['European Delights', 'Alpine Wonders', 'Sparkling Europe', "Kenya's Ultimate Safari", 'Tanzania Untamed', 'Best of Australia', 'Japan — Coming Soon', 'Mediterranean Discovery']
   return (
-    <div style={{ background: 'var(--paper)', borderTop: '1px solid var(--rule)', borderBottom: '1px solid var(--rule)', overflow: 'hidden' }}>
-      <div style={{ padding: '13px 0', borderBottom: '1px solid var(--rule)', overflow: 'hidden' }}>
-        <div className="marquee-track-left">
-          {[...row1, ...row1, ...row1].map((d, i) => (
-            <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '0 20px', whiteSpace: 'nowrap' }}>
-              <span className="font-tight" style={{ fontSize: 15, fontStyle: 'italic', fontWeight: 400, color: 'var(--ink-mid)' }}>{d}</span>
-              <span style={{ color: 'var(--rule)', fontSize: 8 }}>◆</span>
-            </span>
-          ))}
-        </div>
-      </div>
-      <div style={{ padding: '13px 0', overflow: 'hidden' }}>
-        <div className="marquee-track-right">
-          {[...row2, ...row2, ...row2].map((d, i) => (
-            <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '0 20px', whiteSpace: 'nowrap' }}>
-              <span style={{ fontSize: 11, color: 'var(--ink-light)', letterSpacing: '0.1em', fontWeight: 500 }}>{d.toUpperCase()}</span>
-              <span style={{ color: 'var(--rule)', fontSize: 6 }}>●</span>
-            </span>
-          ))}
-        </div>
+    <div className="marquee-strip" aria-label="GTF featured departures">
+      <div className="marquee-track">
+        {[...items, ...items, ...items].map((item, i) => <span className="marquee-item" key={`${item}-${i}`}>{item}<span className="marquee-star" aria-hidden="true">✦</span></span>)}
       </div>
     </div>
   )
@@ -331,11 +313,11 @@ function ProductStream() {
           </div>
           <Link href="/departures/europe" style={{ color: '#5EEAD4', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>BROWSE ALL DEPARTURES →</Link>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(190px, 1fr))', gap: 14, alignItems: 'stretch' }}>
+        <div style={{ display: 'flex', alignItems: 'stretch', gap: 14, overflowX: 'auto', padding: '8px 4px 18px', scrollbarWidth: 'thin' }}>
           {products.map((p, i) => {
             const expanded = active === i
             return (
-              <Link key={p.name} href={p.href} aria-label={`View ${p.name} departures`} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} style={{ position: 'relative', minHeight: 500, borderRadius: 18, overflow: 'hidden', textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'end', padding: 24, backgroundImage: `linear-gradient(180deg,rgba(3,15,20,0.04) 26%,rgba(3,10,16,0.94) 100%), url(${p.image})`, backgroundPosition: 'center', backgroundSize: 'cover', transform: expanded ? 'translateY(-6px)' : 'translateY(0)', boxShadow: expanded ? '0 24px 54px rgba(0,0,0,0.34)' : '0 12px 28px rgba(0,0,0,0.16)', transition: 'transform .35s ease, box-shadow .35s ease' }}>
+              <Link key={p.name} href={p.href} aria-label={`View ${p.name} departures`} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} style={{ position: 'relative', flex: `0 0 ${expanded ? '440px' : '220px'}`, minHeight: 500, borderRadius: 18, overflow: 'hidden', textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'end', padding: 24, backgroundImage: `linear-gradient(180deg,rgba(3,15,20,0.04) 26%,rgba(3,10,16,0.94) 100%), url(${p.image})`, backgroundPosition: 'center', backgroundSize: 'cover', transform: expanded ? 'translateY(-6px)' : 'translateY(0)', boxShadow: expanded ? '0 24px 54px rgba(0,0,0,0.34)' : '0 12px 28px rgba(0,0,0,0.16)', transition: 'flex-basis .45s ease, transform .35s ease, box-shadow .35s ease' }}>
                 <span style={{ position: 'absolute', top: 16, left: 16, padding: '5px 9px', borderRadius: 999, background: 'rgba(3,10,16,.58)', border: '1px solid rgba(255,255,255,.22)', fontSize: 9, fontWeight: 700, letterSpacing: '.08em' }}>{p.category}</span>
                 <div>
                   <div className="font-tight" style={{ fontSize: 27, fontWeight: 800, marginBottom: 8 }}>{p.name}</div>
@@ -346,6 +328,10 @@ function ProductStream() {
               </Link>
             )
           })}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 2 }}>
+          <button type="button" aria-label="Previous destination" onClick={() => setActive((active + products.length - 1) % products.length)} style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid rgba(255,255,255,.26)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer' }}>←</button>
+          <button type="button" aria-label="Next destination" onClick={() => setActive((active + 1) % products.length)} style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid rgba(255,255,255,.26)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer' }}>→</button>
         </div>
         <div aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', gap: 7, marginTop: 28 }}>{products.map((p, i) => <span key={p.name} style={{ width: active === i ? 24 : 6, height: 6, borderRadius: 99, background: active === i ? '#5EEAD4' : 'rgba(255,255,255,.26)', transition: 'all .25s ease' }} />)}</div>
       </div>
@@ -391,15 +377,16 @@ function EditorialIntro() {
 
 // ── BENTO VALUE GRID ─────────────────────────────────────────────────────────
 function Bento() {
+  const [active, setActive] = useState(0)
   const cells = [
-    ['100% B2B & NON-COMPETE', 'Your clients stay yours. We never sell direct.', 'NON-COMPETE', 'span 2', 'span 2'],
-    ['GLOBAL PRODUCT', 'Products across continents and travel categories.', '5 CONTINENTS', 'span 2', 'span 1'],
-    ['GUARANTEED DEPARTURES', 'Confirmed dates and ready-to-sell itineraries.', 'FIXED SERIES', 'span 2', 'span 1'],
-    ['COMPETITIVE B2B RATES', 'Commercial pricing designed for travel professionals.', 'PARTNER PRICING', 'span 1', 'span 1'],
-    ['OPERATIONAL SUPPORT', 'Reliable support before and during the journey.', '24/7 OPS', 'span 1', 'span 1'],
-    ['ONE-STOP PLATFORM', 'Discovery, coordination and sales support in one place.', 'ALL-IN-ONE', 'span 2', 'span 1'],
+    { title: '100% B2B & NON-COMPETE', text: 'Your clients stay yours. We never sell direct.', coords: 'NON-COMPETE', col: 'span 2', row: 'span 2', accent: '#FBBF24', visual: 'GLOBAL ROUTE' },
+    { title: 'GLOBAL PRODUCT', text: 'Products across continents and travel categories.', coords: '5 CONTINENTS', col: 'span 2', row: 'span 1', accent: '#14B8A6', visual: '05 / 05' },
+    { title: 'GUARANTEED DEPARTURES', text: 'Confirmed dates and ready-to-sell itineraries.', coords: 'FIXED SERIES', col: 'span 2', row: 'span 1', accent: '#FBBF24', visual: '12 SEP →' },
+    { title: 'COMPETITIVE B2B RATES', text: 'Commercial pricing designed for travel professionals.', coords: 'PARTNER PRICING', col: 'span 1', row: 'span 1', accent: '#14B8A6', visual: 'B2B' },
+    { title: 'OPERATIONAL SUPPORT', text: 'Reliable support before and during the journey.', coords: '24/7 OPS', col: 'span 1', row: 'span 1', accent: '#FBBF24', visual: 'ONLINE' },
+    { title: 'ONE-STOP PLATFORM', text: 'Discovery, coordination and sales support in one place.', coords: 'ALL-IN-ONE', col: 'span 2', row: 'span 1', accent: '#14B8A6', visual: '4 STEPS' },
   ]
-  return <section style={{ padding: '100px 48px', background: '#F8FAFC' }}><div style={{ maxWidth: 1240, margin: '0 auto' }}><div style={{ textAlign: 'center', marginBottom: 48 }}><div className="eyebrow" style={{ marginBottom: 12 }}>WHY GTF</div><h2 className="font-tight" style={{ margin: 0, fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-.03em' }}>Built for professionals. <span style={{ color: 'var(--teal)', fontWeight: 300, fontStyle: 'italic' }}>Designed for scale.</span></h2></div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gridAutoRows: 190, gap: 16 }}>{cells.map(([title, text, coords, col, row], i) => <div key={title} style={{ gridColumn: col, gridRow: row, minHeight: 0, border: '1px solid #E2E8F0', borderRadius: 18, padding: 26, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}><div style={{ position: 'relative', width: 68, height: 52, opacity: .78 }}><div style={{ position: 'absolute', inset: 0, border: `1px solid ${i % 2 ? '#14B8A6' : '#FBBF24'}`, borderRadius: '62% 38% 55% 45% / 48% 58% 42% 52%' }} /><div style={{ position: 'absolute', inset: 10, border: `1px solid ${i % 2 ? '#FBBF24' : '#14B8A6'}`, borderRadius: '45% 55% 40% 60% / 55% 45% 60% 40%' }} /><span style={{ position: 'absolute', right: 4, bottom: 6, width: 5, height: 5, borderRadius: '50%', background: '#0F766E' }} /></div><div><h3 className="font-tight" style={{ margin: '0 0 6px', fontSize: 17, fontWeight: 700 }}>{title}</h3><p style={{ margin: '0 0 10px', color: '#64748B', fontSize: 13.5, lineHeight: 1.5 }}>{text}</p><div style={{ color: '#94A3B8', font: '10px ui-monospace,monospace', letterSpacing: '.04em' }}>{coords}</div></div></div>)}</div></div></section>
+  return <section style={{ padding: '92px 48px', background: '#F8FAFC' }}><div style={{ maxWidth: 1240, margin: '0 auto' }}><div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 24, marginBottom: 42, flexWrap: 'wrap' }}><div><div className="eyebrow" style={{ marginBottom: 12 }}>WHY GTF</div><h2 className="font-tight" style={{ margin: 0, fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-.03em' }}>Built for professionals. <span style={{ color: 'var(--teal)', fontWeight: 300, fontStyle: 'italic' }}>Designed for scale.</span></h2></div><div style={{ color: '#64748B', fontSize: 13 }}>HOVER TO EXPLORE THE GTF ADVANTAGE</div></div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gridAutoRows: 190, gap: 16 }}>{cells.map((cell, i) => { const selected = i === active; return <button type="button" key={cell.title} onClick={() => setActive(i)} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} aria-pressed={selected} style={{ gridColumn: cell.col, gridRow: cell.row, minHeight: 0, border: `1px solid ${selected ? cell.accent : '#E2E8F0'}`, borderRadius: 18, padding: 26, background: selected ? 'linear-gradient(145deg,#fff 40%,#F0FDFA)' : '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden', textAlign: 'left', cursor: 'pointer', transform: selected ? 'translateY(-5px)' : 'translateY(0)', boxShadow: selected ? `0 18px 38px ${cell.accent}2b` : 'none', transition: 'transform .3s ease, box-shadow .3s ease, border-color .3s ease' }}><div style={{ position: 'relative', height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><div className="bento-route-visual" style={{ position: 'relative', width: 120, height: 64, color: cell.accent }}><span style={{ position: 'absolute', left: 4, top: 32, width: 112, height: 1, background: cell.accent, opacity: .42, transform: 'rotate(-14deg)' }} /><span style={{ position: 'absolute', left: 10, top: 21, width: 8, height: 8, borderRadius: '50%', background: '#0F766E', boxShadow: `0 0 0 5px ${cell.accent}22` }} /><span style={{ position: 'absolute', right: 7, top: 9, width: 8, height: 8, borderRadius: '50%', background: cell.accent, boxShadow: `0 0 0 5px ${cell.accent}22` }} /><span style={{ position: 'absolute', left: 42, top: 8, width: 50, height: 38, border: `1px solid ${cell.accent}`, borderRadius: '58% 42% 52% 48%', opacity: .55 }} /><span style={{ position: 'absolute', left: 50, top: 14, width: 36, height: 25, border: `1px solid ${cell.accent}`, borderRadius: '45% 55% 40% 60%', opacity: .28 }} /></div><span style={{ color: '#94A3B8', font: '10px ui-monospace,monospace', letterSpacing: '.05em' }}>{cell.visual}</span></div><div><h3 className="font-tight" style={{ margin: '0 0 6px', fontSize: 17, fontWeight: 700 }}>{cell.title}</h3><p style={{ margin: '0 0 10px', color: '#64748B', fontSize: 13.5, lineHeight: 1.5 }}>{cell.text}</p><div style={{ color: '#94A3B8', font: '10px ui-monospace,monospace', letterSpacing: '.04em' }}>{cell.coords}</div></div></button> })}</div></div></section>
 }
 
 // ── USPs ──────────────────────────────────────────────────────────────────────
