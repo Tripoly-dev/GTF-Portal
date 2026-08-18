@@ -305,7 +305,7 @@ function ProductStream() {
   ]
 
   return (
-    <section id="product-stream" style={{ padding: '96px 48px 112px', background: 'linear-gradient(135deg,#071F20 0%,#0D3435 58%,#123F3D 100%)', color: '#FFFDF8', overflow: 'hidden' }}>
+    <section id="product-stream" style={{ padding: '96px 48px 112px', background: 'linear-gradient(135deg,#123536 0%,#1B4949 58%,#245756 100%)', color: '#FFFDF8', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1240, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 24, marginBottom: 42, flexWrap: 'wrap' }}>
           <div>
@@ -374,7 +374,7 @@ function CustomerJourney() {
 function EditorialIntro() {
   return (
     <section className="about-portal" style={{ padding: '64px 0 92px' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 56px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'end' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 56px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
         <div>
           <div className="eyebrow" style={{ marginBottom: 20 }}>ABOUT GTF PORTAL</div>
           <h2 className="font-tight about-portal-heading" style={{
