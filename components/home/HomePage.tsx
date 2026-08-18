@@ -390,6 +390,85 @@ function Bento() {
   return <section style={{ padding: '92px 48px', background: '#F8FAFC' }}><div style={{ maxWidth: 1240, margin: '0 auto' }}><div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 24, marginBottom: 42, flexWrap: 'wrap' }}><div><div className="eyebrow" style={{ marginBottom: 12 }}>WHY GTF</div><h2 className="font-tight" style={{ margin: 0, fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-.03em' }}>Built for professionals. <span style={{ color: 'var(--teal)', fontWeight: 300, fontStyle: 'italic' }}>Designed for scale.</span></h2></div><div style={{ color: '#64748B', fontSize: 13 }}>HOVER TO EXPLORE THE GTF ADVANTAGE</div></div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gridAutoRows: 190, gap: 16 }}>{cells.map((cell, i) => { const selected = i === active; return <button type="button" key={cell.title} onClick={() => setActive(i)} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} aria-pressed={selected} style={{ gridColumn: cell.col, gridRow: cell.row, minHeight: 0, border: `1px solid ${selected ? cell.accent : '#E2E8F0'}`, borderRadius: 18, padding: 26, background: selected ? 'linear-gradient(145deg,#fff 40%,#F0FDFA)' : '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden', textAlign: 'left', cursor: 'pointer', transform: selected ? 'translateY(-5px)' : 'translateY(0)', boxShadow: selected ? `0 18px 38px ${cell.accent}2b` : 'none', transition: 'transform .3s ease, box-shadow .3s ease, border-color .3s ease' }}><div style={{ position: 'relative', height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><div className="bento-route-visual" style={{ position: 'relative', width: 120, height: 64, color: cell.accent }}><span style={{ position: 'absolute', left: 4, top: 32, width: 112, height: 1, background: cell.accent, opacity: .42, transform: 'rotate(-14deg)' }} /><span style={{ position: 'absolute', left: 10, top: 21, width: 8, height: 8, borderRadius: '50%', background: '#0F766E', boxShadow: `0 0 0 5px ${cell.accent}22` }} /><span style={{ position: 'absolute', right: 7, top: 9, width: 8, height: 8, borderRadius: '50%', background: cell.accent, boxShadow: `0 0 0 5px ${cell.accent}22` }} /><span style={{ position: 'absolute', left: 42, top: 8, width: 50, height: 38, border: `1px solid ${cell.accent}`, borderRadius: '58% 42% 52% 48%', opacity: .55 }} /><span style={{ position: 'absolute', left: 50, top: 14, width: 36, height: 25, border: `1px solid ${cell.accent}`, borderRadius: '45% 55% 40% 60%', opacity: .28 }} /></div><span style={{ color: '#94A3B8', font: '10px ui-monospace,monospace', letterSpacing: '.05em' }}>{cell.visual}</span></div><div><h3 className="font-tight" style={{ margin: '0 0 6px', fontSize: 17, fontWeight: 700 }}>{cell.title}</h3><p style={{ margin: '0 0 10px', color: '#64748B', fontSize: 13.5, lineHeight: 1.5 }}>{cell.text}</p><div style={{ color: '#94A3B8', font: '10px ui-monospace,monospace', letterSpacing: '.04em' }}>{cell.coords}</div></div></button> })}</div></div></section>
 }
 
+// ── GTF BENTO EXPERIENCE ─────────────────────────────────────────────────────
+// A mixed editorial collage: each tile has a distinct role, palette and
+// entrance moment so the section feels like a branded travel experience.
+function BentoExperience() {
+  const [active, setActive] = useState(0)
+  const [revealed, setRevealed] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setRevealed(true), 90)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const activate = (index: number) => setActive(index)
+  const revealClass = revealed ? 'bento-reveal bento-revealed' : 'bento-reveal'
+
+  return (
+    <section className="bento-experience" aria-labelledby="bento-title">
+      <div className="bento-experience-inner">
+        <div className="bento-heading">
+          <div className="eyebrow">THE GTF ADVANTAGE</div>
+          <h2 id="bento-title" className="font-tight">Built for professionals. <em>Designed for scale.</em></h2>
+          <p>A global travel network with the confidence, products and support to help partners sell further.</p>
+        </div>
+
+        <div className="bento-experience-grid">
+          <button type="button" className={`${revealClass} bento-tile bento-editorial`} style={{ animationDelay: '80ms' }} onMouseEnter={() => activate(0)} onFocus={() => activate(0)} onClick={() => activate(0)} aria-pressed={active === 0}>
+            <span className="bento-compass" aria-hidden="true">✦</span>
+            <span className="bento-editorial-kicker">GTF HOLIDAYS · GLOBAL TRAVEL FUSION</span>
+            <strong>THE WORLD,<br /><i>READY TO SELL.</i></strong>
+            <span className="bento-rule" />
+            <span className="bento-editorial-foot">100% B2B · NON-COMPETE</span>
+          </button>
+
+          <button type="button" className={`${revealClass} bento-tile bento-routes ${active === 1 ? 'bento-active' : ''}`} style={{ animationDelay: '180ms' }} onMouseEnter={() => activate(1)} onFocus={() => activate(1)} onClick={() => activate(1)} aria-pressed={active === 1}>
+            <div className="bento-tile-label"><span>◎</span> GLOBAL ROUTES</div>
+            <svg className="bento-map" viewBox="0 0 520 220" role="img" aria-label="Routes connecting Europe, Africa, Japan and Australia">
+              <path d="M40 125 C135 40, 168 175, 270 92 S392 50, 470 125" />
+              <path d="M170 166 C230 84, 330 160, 390 78" />
+              <circle cx="170" cy="96" r="5" /><circle cx="270" cy="92" r="5" /><circle cx="390" cy="78" r="5" /><circle cx="430" cy="140" r="5" />
+            </svg>
+            <div className="bento-route-labels"><span>EUROPE</span><span>AFRICA</span><span>JAPAN</span><span>AUSTRALIA</span></div>
+            <div className="bento-tile-foot">5 CONTINENTS · ONE PARTNER</div>
+          </button>
+
+          <div className={`${revealClass} bento-tile bento-destination-photo`} style={{ animationDelay: '280ms', backgroundImage: "url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&q=85')" }}>
+            <div className="bento-photo-overlay" />
+            <div className="bento-photo-copy"><span>CURATED JOURNEYS</span><strong>Europe,<br />with intent.</strong><small>PAR · 48.8566°N</small></div>
+          </div>
+
+          <button type="button" className={`${revealClass} bento-tile bento-departure ${active === 3 ? 'bento-active' : ''}`} style={{ animationDelay: '380ms' }} onMouseEnter={() => activate(3)} onFocus={() => activate(3)} onClick={() => activate(3)} aria-pressed={active === 3}>
+            <div className="bento-ticket-top"><span>NEXT DEPARTURE</span><span>12 SEP</span></div>
+            <strong>European<br />Delights</strong>
+            <div className="bento-ticket-meta"><span>GATE<br /><b>B2B</b></span><span>BOARDING<br /><b>09:00</b></span><span>CLASS<br /><b>PARTNER</b></span></div>
+            <div className="bento-barcode" aria-hidden="true" />
+          </button>
+
+          <button type="button" className={`${revealClass} bento-tile bento-flow ${active === 4 ? 'bento-active' : ''}`} style={{ animationDelay: '480ms' }} onMouseEnter={() => activate(4)} onFocus={() => activate(4)} onClick={() => activate(4)} aria-pressed={active === 4}>
+            <div className="bento-tile-label">THE OPERATING MODEL</div>
+            <div className="bento-flow-steps"><span>⌕<small>DISCOVER</small></span><i>→</i><span>▣<small>QUOTE</small></span><i>→</i><span>✓<small>CONFIRM</small></span><i>→</i><span>◉<small>SUPPORT</small></span></div>
+            <div className="bento-tile-foot">ONE BRIEF · ONE COMPREHENSIVE PROPOSAL</div>
+          </button>
+
+          <div className={`${revealClass} bento-tile bento-connect`} style={{ animationDelay: '580ms' }}>
+            <span className="bento-connect-mark">GTF</span>
+            <strong>Connect</strong>
+            <span className="bento-connect-line" />
+            <small>PARTNER NETWORK · EST. 2026</small>
+          </div>
+
+          <button type="button" className={`${revealClass} bento-tile bento-network ${active === 6 ? 'bento-active' : ''}`} style={{ animationDelay: '680ms' }} onMouseEnter={() => activate(6)} onFocus={() => activate(6)} onClick={() => activate(6)} aria-pressed={active === 6}>
+            <div className="bento-tile-label">YOUR GLOBAL AGENT NETWORK</div>
+            <div className="bento-network-visual"><span /><span /><span /><span /><i /></div>
+            <strong>Strategic partnerships.<br /><em>Stronger together.</em></strong>
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ── USPs ──────────────────────────────────────────────────────────────────────
 function USPs() {
   const usps = [
@@ -772,7 +851,7 @@ export default function HomePage() {
       <DestinationMarquee />
       <ProductStream />
       <EditorialIntro />
-      <Bento />
+      <BentoExperience />
       <FinalCTA />
     </main>
   )
