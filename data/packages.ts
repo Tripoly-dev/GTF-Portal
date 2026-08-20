@@ -19,6 +19,14 @@ export type AddOn = {
   note?: string
 }
 
+export type ItineraryDay = {
+  day: number
+  title: string
+  description: string
+  hotel?: string
+  meals: string[]
+}
+
 export type Package = {
   id: string
   name: string
@@ -39,26 +47,29 @@ export type Package = {
   themes: string[]
   exCities: string[]
   starRating: number
+  hasPrice: boolean
+  highlights: string[]
+  itinerary: ItineraryDay[]
 }
 
-// ── DEPARTURE DATES — Updated to 2026/2027 ────────────────────────────────
 const EU_DEPARTURES: DepartureSlot[] = [
   { date: '2026-09-18', status: 'fast-filling' },
   { date: '2026-10-02', status: 'available' },
+  { date: '2026-10-07', status: 'available' },
   { date: '2026-10-16', status: 'available' },
+  { date: '2026-10-21', status: 'available' },
   { date: '2026-10-30', status: 'fast-filling' },
+  { date: '2026-11-04', status: 'available' },
   { date: '2026-11-13', status: 'available' },
+  { date: '2026-11-14', status: 'available' },
   { date: '2026-11-27', status: 'available' },
   { date: '2026-12-11', status: 'fast-filling' },
+  { date: '2026-12-23', status: 'available' },
   { date: '2026-12-26', status: 'sold-out' },
   { date: '2027-01-08', status: 'available' },
-  { date: '2027-01-22', status: 'available' },
   { date: '2027-02-05', status: 'available' },
-  { date: '2027-02-19', status: 'available' },
   { date: '2027-03-05', status: 'available' },
-  { date: '2027-03-19', status: 'available' },
 ]
-
 const AF_DEPARTURES: DepartureSlot[] = [
   { date: '2026-08-28', status: 'fast-filling' },
   { date: '2026-09-11', status: 'available' },
@@ -66,14 +77,9 @@ const AF_DEPARTURES: DepartureSlot[] = [
   { date: '2026-10-09', status: 'available' },
   { date: '2026-10-23', status: 'fast-filling' },
   { date: '2027-07-02', status: 'available' },
-  { date: '2027-07-16', status: 'available' },
   { date: '2027-08-06', status: 'available' },
-  { date: '2027-08-20', status: 'available' },
   { date: '2027-09-10', status: 'available' },
-  { date: '2027-09-24', status: 'available' },
-  { date: '2027-10-08', status: 'available' },
 ]
-
 const OC_DEPARTURES: DepartureSlot[] = [
   { date: '2026-09-04', status: 'available' },
   { date: '2026-10-02', status: 'available' },
@@ -83,7 +89,6 @@ const OC_DEPARTURES: DepartureSlot[] = [
   { date: '2027-02-05', status: 'available' },
 ]
 
-// ── ADD-ONS ────────────────────────────────────────────────────────────────
 const EU_ADDONS: AddOn[] = [
   { id: 'visa_eu', label: 'Schengen Visa Assistance', price: 8500, note: 'Visa fees + processing assistance' },
   { id: 'insurance', label: 'Travel Insurance', price: 2200, note: 'Comprehensive travel coverage' },
@@ -95,483 +100,206 @@ const AF_ADDONS: AddOn[] = [
 const OC_ADDONS: AddOn[] = [
   { id: 'insurance', label: 'Travel Insurance', price: 2200, note: 'Comprehensive travel coverage' },
 ]
+const ASIA_ADDONS: AddOn[] = [
+  { id: 'insurance', label: 'Travel Insurance', price: 2200, note: 'Comprehensive travel coverage' },
+]
 
-// ── EX-CITIES ─────────────────────────────────────────────────────────────
 const ALL_CITIES = ['Mumbai', 'Delhi', 'Ahmedabad', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Pune']
 
-// ── HOTEL DATA — Europe (real 3/4-star group tour hotels) ─────────────────
-const PARIS_HOTELS: Hotel[] = [
-  { city: 'Paris', name: 'Ibis Paris Porte de Clichy', stars: 3, nights: 2, roomType: 'Standard Double', meal: 'Breakfast' },
-]
-const AMSTERDAM_HOTELS: Hotel[] = [
-  { city: 'Amsterdam', name: 'NH Amsterdam Centre', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const ROME_HOTELS: Hotel[] = [
-  { city: 'Rome', name: 'Hampton By Hilton Rome North Fiano Romano', stars: 3, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const VENICE_HOTELS: Hotel[] = [
-  { city: 'Venice / Mestre', name: 'Hotel Tritone Mestre', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const FLORENCE_HOTELS: Hotel[] = [
-  { city: 'Florence Area', name: 'Radisson Hotel Ferrara', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const ZURICH_HOTELS: Hotel[] = [
-  { city: 'Zurich', name: 'Radisson Hotel & Suites Zurich', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const INTERLAKEN_HOTELS: Hotel[] = [
-  { city: 'Interlaken', name: 'Hotel Sonne Interlaken', stars: 3, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const BRUSSELS_HOTELS: Hotel[] = [
-  { city: 'Brussels', name: 'ibis Brussels City Centre', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const FRANKFURT_HOTELS: Hotel[] = [
-  { city: 'Frankfurt', name: 'Sheraton Frankfurt Airport Hotel', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const PRAGUE_HOTELS: Hotel[] = [
-  { city: 'Prague', name: 'Hotel Don Giovanni Prague', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const VIENNA_HOTELS: Hotel[] = [
-  { city: 'Vienna', name: 'Hotel Schani Wien', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const BARCELONA_HOTELS: Hotel[] = [
-  { city: 'Barcelona', name: 'Hotel SB Glow Barcelona', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const MADRID_HOTELS: Hotel[] = [
-  { city: 'Madrid', name: 'NH Madrid Ventas', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const LONDON_HOTELS: Hotel[] = [
-  { city: 'London', name: 'Holiday Inn London Wembley', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const OSLO_HOTELS: Hotel[] = [
-  { city: 'Oslo', name: 'Clarion Hotel The Hub Oslo', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const STOCKHOLM_HOTELS: Hotel[] = [
-  { city: 'Stockholm', name: 'Radisson Blu Waterfront Hotel', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const COPENHAGEN_HOTELS: Hotel[] = [
-  { city: 'Copenhagen', name: 'Radisson Blu Scandinavia Hotel', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const MILAN_HOTELS: Hotel[] = [
-  { city: 'Milan', name: 'Hotel Michelangelo Milano', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-]
-const LUCERNE_HOTELS: Hotel[] = [
-  { city: 'Lucerne', name: 'Hotel Astoria Lucerne', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' },
-]
+const PARIS_HOTELS: Hotel[] = [{ city: 'Paris', name: 'Ibis Paris Porte de Clichy', stars: 3, nights: 2, roomType: 'Standard Double', meal: 'Breakfast' }]
+const AMSTERDAM_HOTELS: Hotel[] = [{ city: 'Amsterdam', name: 'NH Amsterdam Centre', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const ROME_HOTELS: Hotel[] = [{ city: 'Rome', name: 'Hampton By Hilton Rome North Fiano Romano', stars: 3, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const VENICE_HOTELS: Hotel[] = [{ city: 'Venice / Mestre', name: 'Hotel Tritone Mestre', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' }]
+const FLORENCE_HOTELS: Hotel[] = [{ city: 'Florence Area', name: 'Radisson Hotel Ferrara', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' }]
+const ZURICH_HOTELS: Hotel[] = [{ city: 'Zurich', name: 'Radisson Hotel & Suites Zurich', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const INTERLAKEN_HOTELS: Hotel[] = [{ city: 'Interlaken', name: 'Hotel Sonne Interlaken', stars: 3, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const BRUSSELS_HOTELS: Hotel[] = [{ city: 'Brussels', name: 'ibis Brussels City Centre', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' }]
+const FRANKFURT_HOTELS: Hotel[] = [{ city: 'Frankfurt', name: 'Sheraton Frankfurt Airport Hotel', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' }]
+const PRAGUE_HOTELS: Hotel[] = [{ city: 'Prague', name: 'Hotel Don Giovanni Prague', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const VIENNA_HOTELS: Hotel[] = [{ city: 'Vienna', name: 'Hotel Schani Wien', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const LONDON_HOTELS: Hotel[] = [{ city: 'London', name: 'Holiday Inn London Wembley', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const OSLO_HOTELS: Hotel[] = [{ city: 'Oslo', name: 'Clarion Hotel The Hub Oslo', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const STOCKHOLM_HOTELS: Hotel[] = [{ city: 'Stockholm', name: 'Radisson Blu Waterfront Hotel', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const COPENHAGEN_HOTELS: Hotel[] = [{ city: 'Copenhagen', name: 'Radisson Blu Scandinavia Hotel', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
+const MILAN_HOTELS: Hotel[] = [{ city: 'Milan', name: 'Hotel Michelangelo Milano', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' }]
+const LUCERNE_HOTELS: Hotel[] = [{ city: 'Lucerne', name: 'Hotel Astoria Lucerne', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Breakfast' }]
 
-// ── GALLERIES — Europe ─────────────────────────────────────────────────────
-const EU_GALLERY_PARIS = [
-  'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80',
-  'https://images.unsplash.com/photo-1524396309943-e03f5249f002?w=800&q=80',
-  'https://images.unsplash.com/photo-1431274172761-fca41d930114?w=800&q=80',
-  'https://images.unsplash.com/photo-1549144511-f099e773c147?w=800&q=80',
-  'https://images.unsplash.com/photo-1470219556762-1771e7f9427d?w=800&q=80',
-]
-const EU_GALLERY_ROME = [
-  'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80',
-  'https://images.unsplash.com/photo-1529260830199-42c24126f198?w=800&q=80',
-  'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&q=80',
-  'https://images.unsplash.com/photo-1556988680-f4e716453a28?w=800&q=80',
-  'https://images.unsplash.com/photo-1543429257-3eb0b9c580b4?w=800&q=80',
-]
-const EU_GALLERY_ALPS = [
-  'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800&q=80',
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-  'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80',
-  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
-]
-const EU_GALLERY_GENERAL = [
-  'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80',
-  'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80',
-  'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80',
-  'https://images.unsplash.com/photo-1549924231-f129b911e442?w=800&q=80',
-  'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80',
-]
-const EU_GALLERY_SCANDI = [
-  'https://static.wixstatic.com/media/226760_e6550524027f4b8f8bca511deb4defbc~mv2.jpg',
-  'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80',
-  'https://images.unsplash.com/photo-1538332576228-eb5b4c4de6f5?w=800&q=80',
-  'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=800&q=80',
-  'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
-]
-const AF_GALLERY = [
-  'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80',
-  'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&q=80',
-  'https://images.unsplash.com/photo-1551655510-555dc3be8633?w=800&q=80',
-  'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&q=80',
-  'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=800&q=80',
-]
-const OC_GALLERY = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-  'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=800&q=80',
-  'https://images.unsplash.com/photo-1538614484459-75c7cfc2df6f?w=800&q=80',
-  'https://images.unsplash.com/photo-1500312805134-0cb3e7be9a0e?w=800&q=80',
-  'https://images.unsplash.com/photo-1562342770-39f5e2c8d7b3?w=800&q=80',
-]
+const EU_GALLERY_PARIS = ['https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80','https://images.unsplash.com/photo-1524396309943-e03f5249f002?w=800&q=80','https://images.unsplash.com/photo-1431274172761-fca41d930114?w=800&q=80','https://images.unsplash.com/photo-1549144511-f099e773c147?w=800&q=80','https://images.unsplash.com/photo-1470219556762-1771e7f9427d?w=800&q=80']
+const EU_GALLERY_ROME = ['https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80','https://images.unsplash.com/photo-1529260830199-42c24126f198?w=800&q=80','https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&q=80','https://images.unsplash.com/photo-1556988680-f4e716453a28?w=800&q=80','https://images.unsplash.com/photo-1543429257-3eb0b9c580b4?w=800&q=80']
+const EU_GALLERY_ALPS = ['https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800&q=80','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80','https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80','https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80','https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80']
+const EU_GALLERY_GENERAL = ['https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80','https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80','https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80','https://images.unsplash.com/photo-1549924231-f129b911e442?w=800&q=80','https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80']
+const EU_GALLERY_SCANDI = ['https://static.wixstatic.com/media/226760_e6550524027f4b8f8bca511deb4defbc~mv2.jpg','https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80','https://images.unsplash.com/photo-1538332576228-eb5b4c4de6f5?w=800&q=80','https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=800&q=80','https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80']
+const AF_GALLERY = ['https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80','https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&q=80','https://images.unsplash.com/photo-1551655510-555dc3be8633?w=800&q=80','https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&q=80','https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=800&q=80']
+const OC_GALLERY = ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80','https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=800&q=80','https://images.unsplash.com/photo-1538614484459-75c7cfc2df6f?w=800&q=80','https://images.unsplash.com/photo-1500312805134-0cb3e7be9a0e?w=800&q=80','https://images.unsplash.com/photo-1562342770-39f5e2c8d7b3?w=800&q=80']
+const JAPAN_GALLERY = ['https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=800&q=80','https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&q=80','https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=800&q=80','https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80','https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80']
+const VIETNAM_GALLERY = ['https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80','https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&q=80','https://images.unsplash.com/photo-1557456170-0cf4f4d0d362?w=800&q=80','https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80','https://images.unsplash.com/photo-1570280406792-bf58b7c59247?w=800&q=80']
+const TURKEY_GALLERY = ['https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=800&q=80','https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80','https://images.unsplash.com/photo-1527838832700-5059252407fa?w=800&q=80','https://images.unsplash.com/photo-1589561454226-796a8aa89b05?w=800&q=80','https://images.unsplash.com/photo-1570939274717-7eda259b50ed?w=800&q=80']
+const EGYPT_GALLERY = ['https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&q=80','https://images.unsplash.com/photo-1569519024219-3e272822ab04?w=800&q=80','https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80','https://images.unsplash.com/photo-1539650116574-75c0c6d73f6c?w=800&q=80','https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=800&q=80']
+const SA_GALLERY = ['https://images.unsplash.com/photo-1484318571209-661cf29a69c3?w=800&q=80','https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80','https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&q=80','https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80','https://images.unsplash.com/photo-1576485375217-d6a95e34d043?w=800&q=80']
+const MAURITIUS_GALLERY = ['https://images.unsplash.com/photo-1504457047772-27faf1c00561?w=800&q=80','https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80','https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=80','https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80','https://images.unsplash.com/photo-1500312805134-0cb3e7be9a0e?w=800&q=80']
+const USA_GALLERY = ['https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800&q=80','https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80','https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80','https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=800&q=80']
 
+const EU_H_GRAND = ['Ascend to the top level of the iconic Eiffel Tower for panoramic views of Paris','Cruise along the enchanting River Seine — the heart of the City of Lights','Full-day adventure at Disneyland Paris (One Day, One Park)','Explore Zaanse Schans — Dutch heritage of windmills, cheese and wooden clogs','Sail through Amsterdam\'s charming canals','Boat ride at the majestic Rhine Falls — Europe\'s largest waterfall','Ride the Rotair to Mt. Titlis — the world\'s first revolving cable car','Jungfraujoch — Top of Europe at 11,333 feet by cogwheel train','Gondola ride through the enchanting canals of Venice','Guided city tour of Rome — Colosseum, Trevi Fountain & Vatican']
+const EU_H_ALPS = ['Jungfraujoch — Top of Europe at 11,333 feet by Eiger Express & cogwheel train','Mt. Titlis at 3,020m via the world\'s first revolving Rotair cable car','Walk the Titlis Cliff Walk — Europe\'s highest suspension bridge','Gondola ride through Venice\'s enchanting canals','Witness the Leaning Tower of Pisa at the Square of Miracles','Panoramic views of Florence from Piazzale Michelangelo','Guided city tour of Rome — Colosseum, Trevi Fountain & Vatican','City Train Ride in Vaduz, capital of Liechtenstein','Swarovski Crystal Museum at Wattens']
 export const PACKAGES: Package[] = [
-  // ── EUROPE ────────────────────────────────────────────────────────────────
-  {
-    id: 'eu-01', name: 'European Delights', nights: 15, days: 16, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4b2b746336b614b90a0fca213c41b601f',
-    img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80',
-    gallery: EU_GALLERY_PARIS, tag: 'BESTSELLER',
-    basePrice: 148000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...BRUSSELS_HOTELS, ...AMSTERDAM_HOTELS, ...FRANKFURT_HOTELS, ...INTERLAKEN_HOTELS, ...ROME_HOTELS],
-    travelerTypes: ['Couples', 'Family', 'Friends', 'Seniors'],
-    themes: ['Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-02', name: 'Sparkling Europe', nights: 13, days: 14, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4e1b788d7e3a949b98aed405416c3324e',
-    img: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 128000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...BRUSSELS_HOTELS, ...AMSTERDAM_HOTELS, ...FRANKFURT_HOTELS, ...ZURICH_HOTELS],
-    travelerTypes: ['Couples', 'Family', 'Friends'],
-    themes: ['Away & Beyond', 'Wind & Waves'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-03', name: 'Vibrant Europe', nights: 9, days: 10, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4b1639c7c1d5c439ab825f013ec63b57e',
-    img: 'https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 92000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...BRUSSELS_HOTELS],
-    travelerTypes: ['Couples', 'Friends', 'Family'],
-    themes: ['Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 3,
-  },
-  {
-    id: 'eu-04', name: 'Alpine Wonders', nights: 7, days: 8, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5dfb30b43f7f7140f4ab1fc15f3c982d83',
-    img: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=600&q=80',
-    gallery: EU_GALLERY_ALPS, tag: 'POPULAR',
-    basePrice: 78000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...ZURICH_HOTELS, ...INTERLAKEN_HOTELS, ...LUCERNE_HOTELS],
-    travelerTypes: ['Couples', 'Honeymoon', 'Friends'],
-    themes: ['Wind & Waves', 'Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-05', name: 'Grand Europe with London', nights: 14, days: 15, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4d45536d41045426c8c4d782fc5e55c5a',
-    img: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 148000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...LONDON_HOTELS, ...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...FRANKFURT_HOTELS, ...ZURICH_HOTELS],
-    travelerTypes: ['Couples', 'Family', 'Friends', 'Seniors'],
-    themes: ['Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-06', name: 'Grand Europe', nights: 12, days: 13, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh48e4e6f4549894901a692670027c6a552',
-    img: 'https://static.wixstatic.com/media/226760_6405694ec1584971b717372cd1c0d0b0~mv2.jpg',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 110000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...BRUSSELS_HOTELS, ...FRANKFURT_HOTELS, ...INTERLAKEN_HOTELS],
-    travelerTypes: ['Couples', 'Family', 'Seniors', 'Friends'],
-    themes: ['Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-07', name: 'Gems of Europe', nights: 8, days: 9, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4cba10d5137ff4cdb80489121f66d6ab7',
-    img: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 78000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...BRUSSELS_HOTELS],
-    travelerTypes: ['Couples', 'Family', 'Friends'],
-    themes: ['Away & Beyond', 'Moments Away'],
-    exCities: ALL_CITIES, starRating: 3,
-  },
-  {
-    id: 'eu-08', name: 'Essence of Europe', nights: 7, days: 8, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5d03f6defc38ef43bc9cedf72937733163',
-    img: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&q=80',
-    gallery: EU_GALLERY_ROME,
-    basePrice: 78000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...ROME_HOTELS, ...FLORENCE_HOTELS, ...VENICE_HOTELS],
-    travelerTypes: ['Couples', 'Honeymoon', 'Seniors'],
-    themes: ['Away & Beyond', 'Moments Away'],
-    exCities: ALL_CITIES, starRating: 3,
-  },
-  {
-    id: 'eu-09', name: 'Europe for All', nights: 12, days: 13, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5d8f095085adee4e7b927ba6630c53c0b1',
-    img: 'https://images.unsplash.com/photo-1549924231-f129b911e442?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 110000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...ZURICH_HOTELS, ...ROME_HOTELS],
-    travelerTypes: ['Family', 'Seniors', 'Couples'],
-    themes: ['Away & Beyond', 'Moments Away'],
-    exCities: ALL_CITIES, starRating: 3,
-  },
-  {
-    id: 'eu-10', name: 'European Dhamaka', nights: 8, days: 9, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh412f5c88ff68b430d96732cd7971822e9',
-    img: 'https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 78000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...BRUSSELS_HOTELS],
-    travelerTypes: ['Family', 'Friends', 'Couples'],
-    themes: ['Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 3,
-  },
-  {
-    id: 'eu-11', name: 'European Glimpses', nights: 8, days: 9, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh46fa49e557c004f21bfb3898691f69d45',
-    img: 'https://images.unsplash.com/photo-1524396309943-e03f5249f002?w=600&q=80',
-    gallery: EU_GALLERY_PARIS,
-    basePrice: 78000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...FRANKFURT_HOTELS],
-    travelerTypes: ['Couples', 'Friends'],
-    themes: ['Moments Away'],
-    exCities: ALL_CITIES, starRating: 3,
-  },
-  {
-    id: 'eu-12', name: 'Whispers of Romance', nights: 10, days: 11, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4b2b746336b614b90a0fca213c41b601f',
-    img: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80',
-    gallery: EU_GALLERY_PARIS, tag: 'HONEYMOON',
-    basePrice: 92000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...VENICE_HOTELS, ...ROME_HOTELS, ...INTERLAKEN_HOTELS],
-    travelerTypes: ['Honeymoon', 'Couples'],
-    themes: ['Wind & Waves', 'Moments Away'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-13', name: 'European Dream', nights: 11, days: 12, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/eo49d436f80f6e02d47a5bdb93c5a1bb958e0',
-    img: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 110000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...PRAGUE_HOTELS, ...VIENNA_HOTELS],
-    travelerTypes: ['Couples', 'Family', 'Friends', 'Seniors'],
-    themes: ['Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-14', name: 'Best of Scandinavia', nights: 9, days: 10, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5dad2db5022362477bbf58e5eed3eabd1d',
-    img: 'https://static.wixstatic.com/media/226760_e6550524027f4b8f8bca511deb4defbc~mv2.jpg',
-    gallery: EU_GALLERY_SCANDI,
-    basePrice: 92000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...OSLO_HOTELS, ...STOCKHOLM_HOTELS, ...COPENHAGEN_HOTELS],
-    travelerTypes: ['Couples', 'Friends', 'Seniors'],
-    themes: ['Away & Beyond', 'Wind & Waves'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'eu-15', name: 'Amazing Europe', nights: 11, days: 12, region: 'europe',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5d4ab84049c1ec4402915107e2bb0ec951',
-    img: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&q=80',
-    gallery: EU_GALLERY_GENERAL,
-    basePrice: 110000, departures: EU_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS,
-    hotels: [...PARIS_HOTELS, ...AMSTERDAM_HOTELS, ...FRANKFURT_HOTELS, ...ZURICH_HOTELS, ...MILAN_HOTELS],
-    travelerTypes: ['Couples', 'Family', 'Seniors'],
-    themes: ['Away & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-
-  // ── AFRICA ────────────────────────────────────────────────────────────────
-  {
-    id: 'af-01', name: 'Roar & Explore — Tanzania Untamed', nights: 4, days: 5, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61e6fabaf10d354f04831ea7df84367873',
-    img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80',
-    gallery: AF_GALLERY, tag: 'SAFARI',
-    basePrice: 78000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Arusha', name: 'Arusha Planet Lodge', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Serengeti', name: 'Serengeti Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Ngorongoro', name: 'Ngorongoro Sopa Lodge', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Friends', 'Family'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'af-02', name: 'Wild Serenade', nights: 3, days: 4, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r6195ed62fb6cfa47d2a5caebbf293c6b6b',
-    img: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80',
-    gallery: AF_GALLERY,
-    basePrice: 65000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Arusha', name: 'Arusha Planet Lodge', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Serengeti', name: 'Serengeti Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Friends'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 3,
-  },
-  {
-    id: 'af-03', name: 'Tanzania Untamed with Zanzibar', nights: 7, days: 8, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61e6fabaf10d354f04831ea7df84367873',
-    img: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=600&q=80',
-    gallery: AF_GALLERY, tag: 'POPULAR',
-    basePrice: 92000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Arusha', name: 'Arusha Planet Lodge', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Serengeti', name: 'Serengeti Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Zanzibar', name: 'Zanzibar Serena Inn', stars: 4, nights: 3, roomType: 'Standard Room', meal: 'Breakfast' },
-    ],
-    travelerTypes: ['Couples', 'Honeymoon', 'Friends'],
-    themes: ['Beast & Beyond', 'Wind & Waves'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'af-04', name: "Kenya's Ultimate Safari Circuit", nights: 7, days: 8, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61c70b8d90a48042eaa556481fb8ba5cc3',
-    img: 'https://static.wixstatic.com/media/11062b_46346b8363cf4db7a02099aa96aa3024~mv2_d_3416_3415_s_4_2.jpg',
-    gallery: AF_GALLERY,
-    basePrice: 92000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Nairobi', name: 'Nairobi Serena Hotel', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-      { city: 'Masai Mara', name: 'Mara Sopa Lodge', stars: 4, nights: 3, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Amboseli', name: 'Amboseli Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Family', 'Friends', 'Seniors'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'af-05', name: 'Wild Escapade', nights: 5, days: 6, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r6178fa7dadb99c41878a3bf5080adf7802',
-    img: 'https://images.unsplash.com/photo-1551655510-555dc3be8633?w=600&q=80',
-    gallery: AF_GALLERY,
-    basePrice: 78000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Nairobi', name: 'Nairobi Serena Hotel', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-      { city: 'Masai Mara', name: 'Mara Sopa Lodge', stars: 4, nights: 3, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Friends'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'af-06', name: 'Echoes of the Wild', nights: 6, days: 7, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r6160dcec150ca340ea8eb480ecb2c6f542',
-    img: 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=600&q=80',
-    gallery: AF_GALLERY,
-    basePrice: 85000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Arusha', name: 'Arusha Planet Lodge', stars: 3, nights: 1, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Serengeti', name: 'Serengeti Sopa Lodge', stars: 4, nights: 3, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Ngorongoro', name: 'Ngorongoro Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Family', 'Friends'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'af-07', name: 'Amboseli Wild Trails', nights: 3, days: 4, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61220ab1d94e534c51ac06001db48d4534',
-    img: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=600&q=80',
-    gallery: AF_GALLERY,
-    basePrice: 65000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Nairobi', name: 'Nairobi Serena Hotel', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-      { city: 'Amboseli', name: 'Amboseli Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Friends'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'af-08', name: 'Predators & Pink Feathers', nights: 4, days: 5, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61289c50456e4e4bd8a6669c85bec3061e',
-    img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80',
-    gallery: AF_GALLERY,
-    basePrice: 78000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Nairobi', name: 'Nairobi Serena Hotel', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-      { city: 'Masai Mara', name: 'Mara Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Lake Nakuru', name: 'Sarova Lion Hill Lodge', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Friends', 'Family'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'af-09', name: 'Into the Heart of the Wild', nights: 6, days: 7, region: 'africa',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r616f377d5942c346329fe909e3a6d4194b',
-    img: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80',
-    gallery: AF_GALLERY,
-    basePrice: 85000, departures: AF_DEPARTURES,
-    singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS,
-    hotels: [
-      { city: 'Nairobi', name: 'Nairobi Serena Hotel', stars: 4, nights: 1, roomType: 'Standard Room', meal: 'Breakfast' },
-      { city: 'Masai Mara', name: 'Mara Sopa Lodge', stars: 4, nights: 3, roomType: 'Standard Room', meal: 'Full Board' },
-      { city: 'Amboseli', name: 'Amboseli Sopa Lodge', stars: 4, nights: 2, roomType: 'Standard Room', meal: 'Full Board' },
-    ],
-    travelerTypes: ['Couples', 'Family', 'Friends', 'Seniors'],
-    themes: ['Beast & Beyond'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-
-  // ── OCEANIA ───────────────────────────────────────────────────────────────
-  {
-    id: 'oc-01', name: 'Best of Australia', nights: 9, days: 10, region: 'oceania',
-    workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5df5a5fff6366543e397fe53513b10536d',
-    img: 'https://static.wixstatic.com/media/226760_ba7cc5b928a24377a86d5d4c8d124684~mv2.jpg',
-    gallery: OC_GALLERY, tag: 'AVAILABLE',
-    basePrice: 110000, departures: OC_DEPARTURES,
-    singleSupplement: 18000, tripleReduction: 4000, addOns: OC_ADDONS,
-    hotels: [
-      { city: 'Sydney', name: 'Novotel Sydney on Darling Harbour', stars: 4, nights: 3, roomType: 'Standard Room', meal: 'Breakfast' },
-      { city: 'Melbourne', name: 'ibis Melbourne Hotel & Apartments', stars: 3, nights: 3, roomType: 'Standard Room', meal: 'Breakfast' },
-      { city: 'Cairns', name: 'Mantra Esplanade Cairns', stars: 4, nights: 3, roomType: 'Standard Room', meal: 'Breakfast' },
-    ],
-    travelerTypes: ['Couples', 'Family', 'Friends', 'Seniors'],
-    themes: ['Away & Beyond', 'Wind & Waves'],
-    exCities: ALL_CITIES, starRating: 4,
-  },
-  {
-    id: 'oc-02', name: 'Discover Australia', nights: 9, days: 10, region: 'oceania',
-    workdriveUrl: '', img: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=600&q=80',
-    gallery: OC_GALLERY, tag: 'COMING SOON',
-    basePrice: 110000, departures: [],
-    singleSupplement: 18000, tripleReduction: 4000, addOns: OC_ADDONS,
-    hotels: [], travelerTypes: [], themes: [], exCities: ALL_CITIES, starRating: 4,
-  },
+  // EUROPE
+  { id: 'eu-01', name: 'European Delights', nights: 15, days: 16, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4b2b746336b614b90a0fca213c41b601f', img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80', gallery: EU_GALLERY_PARIS, tag: 'BESTSELLER', basePrice: 148000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...BRUSSELS_HOTELS,...AMSTERDAM_HOTELS,...FRANKFURT_HOTELS,...INTERLAKEN_HOTELS,...ROME_HOTELS], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: EU_H_GRAND, itinerary: [] },
+  { id: 'eu-02', name: 'Sparkling Europe', nights: 13, days: 14, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4e1b788d7e3a949b98aed405416c3324e', img: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 128000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...BRUSSELS_HOTELS,...AMSTERDAM_HOTELS,...FRANKFURT_HOTELS,...ZURICH_HOTELS], travelerTypes: ['Couples','Family','Friends'], themes: ['Away & Beyond','Wind & Waves'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: EU_H_GRAND, itinerary: [] },
+  { id: 'eu-03', name: 'Vibrant Europe', nights: 9, days: 10, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4b1639c7c1d5c439ab825f013ec63b57e', img: 'https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 92000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...BRUSSELS_HOTELS], travelerTypes: ['Couples','Friends','Family'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 3, hasPrice: false, highlights: EU_H_GRAND, itinerary: [] },
+  { id: 'eu-04', name: 'Alpine Wonders', nights: 7, days: 8, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5dfb30b43f7f7140f4ab1fc15f3c982d83', img: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=600&q=80', gallery: EU_GALLERY_ALPS, tag: 'POPULAR', basePrice: 78000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...ZURICH_HOTELS,...INTERLAKEN_HOTELS,...LUCERNE_HOTELS], travelerTypes: ['Couples','Honeymoon','Friends'], themes: ['Wind & Waves','Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: EU_H_ALPS, itinerary: [] },
+  { id: 'eu-05', name: 'Grand Europe with London', nights: 14, days: 15, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4d45536d41045426c8c4d782fc5e55c5a', img: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 148000, departures: [{date:'2027-05-01',status:'available'}], singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...LONDON_HOTELS,...PARIS_HOTELS,...AMSTERDAM_HOTELS,...FRANKFURT_HOTELS,...ZURICH_HOTELS], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Discover lifelike wonders at Madame Tussauds Wax Museum in London','Soar above London with the exhilarating London Eye Ride','Uncover the historic Tower of London and the legendary Kohinoor Diamond','Experience the Eurostar — Europe\'s renowned high-speed train','Ascend to the Eiffel Tower 3rd Level and cruise the River Seine','Full-day Disneyland Paris adventure','Jungfraujoch — Top of Europe by Eiger Express','Gondola ride through the canals of Venice','Guided city tour of Rome — Colosseum, Trevi Fountain & Vatican','Keukenhof Gardens — Holland\'s legendary tulip glory (seasonal)'], itinerary: [] },
+  { id: 'eu-06', name: 'Grand Europe', nights: 12, days: 13, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh48e4e6f4549894901a692670027c6a552', img: 'https://static.wixstatic.com/media/226760_6405694ec1584971b717372cd1c0d0b0~mv2.jpg', gallery: EU_GALLERY_GENERAL, basePrice: 110000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...BRUSSELS_HOTELS,...FRANKFURT_HOTELS,...INTERLAKEN_HOTELS], travelerTypes: ['Couples','Family','Seniors','Friends'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: EU_H_GRAND, itinerary: [
+    { day: 1, title: 'Arrive in Paris | Paris by Night', description: 'Arrive at Paris CDG Airport and transfer to your hotel. Evening Paris Illumination Tour — the City of Lights in all its glory.', hotel: 'Paris Hotel (4★)', meals: ['Dinner'] },
+    { day: 2, title: 'Paris City Tour | Eiffel Tower 3rd Level | Seine Cruise', description: 'Guided city tour — Place Vendôme, Opéra Garnier, Champs-Élysées, Arc de Triomphe. Ascend Eiffel Tower to the 3rd Level. Scenic Seine River Cruise.', hotel: 'Paris Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 3, title: 'Disneyland Paris', description: 'Full day at Disneyland Paris — choose between Disneyland Park or Walt Disney Studios Park.', hotel: 'Paris Hotel (4★)', meals: ['Breakfast','Packed Lunch','Dinner'] },
+    { day: 4, title: 'Mini-Europe | Atomium | Brussels | Grand Place', description: 'Visit Mini-Europe and the Atomium in Brussels. Explore Grand Place and Manneken Pis. Proceed to the Netherlands.', hotel: 'Netherlands Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 5, title: 'Zaanse Schans | Amsterdam Canal Cruise', description: 'Dutch heritage at Zaanse Schans — windmills, cheese and clogs. Amsterdam Canal Cruise. Proceed to Germany.', hotel: 'Germany Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 6, title: 'Black Forest | Rhine Falls', description: 'Black Forest, Cuckoo Clock, Lake Titisee. Boat ride at the magnificent Rhine Falls.', hotel: 'Switzerland Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 7, title: 'Jungfraujoch — Top of Europe', description: 'Leisure time in Interlaken then the spectacular journey to Jungfraujoch at 11,333 feet via Eiger Express and cogwheel train. Ice Palace and Sphinx Observatory.', hotel: 'Switzerland Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 8, title: 'Mt. Titlis | Lucerne', description: 'Mt. Titlis at 3,020m via Rotair cable car. Titlis Cliff Walk. Orientation tour of Lucerne.', hotel: 'Switzerland Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 9, title: 'Vaduz | Swarovski Crystal Museum | Innsbruck', description: 'City Train Ride in Vaduz. Swarovski Crystal Museum. Orientation tour of Innsbruck.', hotel: 'Tyrol Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 10, title: 'Venice — Gondola Ride', description: 'Private boat to St. Mark\'s Square, Venice. Walking tour. Romantic Gondola ride through the canals.', hotel: 'Padova Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 11, title: 'Pisa | Florence', description: 'Leaning Tower of Pisa. Florence — Piazzale Michelangelo with panoramic city views.', hotel: 'Tuscany Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 12, title: 'Rome City Tour | Vatican', description: 'Guided Rome city tour — Colosseum photo stop, Trevi Fountain, St. Peter\'s Basilica and Vatican City.', hotel: 'Rome Hotel (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 13, title: 'Departure', description: 'After breakfast, transfer to the airport for your onward flight home.', hotel: '', meals: ['Breakfast'] },
+  ] },
+  { id: 'eu-07', name: 'Gems of Europe', nights: 8, days: 9, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4cba10d5137ff4cdb80489121f66d6ab7', img: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 78000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...BRUSSELS_HOTELS], travelerTypes: ['Couples','Family','Friends'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 3, hasPrice: false, highlights: ['Paris by Night Illumination Tour','Eiffel Tower 3rd Level panoramic views','Full-day Disneyland Paris adventure','Mini-Europe and Atomium in Brussels','Zaanse Schans Dutch windmills, cheese and clogs','Scenic Amsterdam Canal Cruise','Rhine Falls boat ride — Europe\'s largest waterfall','Mt. Titlis via Rotair revolving cable car','Jungfraujoch — Top of Europe at 11,333 feet'], itinerary: [] },
+  { id: 'eu-08', name: 'Essence of Europe', nights: 7, days: 8, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5d03f6defc38ef43bc9cedf72937733163', img: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&q=80', gallery: EU_GALLERY_ROME, basePrice: 78000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...ROME_HOTELS,...FLORENCE_HOTELS,...VENICE_HOTELS], travelerTypes: ['Couples','Honeymoon','Seniors'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 3, hasPrice: false, highlights: EU_H_ALPS, itinerary: [] },
+  { id: 'eu-09', name: 'Europe for All', nights: 12, days: 13, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5d8f095085adee4e7b927ba6630c53c0b1', img: 'https://images.unsplash.com/photo-1549924231-f129b911e442?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 110000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...ZURICH_HOTELS,...ROME_HOTELS], travelerTypes: ['Family','Seniors','Couples'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 3, hasPrice: false, highlights: EU_H_GRAND, itinerary: [] },
+  { id: 'eu-10', name: 'European Dhamaka', nights: 8, days: 9, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh412f5c88ff68b430d96732cd7971822e9', img: 'https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 78000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...BRUSSELS_HOTELS], travelerTypes: ['Family','Friends','Couples'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 3, hasPrice: false, highlights: ['Eiffel Tower 2nd Level — iconic views of Paris','Scenic Seine River Cruise past Paris landmarks','Atomium photo stop in Brussels','Grand Place — one of Europe\'s most stunning medieval squares','Zaanse Schans — Dutch windmills, cheese and clogs','Amsterdam Canal Cruise','Cologne Cathedral — one of Europe\'s largest Gothic churches','Rhine Falls — Europe\'s largest waterfall','Mt. Titlis via Rotair — the world\'s first revolving cable car'], itinerary: [] },
+  { id: 'eu-11', name: 'European Glimpses', nights: 8, days: 9, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh46fa49e557c004f21bfb3898691f69d45', img: 'https://images.unsplash.com/photo-1524396309943-e03f5249f002?w=600&q=80', gallery: EU_GALLERY_PARIS, basePrice: 78000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...FRANKFURT_HOTELS], travelerTypes: ['Couples','Friends'], themes: ['Moments Away'], exCities: ALL_CITIES, starRating: 3, hasPrice: false, highlights: EU_H_ALPS, itinerary: [] },
+  { id: 'eu-12', name: 'Whispers of Romance', nights: 10, days: 11, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/jugh4b2b746336b614b90a0fca213c41b601f', img: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80', gallery: EU_GALLERY_PARIS, tag: 'HONEYMOON', basePrice: 92000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...VENICE_HOTELS,...ROME_HOTELS,...INTERLAKEN_HOTELS], travelerTypes: ['Honeymoon','Couples'], themes: ['Wind & Waves','Moments Away'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: EU_H_GRAND, itinerary: [] },
+  { id: 'eu-13', name: 'European Dream', nights: 11, days: 12, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/eo49d436f80f6e02d47a5bdb93c5a1bb958e0', img: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 110000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...PRAGUE_HOTELS,...VIENNA_HOTELS], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: EU_H_GRAND, itinerary: [] },
+  { id: 'eu-14', name: 'Best of Scandinavia', nights: 9, days: 10, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5dad2db5022362477bbf58e5eed3eabd1d', img: 'https://static.wixstatic.com/media/226760_e6550524027f4b8f8bca511deb4defbc~mv2.jpg', gallery: EU_GALLERY_SCANDI, basePrice: 92000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...OSLO_HOTELS,...STOCKHOLM_HOTELS,...COPENHAGEN_HOTELS], travelerTypes: ['Couples','Friends','Seniors'], themes: ['Away & Beyond','Wind & Waves'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Oslo — Viking Ship Museum, Vigeland Sculpture Park and Akershus Fortress','Bergen and the UNESCO-listed Bryggen Wharf','Flåm Railway — one of the world\'s most spectacular train journeys','Stockholm — Royal Palace and Gamla Stan Old Town','Copenhagen — Tivoli Gardens, The Little Mermaid and Nyhavn Harbour'], itinerary: [] },
+  { id: 'eu-15', name: 'Amazing Europe', nights: 11, days: 12, region: 'europe', workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5d4ab84049c1ec4402915107e2bb0ec951', img: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&q=80', gallery: EU_GALLERY_GENERAL, basePrice: 110000, departures: EU_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: EU_ADDONS, hotels: [...PARIS_HOTELS,...AMSTERDAM_HOTELS,...FRANKFURT_HOTELS,...ZURICH_HOTELS,...MILAN_HOTELS], travelerTypes: ['Couples','Family','Seniors'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: EU_H_GRAND, itinerary: [] },
+  // AFRICA
+  { id: 'af-01', name: 'Roar & Explore — Tanzania Untamed', nights: 4, days: 5, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61e6fabaf10d354f04831ea7df84367873', img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80', gallery: AF_GALLERY, tag: 'SAFARI', basePrice: 78000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Arusha',name:'Arusha Planet Lodge',stars:3,nights:1,roomType:'Standard Room',meal:'Full Board'},{city:'Serengeti',name:'Serengeti Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'},{city:'Ngorongoro',name:'Ngorongoro Sopa Lodge',stars:4,nights:1,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Friends','Family'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Full-day game drives in the world-renowned Serengeti National Park','Witness the legendary Big Five — Lion, Leopard, Elephant, Buffalo and Rhino','Scenic drive through the Ngorongoro Conservation Area','Half-day Ngorongoro Crater safari — Africa\'s natural wonder','Visit Olduvai Gorge Museum — the Cradle of Mankind','Comfortable 4x4 safari vehicles with expert driver guides'], itinerary: [
+    { day: 1, title: 'Arrival — Kilimanjaro Airport to Arusha', description: 'Arrive at Kilimanjaro International Airport and transfer to Arusha Town. Check in and begin your African adventure.', hotel: 'Arusha Planet Lodge (3★)', meals: ['Lunch','Dinner'] },
+    { day: 2, title: 'Arusha — Serengeti National Park', description: 'Depart for the legendary Serengeti with a picnic lunch, travelling through the Ngorongoro Conservation Area.', hotel: 'Serengeti Sopa Lodge (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 3, title: 'Full-Day Game Drive — Serengeti', description: 'Full-day game drive across the vast plains of Serengeti. Track the Great Migration and seek the Big Five.', hotel: 'Serengeti Sopa Lodge (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 4, title: 'Ngorongoro Crater Safari', description: 'Descend into the Ngorongoro Crater — UNESCO World Heritage Site. Half-day safari with lions, elephants, flamingos. Visit Olduvai Gorge Museum.', hotel: 'Ngorongoro Sopa Lodge (4★)', meals: ['Breakfast','Lunch','Dinner'] },
+    { day: 5, title: 'Departure from Kilimanjaro', description: 'After breakfast, transfer to Kilimanjaro International Airport for your onward flight.', hotel: '', meals: ['Breakfast'] },
+  ] },
+  { id: 'af-02', name: 'Wild Serenade', nights: 3, days: 4, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r6195ed62fb6cfa47d2a5caebbf293c6b6b', img: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80', gallery: AF_GALLERY, basePrice: 65000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Arusha',name:'Arusha Planet Lodge',stars:3,nights:1,roomType:'Standard Room',meal:'Full Board'},{city:'Serengeti',name:'Serengeti Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Friends'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 3, hasPrice: false, highlights: ['Game drives in the iconic Serengeti National Park','Seek the Big Five on expert-guided safaris','Witness the Great Migration — nature\'s greatest wildlife spectacle'], itinerary: [] },
+  { id: 'af-03', name: 'Tanzania Untamed with Zanzibar', nights: 7, days: 8, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61e6fabaf10d354f04831ea7df84367873', img: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=600&q=80', gallery: AF_GALLERY, tag: 'POPULAR', basePrice: 92000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Arusha',name:'Arusha Planet Lodge',stars:3,nights:1,roomType:'Standard Room',meal:'Full Board'},{city:'Serengeti',name:'Serengeti Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'},{city:'Zanzibar',name:'Zanzibar Serena Inn',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast'}], travelerTypes: ['Couples','Honeymoon','Friends'], themes: ['Beast & Beyond','Wind & Waves'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Full-day game drives in the legendary Serengeti','Ngorongoro Crater safari — UNESCO World Heritage Site','Zanzibar — pristine white-sand beaches and crystal-clear Indian Ocean','Stone Town UNESCO World Heritage Site'], itinerary: [] },
+  { id: 'af-04', name: "Kenya's Ultimate Safari Circuit", nights: 7, days: 8, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61c70b8d90a48042eaa556481fb8ba5cc3', img: 'https://static.wixstatic.com/media/11062b_46346b8363cf4db7a02099aa96aa3024~mv2_d_3416_3415_s_4_2.jpg', gallery: AF_GALLERY, basePrice: 92000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Nairobi',name:'Nairobi Serena Hotel',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast'},{city:'Masai Mara',name:'Mara Sopa Lodge',stars:4,nights:3,roomType:'Standard Room',meal:'Full Board'},{city:'Amboseli',name:'Amboseli Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Masai Mara — Kenya\'s most celebrated wildlife reserve and home of the Big Five','Witness the Great Wildebeest Migration','Amboseli National Park — elephants against Mt. Kilimanjaro','Maasai cultural village visit'], itinerary: [] },
+  { id: 'af-05', name: 'Wild Escapade', nights: 5, days: 6, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r6178fa7dadb99c41878a3bf5080adf7802', img: 'https://images.unsplash.com/photo-1551655510-555dc3be8633?w=600&q=80', gallery: AF_GALLERY, basePrice: 78000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Nairobi',name:'Nairobi Serena Hotel',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast'},{city:'Masai Mara',name:'Mara Sopa Lodge',stars:4,nights:3,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Friends'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Nairobi — vibrant East African capital','Masai Mara game drives — home of the Big Five','Great Migration viewing opportunities'], itinerary: [] },
+  { id: 'af-06', name: 'Echoes of the Wild', nights: 6, days: 7, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r6160dcec150ca340ea8eb480ecb2c6f542', img: 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=600&q=80', gallery: AF_GALLERY, basePrice: 85000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Arusha',name:'Arusha Planet Lodge',stars:3,nights:1,roomType:'Standard Room',meal:'Full Board'},{city:'Serengeti',name:'Serengeti Sopa Lodge',stars:4,nights:3,roomType:'Standard Room',meal:'Full Board'},{city:'Ngorongoro',name:'Ngorongoro Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Family','Friends'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Multiple game drives across Serengeti and Ngorongoro','Ngorongoro Crater — Africa\'s Garden of Eden','Big Five wildlife experiences','Olduvai Gorge Museum'], itinerary: [] },
+  { id: 'af-07', name: 'Amboseli Wild Trails', nights: 3, days: 4, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61220ab1d94e534c51ac06001db48d4534', img: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=600&q=80', gallery: AF_GALLERY, basePrice: 65000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Nairobi',name:'Nairobi Serena Hotel',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast'},{city:'Amboseli',name:'Amboseli Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Friends'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Amboseli — Kenya\'s premier elephant sanctuary against Kilimanjaro','Maasai giraffe, cheetahs, lions and large elephant herds'], itinerary: [] },
+  { id: 'af-08', name: 'Predators & Pink Feathers', nights: 4, days: 5, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r61289c50456e4e4bd8a6669c85bec3061e', img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80', gallery: AF_GALLERY, basePrice: 78000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Nairobi',name:'Nairobi Serena Hotel',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast'},{city:'Masai Mara',name:'Mara Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'},{city:'Lake Nakuru',name:'Sarova Lion Hill Lodge',stars:4,nights:1,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Friends','Family'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Masai Mara game drives — Big Five and Great Migration','Lake Nakuru — vast flamingo colonies and rhino sanctuary'], itinerary: [] },
+  { id: 'af-09', name: 'Into the Heart of the Wild', nights: 6, days: 7, region: 'africa', workdriveUrl: 'https://workdrive.zohoexternal.in/file/77r616f377d5942c346329fe909e3a6d4194b', img: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80', gallery: AF_GALLERY, basePrice: 85000, departures: AF_DEPARTURES, singleSupplement: 15000, tripleReduction: 3500, addOns: AF_ADDONS, hotels: [{city:'Nairobi',name:'Nairobi Serena Hotel',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast'},{city:'Masai Mara',name:'Mara Sopa Lodge',stars:4,nights:3,roomType:'Standard Room',meal:'Full Board'},{city:'Amboseli',name:'Amboseli Sopa Lodge',stars:4,nights:2,roomType:'Standard Room',meal:'Full Board'}], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Beast & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Masai Mara multiple game drives','Amboseli — elephants beneath Mt. Kilimanjaro','Big Five across two iconic national parks','Great Migration viewing'], itinerary: [] },
+  // SOUTH AFRICAN SPLENDOUR
+  { id: 'af-10', name: 'South African Splendour', nights: 9, days: 10, region: 'africa', workdriveUrl: 'https://drive.google.com/file/d/1BA-mhnfQXO4xWtwtLSW-UofkyocYvniW/view', img: 'https://images.unsplash.com/photo-1484318571209-661cf29a69c3?w=600&q=80', gallery: SA_GALLERY, tag: 'NEW', basePrice: 299999, departures: [{date:'2026-10-09',status:'available'},{date:'2026-11-13',status:'available'}], singleSupplement: 40000, tripleReduction: 5000, addOns: ASIA_ADDONS, hotels: [{city:'Cape Town',name:'Cresta Grande Cape Town or similar',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Garden Route',name:'Diaz Hotel & Resort or similar',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Sun City',name:'Sun City Resort or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Johannesburg',name:'The Catalyst Hotel or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'}], travelerTypes: ['Couples','Family','Friends'], themes: ['Beast & Beyond','Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Ascend Table Mountain by Cable Car — panoramic views of Cape Town','Cape Peninsula Tour — Seal Island Cruise, Chapman\'s Peak and Cape of Good Hope','Boulders Beach Penguin Colony — African Penguins','Wine Tasting at Benguela Cove Wine Estate','Cango Caves and Safari Ostrich Farm in Oudtshoorn','Stay at the world-famous Sun City Resort','Pilanesberg National Park Game Drive — Big Five wildlife','Gold Reef City and Johannesburg Orientation Tour'], itinerary: [
+    {day:1,title:'Arrive in Cape Town',description:'Welcome to South Africa! Arrive at Cape Town International Airport. Transfer to hotel. Takeaway dinner arranged for late arrivals.',hotel:'Cresta Grande Cape Town (4★)',meals:['Dinner']},
+    {day:2,title:'Cape Town City Tour | Table Mountain | V&A Waterfront',description:'Orientation tour of Cape Town. Ascend iconic Table Mountain by Cable Car (weather permitting) for panoramic views. Victoria & Alfred Waterfront.',hotel:'Cresta Grande Cape Town (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:3,title:'Cape Peninsula | Seal Island Cruise | Boulders Beach | Cape Point',description:'Full-day Cape Peninsula Tour. Seal Island Cruise, Chapman\'s Peak Drive, Boulders Beach Penguin Colony. Flying Dutchman Funicular to Cape Point. Cape of Good Hope.',hotel:'Cresta Grande Cape Town (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:4,title:'Cape Town — Hermanus — Garden Route | Wine Tasting',description:'Wine Tasting at Benguela Cove Wine Estate. Visit scenic coastal Hermanus. Continue towards the Garden Route.',hotel:'Diaz Hotel & Resort (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:5,title:'Oudtshoorn — Cango Caves | Safari Ostrich Farm | Cango Wildlife Ranch',description:'Magnificent Cango Caves. Safari Ostrich Farm — the Ostrich Capital of the World. Cango Wildlife Ranch.',hotel:'Diaz Hotel & Resort (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:6,title:'Garden Route — Day at Leisure',description:'Day at leisure in the beautiful Garden Route. Optional: Bungee Jumping, Skydiving, Ziplining (additional cost).',hotel:'Diaz Hotel & Resort (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:7,title:'Garden Route — Johannesburg — Sun City',description:'Fly to Johannesburg and proceed to the world-famous Sun City Resort. Day free to enjoy resort facilities.',hotel:'Sun City Resort (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:8,title:'Pilanesberg National Park Game Drive',description:'Exciting Game Drive at Pilanesberg National Park — Big Five: Lion, Leopard, Elephant, Rhino and Buffalo.',hotel:'Sun City Resort (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:9,title:'Johannesburg — Orientation Tour | Gold Reef City',description:'Johannesburg Orientation Tour. Visit the famous Gold Reef City — inspired by gold-mining heritage.',hotel:'The Catalyst Hotel (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:10,title:'Departure from Johannesburg',description:'After breakfast, transfer to Johannesburg Airport for your return flight.',hotel:'',meals:['Breakfast']},
+  ] },
+  // MYSTICAL EGYPT
+  { id: 'af-11', name: 'Mystical Egypt', nights: 8, days: 9, region: 'africa', workdriveUrl: 'https://drive.google.com/file/d/1q6Ki7-OM6QxkskweBbkxjzEWTufM8A5V/view', img: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=600&q=80', gallery: EGYPT_GALLERY, tag: 'NEW', basePrice: 199999, departures: [{date:'2026-10-13',status:'available'},{date:'2026-11-10',status:'available'},{date:'2026-12-15',status:'available'}], singleSupplement: 30000, tripleReduction: 5000, addOns: ASIA_ADDONS, hotels: [{city:'Cairo',name:'Novotel 6 October Hotel or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Cairo–Aswan Sleeper Train',name:'Onboard Sleeper Train',stars:3,nights:1,roomType:'Sleeper Cabin',meal:'Dinner & Breakfast'},{city:'Nile Cruise',name:'Semiramis / Commodore or similar',stars:4,nights:3,roomType:'Standard Cabin',meal:'Full Board'},{city:'Hurghada',name:'Pharaoh Azur Hurgada or similar',stars:4,nights:2,roomType:'Standard Room',meal:'All Inclusive'}], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Pyramids of Giza and the iconic Great Sphinx','Grand Egyptian Museum — world\'s largest Egyptian antiquities collection','Alexandria — Catacombs, Roman Amphitheatre and Qaitbay Citadel','Overnight Sleeper Train from Cairo to Aswan','Luxurious 3-Night Nile River Cruise through Ancient Egypt','Abu Simbel Temples — Egypt\'s greatest archaeological masterpiece','Valley of the Kings, Temple of Queen Hatshepsut and Karnak Temple','Red Sea relaxation in beautiful Hurghada'], itinerary: [
+    {day:1,title:'Arrive in Cairo',description:'Welcome to the land of the Pharaohs! Arrive at Cairo International Airport. Transfer to hotel. Indian dinner.',hotel:'Novotel 6 October (4★)',meals:['Dinner']},
+    {day:2,title:'Alexandria Excursion',description:'Drive to Alexandria. Catacombs of Kom El Shoqafa, Pompey\'s Pillar, Roman Amphitheatre, Qaitbay Citadel photo stop. Return to Cairo.',hotel:'Novotel 6 October (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:3,title:'Pyramids of Giza | Grand Egyptian Museum | Overnight Train',description:'Legendary Pyramids of Giza and Great Sphinx. Grand Egyptian Museum. Board overnight Sleeper Train to Aswan.',hotel:'Sleeper Train',meals:['Breakfast','Lunch','Dinner']},
+    {day:4,title:'Aswan | Philae Temple | Nile Cruise Embarkation',description:'Philae Temple and Aswan High Dam. Board luxurious Nile River Cruise.',hotel:'Nile Cruise (4★)',meals:['Breakfast Box','Lunch','Dinner']},
+    {day:5,title:'Abu Simbel | Kom Ombo Temple',description:'Early morning excursion to magnificent Abu Simbel Temples. Sail to Kom Ombo Temple and Crocodile Museum.',hotel:'Nile Cruise (4★)',meals:['Breakfast Box','Lunch','Dinner']},
+    {day:6,title:'Edfu Temple | Esna Lock | Luxor Temple',description:'Horse Carriage Ride to Temple of Edfu. Sail through the famous Esna Lock. Arrive in Luxor and visit Luxor Temple.',hotel:'Nile Cruise (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:7,title:'Luxor West Bank | Valley of the Kings | Hurghada',description:'Valley of the Kings, Temple of Queen Hatshepsut, Colossi of Memnon. Karnak Temple Complex. Travel to Hurghada.',hotel:'Pharaoh Azur Hurgada (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:8,title:'Leisure in Hurghada',description:'Day at leisure at your Hurghada resort. Relax on the beach, enjoy the pool or optional water sports.',hotel:'Pharaoh Azur Hurgada (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:9,title:'Departure from Cairo',description:'After breakfast, travel to Cairo International Airport for your return flight.',hotel:'',meals:['Breakfast','Packed Lunch']},
+  ] },
+  // OCEANIA
+  { id: 'oc-01', name: 'Best of Australia', nights: 9, days: 10, region: 'oceania', workdriveUrl: 'https://workdrive.zohoexternal.in/file/l5o5df5a5fff6366543e397fe53513b10536d', img: 'https://static.wixstatic.com/media/226760_ba7cc5b928a24377a86d5d4c8d124684~mv2.jpg', gallery: OC_GALLERY, tag: 'AVAILABLE', basePrice: 110000, departures: OC_DEPARTURES, singleSupplement: 18000, tripleReduction: 4000, addOns: OC_ADDONS, hotels: [{city:'Sydney',name:'Novotel Sydney on Darling Harbour',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast'},{city:'Melbourne',name:'ibis Melbourne Hotel & Apartments',stars:3,nights:3,roomType:'Standard Room',meal:'Breakfast'},{city:'Cairns',name:'Mantra Esplanade Cairns',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast'}], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Away & Beyond','Wind & Waves'], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: ['Sydney Opera House and Harbour Bridge','Great Barrier Reef cruise — the world\'s largest coral reef','Melbourne — vibrant laneways and café culture','Cairns and the Daintree Rainforest — World Heritage wonders','Blue Mountains and Scenic World gondola ride'], itinerary: [] },
+  { id: 'oc-02', name: 'Discover Australia', nights: 9, days: 10, region: 'oceania', workdriveUrl: '', img: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=600&q=80', gallery: OC_GALLERY, tag: 'COMING SOON', basePrice: 110000, departures: [], singleSupplement: 18000, tripleReduction: 4000, addOns: OC_ADDONS, hotels: [], travelerTypes: [], themes: [], exCities: ALL_CITIES, starRating: 4, hasPrice: false, highlights: [], itinerary: [] },
+  // ASIA — Japan Autumn Discovery
+  { id: 'as-01', name: 'Japan Autumn Discovery', nights: 8, days: 9, region: 'asia', workdriveUrl: 'https://drive.google.com/file/d/1eltBZgAlqLL9HYf-WIeHfnb1_fNOtHOD/view', img: 'https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=600&q=80', gallery: JAPAN_GALLERY, tag: 'NEW', basePrice: 249999, departures: [{date:'2026-10-22',status:'available'}], singleSupplement: 50000, tripleReduction: 8000, addOns: ASIA_ADDONS, hotels: [{city:'Narita',name:'ANA Crowne Plaza or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Dinner'},{city:'Tokyo',name:'1955 Tokyo Bay by Hoshino Resorts or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Nagoya',name:'Nagoya Tokyu Hotel or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Hiroshima',name:'Vessel Hotel Hiroshima or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Osaka',name:'Hotel Righa Royal or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Kansai',name:'Hotel Nikko Kansai or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast'}], travelerTypes: ['Couples','Family','Friends'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Senso-ji Temple — Tokyo\'s oldest and most celebrated Buddhist temple','Tokyo Skytree (350m) — spectacular panoramic views of the skyline','TeamLab Planets — immersive digital art of light, water and interactive installations','UNESCO Toshogu Shrine in Nikko and spectacular Kegon Waterfall','Shinkansen Bullet Train on three exciting sectors','Miyajima Island — Itsukushima Shrine and the iconic Floating Torii Gate','Hiroshima Peace Memorial Museum and Atomic Bomb Dome','Arashiyama Bamboo Grove and Kinkaku-ji Golden Pavilion in Kyoto','Nara Deer Park and Todai-ji Temple — home to Japan\'s Great Buddha','Osaka Castle, Umeda Sky Building and vibrant Dotonbori District'], itinerary: [
+    {day:1,title:'Arrival in Narita',description:'Welcome to Japan. Arrive at Narita International Airport, complete immigration and transfer to your hotel.',hotel:'ANA Crowne Plaza Narita (4★)',meals:['Dinner']},
+    {day:2,title:'Narita — Tokyo | Senso-ji Temple | Tokyo Skytree | TeamLab Planets',description:'Visit the iconic Senso-ji Temple and Nakamise Dori shopping street. Ascend the Tokyo Skytree (350m Observatory). Visit TeamLab Planets — extraordinary immersive digital art.',hotel:'1955 Tokyo Bay (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:3,title:'Tokyo — Nikko | Toshogu Shrine | Kegon Waterfall',description:'Excursion to Nikko. UNESCO Toshogu Shrine with exquisite carvings. Spectacular Kegon Waterfall cascading nearly 100 metres. Return to Tokyo.',hotel:'1955 Tokyo Bay (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:4,title:'Tokyo — Hakone — Mt. Fuji — Nagoya',description:'Lake Ashi Pirate Cruise. Hakone Ropeway over Owakudani volcanic landscapes. Mt. Fuji 5th Station (weather permitting). Shinkansen Bullet Train to Nagoya.',hotel:'Nagoya Tokyu Hotel (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:5,title:'Nagoya — SCMAGLEV Railway Park — Toyota Museum — Hiroshima',description:'SCMAGLEV & Railway Park. Toyota Commemorative Museum. Shinkansen to Hiroshima.',hotel:'Vessel Hotel Hiroshima (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:6,title:'Miyajima Island | Hiroshima Peace Memorial | Osaka',description:'Ferry to Miyajima — Itsukushima Shrine and Floating Torii Gate. Atomic Bomb Dome, Peace Memorial Museum and Park. Shinkansen to Osaka.',hotel:'Hotel Righa Royal Osaka (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:7,title:'Kyoto — Nara | Arashiyama | Golden Pavilion | Nara Deer Park',description:'Arashiyama Bamboo Grove. Kinkaku-ji Temple (Golden Pavilion). Nara Deer Park with hundreds of friendly deer. Todai-ji Temple — Great Buddha. Return to Osaka.',hotel:'Hotel Righa Royal Osaka (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:8,title:'Osaka | Osaka Castle | Umeda Sky Building | Dotonbori',description:'Osaka Castle. Panoramic views from Umeda Sky Building. Shinsaibashi Shopping Street. Vibrant Dotonbori District. Proceed to Kansai.',hotel:'Hotel Nikko Kansai (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:9,title:'Departure from Kansai',description:'After breakfast, transfer to Kansai International Airport for your onward flight.',hotel:'',meals:['Breakfast']},
+  ] },
+  // TIMELESS JAPAN
+  { id: 'as-02', name: 'Timeless Japan', nights: 7, days: 8, region: 'asia', workdriveUrl: 'https://drive.google.com/file/d/1SD8EiXLBZQUQbipWr3g4CwiYC02iJC_Q/view', img: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=600&q=80', gallery: JAPAN_GALLERY, tag: 'NEW', basePrice: 237999, departures: [{date:'2026-11-15',status:'available'}], singleSupplement: 48000, tripleReduction: 8000, addOns: ASIA_ADDONS, hotels: [{city:'Narita',name:'Hotel Nikko Narita / ANA Crowne Plaza or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Dinner'},{city:'Tokyo',name:'1955 Tokyo Bay / La Vista Tokyo Bay or similar',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Osaka',name:'Rihga Royal Hotel Osaka or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Kansai',name:'Hotel Nikko Kansai Airport or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast'}], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Tokyo Skytree (350m Observatory) — breathtaking panoramic city views','Sumida River Cruise — unique perspective of Tokyo\'s iconic skyline','TeamLab Planets Tokyo — captivating digital art experience','Lake Ashi Cruise and Hakone Ropeway over Owakudani volcanic landscapes','Mt. Fuji 5th Station (weather permitting)','Shinkansen Bullet Train from Tokyo to Osaka with luggage forwarding','Arashiyama Bamboo Grove and Kinkaku-ji Golden Pavilion in Kyoto','Fushimi Inari Taisha Shrine — thousands of vibrant vermilion torii gates','Nara Deer Park and Todai-ji Temple — home to Japan\'s Great Buddha','Osaka Castle, Shinsaibashi Shopping Street and Dotonbori District'], itinerary: [
+    {day:1,title:'Arrival in Narita',description:'Arrive at Narita International Airport and transfer to your hotel.',hotel:'Hotel Nikko Narita (4★)',meals:['Dinner']},
+    {day:2,title:'Narita — Tokyo | Tokyo Skytree | Sumida River Cruise | TeamLab Planets',description:'Tokyo Skytree (350m Observatory). Scenic Sumida River Cruise. teamLab Planets — immersive digital art.',hotel:'1955 Tokyo Bay (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:3,title:'Tokyo — Mt. Fuji — Hakone — Tokyo',description:'Lake Ashi Cruise. Hakone Ropeway over Owakudani Valley. Mt. Fuji 5th Station (weather permitting). Return to Tokyo.',hotel:'1955 Tokyo Bay (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:4,title:'Tokyo — Leisure | Optional Disneyland',description:'Day at leisure in Tokyo. Shopping or optional Tokyo Disneyland (additional cost).',hotel:'1955 Tokyo Bay (4★)',meals:['Breakfast','Dinner']},
+    {day:5,title:'Tokyo — Osaka | Shinkansen | Shinsaibashi | Dotonbori',description:'Shinkansen Bullet Train to Osaka with complimentary luggage forwarding. Shinsaibashi Shopping Street and Dotonbori District.',hotel:'Rihga Royal Hotel Osaka (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:6,title:'Kyoto | Arashiyama Bamboo Grove | Kinkaku-ji | Fushimi Inari',description:'Arashiyama Bamboo Grove. Kinkaku-ji Temple (Golden Pavilion). Fushimi Inari Taisha Shrine — thousands of vibrant vermilion torii gates. Return to Osaka.',hotel:'Rihga Royal Hotel Osaka (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:7,title:'Nara | Nara Deer Park | Todai-ji Temple | Osaka Castle',description:'Nara Deer Park. Todai-ji Temple — Great Buddha. Osaka Castle photo stop. Proceed to Kansai.',hotel:'Hotel Nikko Kansai (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:8,title:'Departure from Kansai',description:'After breakfast, transfer to Kansai International Airport for your return flight.',hotel:'',meals:['Breakfast']},
+  ] },
+  // GRAND TURKIYE
+  { id: 'as-03', name: 'Grand Türkiye', nights: 10, days: 11, region: 'asia', workdriveUrl: 'https://drive.google.com/file/d/1yVHfwcYSkO6ewI__IBonn9IzmcsKQDCN/view', img: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=600&q=80', gallery: TURKEY_GALLERY, tag: 'NEW', basePrice: 214999, departures: [{date:'2026-11-10',status:'available'}], singleSupplement: 35000, tripleReduction: 6000, addOns: ASIA_ADDONS, hotels: [{city:'Istanbul',name:'Wyndham Istanbul Old City Hotel or similar',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Ankara',name:'Mercure Hotel Kızılay or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Cappadocia',name:'Aleria Hotel or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Antalya',name:'Ring Hotel or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Pamukkale',name:'Adempira Thermal Hotel or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Kusadasi',name:'Odelia Resort Hotel or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'}], travelerTypes: ['Couples','Family','Friends','Seniors'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Scenic Bosphorus Dinner Cruise with Turkish dinner, live entertainment and Belly Dance','Hagia Sophia, Blue Mosque, Topkapi Palace and Grand Bazaar in Istanbul','ATV Ride through the fairy chimneys of magical Cappadocia','Cappadocia Red Tour — Devrent Valley, Love Valley, Paşabağ and Zelve','UNESCO Hierapolis and spectacular Pamukkale Travertine Terraces (Cotton Castle)','Ancient city of Ephesus — Library of Celsus, Grand Theatre and House of Virgin Mary','Temple of Artemis — one of the Seven Wonders of the Ancient World','Bursa — first Ottoman capital — Uludağ Cable Car and Green Mosque'], itinerary: [
+    {day:1,title:'Arrive in Istanbul | Bosphorus Dinner Cruise',description:'Arrive at Istanbul Airport. Evening Bosphorus Dinner Cruise. Turkish dinner with live folk performances and Belly Dance.',hotel:'Wyndham Istanbul Old City (4★)',meals:['Dinner']},
+    {day:2,title:'Istanbul | Hagia Sophia | Blue Mosque | Topkapi Palace | Grand Bazaar',description:'Visit Hagia Sophia and Blue Mosque. Historic Hippodrome and Topkapi Palace. Shopping at the Grand Bazaar.',hotel:'Wyndham Istanbul Old City (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:3,title:'Istanbul — Ankara | Anıtkabir | Ankara City Tour',description:'Drive to Ankara. Visit Anıtkabir — mausoleum of Mustafa Kemal Atatürk. Panoramic city tour.',hotel:'Mercure Hotel Kızılay (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:4,title:'Ankara — Cappadocia | ATV Ride | Sunset Experience',description:'Drive to magical Cappadocia. Exciting ATV Ride through fairy chimneys and valleys. Breathtaking sunset.',hotel:'Aleria Hotel Cappadocia (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:5,title:'Cappadocia Red Tour | Devrent Valley | Love Valley | Zelve',description:'Cappadocia Red Tour — Devrent Valley, Love Valley, Paşabağ, Zelve Open Air Museum, Avanos pottery and Uçhisar Castle.',hotel:'Aleria Hotel Cappadocia (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:6,title:'Cappadocia — Konya — Antalya | Taurus Mountains',description:'Visit Konya — spiritual home of Mevlana Rumi. Drive through spectacular Taurus Mountains to Antalya.',hotel:'Ring Hotel Antalya (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:7,title:'Antalya | Kaleiçi Old Town | Hadrian\'s Gate | Düden Waterfalls',description:'Explore charming Kaleiçi Old Town. Visit Hadrian\'s Gate, Clock Tower and picturesque Düden Waterfalls.',hotel:'Ring Hotel Antalya (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:8,title:'Pamukkale | Hierapolis | Travertine Terraces',description:'UNESCO Hierapolis — Roman Bath Complex and Archaeological Museum. Spectacular white Pamukkale Travertine Terraces.',hotel:'Adempira Thermal Hotel (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:9,title:'Ephesus | Library of Celsus | House of Virgin Mary | Temple of Artemis',description:'Ancient city of Ephesus — Library of Celsus, Grand Theatre and Marble Streets. House of the Virgin Mary. Temple of Artemis photo stop. Free time in Kuşadası.',hotel:'Odelia Resort Hotel Kusadasi (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:10,title:'Bursa | Uludağ Cable Car | Green Mosque | Istanbul',description:'Bursa — first Ottoman capital. Cable Car to Uludağ Mountain. Historic Green Mosque. Continue to Istanbul.',hotel:'Wyndham Istanbul Old City (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:11,title:'Departure from Istanbul',description:'After breakfast, transfer to Istanbul Airport for your onward flight.',hotel:'',meals:['Breakfast']},
+  ] },
+  // VIETNAM ESCAPES
+  { id: 'as-04', name: 'Vietnam Escapes', nights: 8, days: 9, region: 'asia', workdriveUrl: 'https://drive.google.com/file/d/1NRg9uuboRvNSfLkkV-EobmMvCFq1Queq/view', img: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=600&q=80', gallery: VIETNAM_GALLERY, tag: 'NEW', basePrice: 139999, departures: [{date:'2026-09-20',status:'available'},{date:'2026-10-11',status:'available'}], singleSupplement: 25000, tripleReduction: 4000, addOns: ASIA_ADDONS, hotels: [{city:'Ho Chi Minh City',name:'Muong Thanh Saigon Hotel or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Da Nang',name:'Grand Gold Hotel or similar',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Hanoi',name:'Gloud Hotel or similar',stars:4,nights:3,roomType:'Standard Room',meal:'Breakfast & Dinner'}], travelerTypes: ['Couples','Family','Friends'], themes: ['Away & Beyond','Moments Away'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Discover South, Central and North Vietnam in one unforgettable holiday','Cu Chi Tunnels — legendary underground wartime network','Mekong Delta Cruise with traditional Sampan Ride','Walk across the world-famous Golden Bridge at Ba Na Hills','Hoi An Ancient Town — UNESCO World Heritage Site','Halong Bay Cruise — spectacular UNESCO-listed limestone formations','Tam Coc — "Halong Bay on Land" — scenic sampan boat ride','Hanoi Old Quarter, Ho Chi Minh Complex and vibrant Train Street'], itinerary: [
+    {day:1,title:'Welcome to Ho Chi Minh City | City Highlights',description:'Arrive in Ho Chi Minh City. Early Check-in. Reunification Palace, Notre Dame Cathedral and the iconic Central Post Office.',hotel:'Muong Thanh Saigon Hotel (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:2,title:'Cu Chi Tunnels | Mekong Delta | Sampan Ride',description:'Cu Chi Tunnels — remarkable underground wartime network. Mekong Delta — Tien River boat ride and Sampan cruise. Coconut Candy Workshop and folk music.',hotel:'Muong Thanh Saigon Hotel (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:3,title:'Ho Chi Minh City — Da Nang | Son Tra Peninsula | Dragon Bridge',description:'Fly to Da Nang. Son Tra Peninsula. Linh Ung Pagoda — 67m Lady Buddha statue. Dragon Bridge and Night Market.',hotel:'Grand Gold Hotel Da Nang (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:4,title:'Ba Na Hills | Cable Car | Golden Bridge | Fantasy Park',description:'Spectacular Ba Na Hills Cable Car. World-famous Golden Bridge. Fantasy Park attractions.',hotel:'Grand Gold Hotel Da Nang (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:5,title:'Marble Mountains | Cam Thanh Coconut Village | Hoi An Ancient Town',description:'Marble Mountains and Huyen Khong Cave. Basket Boat Ride at Cam Thanh Coconut Village. Hoi An Ancient Town — UNESCO World Heritage Site.',hotel:'Grand Gold Hotel Da Nang (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:6,title:'Da Nang — Hanoi | City Tour | Old Quarter | Train Street',description:'Fly to Hanoi. Tran Quoc Pagoda. Ho Chi Minh Complex and One Pillar Pagoda. Hoan Kiem Lake, Old Quarter and Train Street.',hotel:'Gloud Hotel Hanoi (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:7,title:'Ninh Binh | Hoa Lu Ancient Capital | Tam Coc Sampan Ride',description:'Hoa Lu — Vietnam\'s ancient Royal Capital. Tam Coc — sampan ride through limestone cliffs and rice fields.',hotel:'Gloud Hotel Hanoi (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:8,title:'Halong Bay Cruise | Sung Sot Cave | Titop Island',description:'Halong Bay Cruise through hundreds of limestone formations. Sung Sot Cave. Titop Island beach. Kayaking at Luon Cave.',hotel:'Gloud Hotel Hanoi (4★)',meals:['Breakfast','Lunch','Dinner']},
+    {day:9,title:'Departure from Hanoi',description:'Morning at leisure for shopping. Transfer to Noi Bai International Airport for your return flight.',hotel:'',meals:['Breakfast','Lunch']},
+  ] },
+  // MAURITIAN PARADISE
+  { id: 'as-05', name: 'Mauritian Paradise', nights: 6, days: 7, region: 'asia', workdriveUrl: 'https://drive.google.com/file/d/19mh78RZg-83DStbdGt1rHNp86_z8u5xt/view', img: 'https://images.unsplash.com/photo-1504457047772-27faf1c00561?w=600&q=80', gallery: MAURITIUS_GALLERY, tag: 'NEW', basePrice: 139999, departures: [{date:'2026-11-11',status:'available'}], singleSupplement: 25000, tripleReduction: 4000, addOns: ASIA_ADDONS, hotels: [{city:'Mauritius',name:'Pearle Beach Resort & Spa or similar',stars:4,nights:6,roomType:'Standard Room',meal:'Breakfast & Dinner'}], travelerTypes: ['Couples','Honeymoon','Friends','Family'], themes: ['Wind & Waves','Moments Away'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Île aux Cerfs — stunning island with speedboat transfers and optional water sports','North Mauritius Tour — Port Louis, Citadel Fort, Ship Model Factory and Caudan Waterfront','South Mauritius Tour — Trou aux Cerfs Volcano Crater, Grand Bassin and Bois Chéri Tea Plantation','Valley of Colours — vibrant natural landscapes','Casela Nature Parks — African Safari, Big Cats Kingdom and Tulawaka Gold Coaster Ride','Crystal-clear turquoise lagoons and pristine white-sand beaches'], itinerary: [
+    {day:1,title:'Arrive in Mauritius',description:'Welcome to tropical Mauritius. Arrive and transfer to your resort. Traditional Mauritian Welcome Drink on arrival. Relax or explore Grand Baie waterfront.',hotel:'Pearle Beach Resort & Spa (4★)',meals:['Dinner']},
+    {day:2,title:'North Mauritius | Port Louis | Citadel Fort | Caudan Waterfront',description:'Tour of North Mauritius. Ship Model Factory, Adamas Diamond Showroom and Floreal Souvenir Shop. Historic Citadel Fort. Free time at Caudan Waterfront.',hotel:'Pearle Beach Resort & Spa (4★)',meals:['Breakfast','Dinner']},
+    {day:3,title:'Île aux Cerfs | Speedboat | Optional Water Sports',description:'Shared Speedboat Transfer to Île aux Cerfs. Relax on white sandy beaches or enjoy optional water sports: Parasailing, Undersea Walk, Tube Ride.',hotel:'Pearle Beach Resort & Spa (4★)',meals:['Breakfast','Dinner']},
+    {day:4,title:'South Mauritius | Trou aux Cerfs | Grand Bassin | Valley of Colours',description:'Trou aux Cerfs Volcano Crater, Grand Bassin (Ganga Talao), Bois Chéri Tea Plantation. Valley of Colours.',hotel:'Pearle Beach Resort & Spa (4★)',meals:['Breakfast','Dinner']},
+    {day:5,title:'Mauritius — Day at Leisure',description:'Free day at the resort. Beach, pool or optional excursions at your own pace.',hotel:'Pearle Beach Resort & Spa (4★)',meals:['Breakfast','Dinner']},
+    {day:6,title:'Casela Nature Parks | African Safari | Big Cats Kingdom',description:'Full-day Casela Nature Parks. African Safari with Zebras, Rhinos, Ostriches and Wildebeest. Big Cats Kingdom, Walk-Through Aviary and Tulawaka Gold Coaster Ride.',hotel:'Pearle Beach Resort & Spa (4★)',meals:['Breakfast','Dinner']},
+    {day:7,title:'Departure from Mauritius',description:'After breakfast, check out and transfer to the airport for your return flight.',hotel:'',meals:['Breakfast']},
+  ] },
+  // USA EAST TO WEST
+  { id: 'am-01', name: 'USA East to West Experience', nights: 10, days: 11, region: 'americas', workdriveUrl: 'https://drive.google.com/file/d/1P7tGLTJNve16yDAYwUFmUk9akwr4MIJC/view', img: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&q=80', gallery: USA_GALLERY, tag: 'NEW', basePrice: 279999, departures: [{date:'2026-09-17',status:'available'},{date:'2026-10-15',status:'available'}], singleSupplement: 45000, tripleReduction: 8000, addOns: ASIA_ADDONS, hotels: [{city:'New York',name:'Fairfield Inn Marriott JFK / Hyatt Place Flushing or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Washington DC',name:'Hyatt Place Dulles / Embassy Suites or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Niagara',name:'Fairfield Inn Marriott / Wingate Wyndham or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Las Vegas',name:'Hotel Luxor / The Linq / Excalibur or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'Los Angeles',name:'Fairfield Inn LAX / Hampton Inn LAX or similar',stars:4,nights:2,roomType:'Standard Room',meal:'Breakfast & Dinner'},{city:'San Francisco',name:'Crown Plaza SFO / Hyatt Place Silicon Valley or similar',stars:4,nights:1,roomType:'Standard Room',meal:'Breakfast & Dinner'}], travelerTypes: ['Couples','Family','Friends'], themes: ['Away & Beyond'], exCities: ALL_CITIES, starRating: 4, hasPrice: true, highlights: ['Statue of Liberty ferry ride and One World Observatory in New York','New York City Tour — Times Square, Central Park, Rockefeller Center','Washington DC — White House, Lincoln Memorial, Capitol Building, Smithsonian','Hershey\'s Chocolate World and majestic Niagara Falls','Maid of the Mist boat ride and Cave of the Winds at Niagara','Grand Canyon West Rim with Skywalk Experience and Hoover Dam','Las Vegas Evening Tour — Bellagio Fountains and Fremont Street','Hollywood Walk of Fame, Beverly Hills and Rodeo Drive in Los Angeles','Full day at Universal Studios','San Francisco — Golden Gate Bridge, Twin Peaks, Pier 39 and Bay Cruise'], itinerary: [
+    {day:1,title:'Arrive in New York City',description:'Welcome to New York! Arrive at JFK Airport, complete immigration and transfer to your hotel. Indian dinner.',hotel:'Fairfield Inn JFK (4★)',meals:['Dinner']},
+    {day:2,title:'New York City | Statue of Liberty | One World Observatory | Times Square',description:'Ferry to Liberty Island — Statue of Liberty. One World Observatory. NYC Tour — Rockefeller Center, Wall Street, Ground Zero, Central Park, Times Square and United Nations.',hotel:'Fairfield Inn JFK (4★)',meals:['Breakfast','Dinner']},
+    {day:3,title:'New York — Washington DC | White House | Capitol | Smithsonian',description:'Drive to Washington DC. Guided tour — White House, Lincoln Memorial, Capitol Building, Smithsonian Air and Space Museum, World War II Memorial and Washington Monument.',hotel:'Hyatt Place Dulles (4★)',meals:['Breakfast','Dinner']},
+    {day:4,title:'Washington — Hershey\'s Chocolate World — Niagara Falls',description:'Hershey\'s Chocolate World in Harrisburg. Drive to spectacular Niagara Falls.',hotel:'Fairfield Inn Niagara (4★)',meals:['Breakfast','Dinner']},
+    {day:5,title:'Niagara Falls | Maid of the Mist | Cave of the Winds',description:'Maid of the Mist boat ride up close to the powerful cascades. Cave of the Winds — stand feet from thundering waters.',hotel:'Fairfield Inn Niagara (4★)',meals:['Breakfast','Dinner']},
+    {day:6,title:'Buffalo — Las Vegas',description:'Fly to Las Vegas. Arrive and check in. Evening at leisure on the glittering Las Vegas Strip.',hotel:'Hotel Luxor Las Vegas (4★)',meals:['Breakfast','Dinner']},
+    {day:7,title:'Las Vegas | Grand Canyon Skywalk | Hoover Dam | Evening Tour',description:'Grand Canyon West Rim Bus Tour with Skywalk Experience. Hoover Dam photo stop. Las Vegas Evening Tour — Bellagio Fountains, Treasure Island, Fremont Street.',hotel:'Hotel Luxor Las Vegas (4★)',meals:['Breakfast','Dinner']},
+    {day:8,title:'Las Vegas — Los Angeles | Hollywood | Beverly Hills | Rodeo Drive',description:'Drive to Los Angeles. Guided city tour — Hollywood Walk of Fame, Beverly Hills, Sunset Strip, Rodeo Drive and Chinatown.',hotel:'Fairfield Inn LAX (4★)',meals:['Breakfast','Dinner']},
+    {day:9,title:'Universal Studios',description:'Full day at Universal Studios — world-renowned rides and immersive movie experiences.',hotel:'Fairfield Inn LAX (4★)',meals:['Breakfast','Dinner']},
+    {day:10,title:'Los Angeles — San Francisco | Golden Gate Bridge | Bay Cruise',description:'Fly to San Francisco. Guided city tour — Golden Gate Bridge, Twin Peaks, Lombard Street, Cable Car, Pier 39 and Fisherman\'s Wharf. Scenic San Francisco Bay Cruise.',hotel:'Crown Plaza SFO (4★)',meals:['Breakfast','Dinner']},
+    {day:11,title:'Departure from San Francisco',description:'After breakfast, leisure time then transfer to SFO Airport for your return flight.',hotel:'',meals:['Breakfast']},
+  ] },
 ]
-
 export const REGIONS = {
   europe: {
     name: 'Europe', tagline: 'Castles, Cultures & Cobblestones',
-    desc: 'From the Eiffel Tower to Alpine peaks — Europe offers the world\'s most diverse travel canvas. GTF operates 15 guaranteed group departures across Western, Central and Northern Europe.',
+    desc: 'From the Eiffel Tower to Alpine peaks — Europe offers the world\'s most diverse travel canvas. GTF operates guaranteed group departures across Western, Central and Northern Europe.',
     heroImg: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1600&q=85',
     packages: PACKAGES.filter(p => p.region === 'europe'),
   },
   africa: {
     name: 'Africa', tagline: 'Safari, Savannah & Soul',
-    desc: 'Kenya, Tanzania and beyond — witness the Great Migration, track the Big Five and experience the raw beauty of East Africa.',
+    desc: 'Kenya, Tanzania, South Africa and Egypt — witness the Great Migration, explore ancient pyramids and experience the raw beauty of the African continent.',
     heroImg: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1600&q=85',
     packages: PACKAGES.filter(p => p.region === 'africa'),
   },
@@ -583,15 +311,15 @@ export const REGIONS = {
   },
   asia: {
     name: 'Asia', tagline: 'Ancient Wonders, Modern Energy',
-    desc: 'Japan, South Korea, Thailand, Vietnam, Cambodia and beyond — GTF\'s Asia series is coming soon.',
+    desc: 'Japan, Vietnam, Mauritius and Turkey — GTF\'s Asia series brings the best of the continent with guaranteed departures and real pricing.',
     heroImg: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1600&q=85',
-    packages: [],
+    packages: PACKAGES.filter(p => p.region === 'asia'),
   },
   americas: {
-    name: 'Americas', tagline: 'From Patagonia to New York',
-    desc: 'USA, Canada, Brazil, Peru and the wider Americas — GTF is building a brand new series.',
-    heroImg: 'https://static.wixstatic.com/media/11062b_f5be68c7acbc4b1b91a684d8acd6acb9~mv2.jpg',
-    packages: [],
+    name: 'Americas', tagline: 'From New York to San Francisco',
+    desc: 'USA East to West — New York, Washington DC, Niagara Falls, Las Vegas, Los Angeles and San Francisco in one iconic journey.',
+    heroImg: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1600&q=85',
+    packages: PACKAGES.filter(p => p.region === 'americas'),
   },
 }
 
@@ -602,13 +330,10 @@ export const FAQS = [
   { q: 'What is a White Label Solution?', a: 'Our White Label Solutions allow travel companies to sell and operate tours under their own brand name while GTF Holidays manages the backend operations, logistics, contracting, and execution discreetly.', cat: 'General' },
   { q: 'What are ADHOC Groups?', a: 'ADHOC Groups are customized group departures created specifically for closed groups such as families, corporates, institutions, communities, incentive groups, student groups, social groups, or special interest travellers.', cat: 'General' },
   { q: 'Do you provide fully customized holidays?', a: 'Yes. We design Bespoke Customised Holidays based on the traveller\'s preferences, budget, travel style, interests, meal requirements, hotel preferences, sightseeing priorities, and operational feasibility.', cat: 'General' },
-  { q: 'What is the "Tour Family" concept?', a: 'The "Tour Family" concept is a unique approach where travellers from various travel partners come together and travel as one professionally managed tour family.', cat: 'General' },
-  { q: 'What is the "Agent Voice" concept?', a: 'The "Agent Voice" concept is a unique support initiative where our experienced team members directly communicate with your clients under your company\'s banner — providing accurate tour information, destination guidance, and travel assistance.', cat: 'General' },
   { q: 'Are meals included on tours?', a: 'Most group departures include meals as mentioned in the itinerary. Depending on the destination and tour design, meals may include Indian, Jain, Vegetarian, Non-Vegetarian, Continental, local cuisine experiences, buffet meals, packed meals, or fixed group menus.', cat: 'Travel & Tour' },
   { q: 'Do your tours include Tour Managers?', a: 'Yes. Our Series Departures and many group tours are accompanied by experienced professional Tour Managers or Tour Representatives for seamless coordination and guest assistance throughout the journey.', cat: 'Travel & Tour' },
   { q: 'What category of hotels do you provide?', a: 'We generally provide carefully selected hotels or equivalent accommodations, ensuring comfort, cleanliness, location advantage, and operational convenience for travellers.', cat: 'Hotels & Accommodation' },
   { q: 'How many passengers are usually in a group?', a: 'Group sizes generally range between 25 to 45 guests, allowing a comfortable balance between personalized attention and group travel experience.', cat: 'Travel & Tour' },
   { q: 'Are your tours suitable for senior citizens and families?', a: 'Yes. Our tours are designed to cater to families, couples, senior citizens, honeymooners, youngsters, and first-time international travellers.', cat: 'Travel & Tour' },
-  { q: 'Do you work only with travel partners across India?', a: 'No. While we have a strong network across India, we also collaborate with travel companies, tour operators, and travel agencies globally. GTF Holidays LLP operates exclusively as a B2B travel operator and does not deal in B2C retail business.', cat: 'B2B & White Label Support' },
   { q: 'How do I register as a partner on this portal?', a: 'Click "Register as Agent" and fill in your agency details. Your application will be reviewed by our team within 24-48 hours. Upon approval, you\'ll receive access to view detailed itineraries, request quotes, and access partner-exclusive resources.', cat: 'B2B & White Label Support' },
 ]

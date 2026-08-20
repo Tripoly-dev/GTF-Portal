@@ -284,10 +284,19 @@ function PackageCard({ pkg }: { pkg: Package }) {
         )}
 
         <div style={{ display: 'flex', gap: 7 }}>
-          <Link href={`/dashboard/packages/${pkg.id}`}
-            style={{ flex: 1, textAlign: 'center', padding: '8px 0', background: 'var(--teal)', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', display: 'block' }}>
-            CREATE QUOTE
-          </Link>
+          {pkg.hasPrice ? (
+            <Link href={`/dashboard/packages/${pkg.id}`}
+              style={{ flex: 1, textAlign: 'center', padding: '8px 0', background: 'var(--teal)', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', display: 'block' }}>
+              CREATE QUOTE
+            </Link>
+          ) : (
+            <a
+              href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D). Please share the nett rate and TAC so I can create a quote for my client.`)}`}
+              target="_blank" rel="noopener noreferrer"
+              style={{ flex: 1, textAlign: 'center', padding: '8px 0', background: 'var(--orange)', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', display: 'block' }}>
+              REQUEST PRICING →
+            </a>
+          )}
           {pkg.workdriveUrl && (
             <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer"
               style={{ padding: '8px 11px', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 11, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>

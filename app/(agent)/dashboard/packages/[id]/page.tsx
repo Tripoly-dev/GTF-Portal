@@ -177,6 +177,67 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
   )
 }
 
+// ── DAY-WISE ITINERARY COMPONENT ──────────────────────────────────────────────
+function DayItinerary({ itinerary }: { itinerary: import('@/data/packages').ItineraryDay[] }) {
+  const [expandedDays, setExpandedDays] = useState<number[]>([1])
+  const toggle = (day: number) => setExpandedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])
+
+  return (
+    <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
+      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>
+        DAY-WISE ITINERARY
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        {itinerary.map((item, i) => {
+          const isExpanded = expandedDays.includes(item.day)
+          return (
+            <div key={item.day} style={{ borderBottom: i < itinerary.length - 1 ? '1px solid var(--rule)' : 'none' }}>
+              <button
+                onClick={() => toggle(item.day)}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontFamily: 'Inter, sans-serif' }}>
+                {/* Day badge */}
+                <div style={{ background: 'var(--orange)', color: '#fff', width: 44, height: 44, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, lineHeight: 1 }}>
+                  <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.08em' }}>DAY</span>
+                  <span style={{ fontSize: 16, fontWeight: 800 }}>{item.day}</span>
+                </div>
+                {/* Title */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3 }}>{item.title}</div>
+                  {item.hotel && !isExpanded && (
+                    <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>🏨 {item.hotel}</div>
+                  )}
+                </div>
+                {/* Chevron */}
+                <span style={{ fontSize: 11, color: 'var(--ink-light)', transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }}>▾</span>
+              </button>
+              {/* Expanded content */}
+              {isExpanded && (
+                <div style={{ padding: '0 0 16px 58px' }}>
+                  <p style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 12 }}>{item.description}</p>
+                  <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                    {item.hotel && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 12 }}>🏨</span>
+                        <span style={{ fontSize: 12, color: 'var(--ink-mid)', fontWeight: 600 }}>{item.hotel}</span>
+                      </div>
+                    )}
+                    {item.meals && item.meals.length > 0 && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 12 }}>🍽</span>
+                        <span style={{ fontSize: 12, color: 'var(--teal)', fontWeight: 600 }}>{item.meals.join(' · ')} — Included</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ── QUOTE BUILDER PANEL ───────────────────────────────────────────────────────
 function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void }) {
   const [departureDate, setDepartureDate] = useState(pkg.departures.find(d => d.status !== 'sold-out')?.date || '')
@@ -351,13 +412,30 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
             </div>
           </div>
 
-          <button onClick={() => setShowModal(true)} className="btn-orange" style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: 13, letterSpacing: '0.06em', fontWeight: 700 }}>
-            SAVE AS PROPOSAL →
-          </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
-            <div style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--teal-lt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'var(--teal)', fontWeight: 800 }}>i</div>
-            <p style={{ fontSize: 11, color: 'var(--ink-light)' }}>Markup is adjustable in the next step</p>
-          </div>
+          {pkg.hasPrice ? (
+            <>
+              <button onClick={() => setShowModal(true)} className="btn-orange" style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: 13, letterSpacing: '0.06em', fontWeight: 700 }}>
+                SAVE AS PROPOSAL →
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+                <div style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--teal-lt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'var(--teal)', fontWeight: 800 }}>i</div>
+                <p style={{ fontSize: 11, color: 'var(--ink-light)' }}>Markup is adjustable in the next step</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <a
+                href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D). Please share the nett rate and TAC so I can create a quote for my client.`)}`}
+                target="_blank" rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '16px', background: 'var(--orange)', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', boxSizing: 'border-box' }}>
+                REQUEST PRICING →
+              </a>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+                <div style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--orange-lt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'var(--orange)', fontWeight: 800 }}>!</div>
+                <p style={{ fontSize: 11, color: 'var(--ink-light)' }}>Pricing not yet available — WhatsApp GTF team</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -410,6 +488,43 @@ const HOTEL_IMAGES: Record<string, string> = {
   'Sydney':       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
   'Melbourne':    'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&q=80',
   'Cairns':       'https://images.unsplash.com/photo-1538614484459-75c7cfc2df6f?w=400&q=80',
+  // Japan
+  'Narita':       'https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=400&q=80',
+  'Tokyo':        'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80',
+  'Nagoya':       'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=400&q=80',
+  'Hiroshima':    'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=400&q=80',
+  'Osaka':        'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&q=80',
+  'Kansai':       'https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=400&q=80',
+  // Turkey
+  'Istanbul':     'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=400&q=80',
+  'Ankara':       'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=400&q=80',
+  'Cappadocia':   'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=400&q=80',
+  'Antalya':      'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?w=400&q=80',
+  'Pamukkale':    'https://images.unsplash.com/photo-1589561454226-796a8aa89b05?w=400&q=80',
+  'Kusadasi':     'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=400&q=80',
+  // Vietnam
+  'Ho Chi Minh City': 'https://images.unsplash.com/photo-1528127269322-539801943592?w=400&q=80',
+  'Da Nang':      'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400&q=80',
+  'Hanoi':        'https://images.unsplash.com/photo-1557456170-0cf4f4d0d362?w=400&q=80',
+  // Egypt
+  'Cairo':        'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=400&q=80',
+  'Nile Cruise':  'https://images.unsplash.com/photo-1569519024219-3e272822ab04?w=400&q=80',
+  'Cairo–Aswan Sleeper Train': 'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6c?w=400&q=80',
+  'Hurghada':     'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=400&q=80',
+  // South Africa
+  'Cape Town':    'https://images.unsplash.com/photo-1484318571209-661cf29a69c3?w=400&q=80',
+  'Garden Route': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80',
+  'Sun City':     'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&q=80',
+  'Johannesburg': 'https://images.unsplash.com/photo-1576485375217-d6a95e34d043?w=400&q=80',
+  // Mauritius
+  'Mauritius':    'https://images.unsplash.com/photo-1504457047772-27faf1c00561?w=400&q=80',
+  // USA
+  'New York':     'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&q=80',
+  'Washington DC':'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&q=80',
+  'Niagara':      'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80',
+  'Las Vegas':    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
+  'Los Angeles':  'https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=400&q=80',
+  'San Francisco':'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&q=80',
 }
 
 export default function PackageDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -577,6 +692,28 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                   * Hotels or equivalent. Subject to availability at time of booking.
                 </div>
               </div>
+            )}
+
+            {/* Trip Highlights */}
+            {pkg.highlights && pkg.highlights.length > 0 && (
+              <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
+                <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ color: '#F59E0B', fontSize: 14 }}>★</span> TRIP HIGHLIGHTS
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {pkg.highlights.map((h, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0, marginTop: 6 }} />
+                      <span style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Day-wise Itinerary */}
+            {pkg.itinerary && pkg.itinerary.length > 0 && (
+              <DayItinerary itinerary={pkg.itinerary} />
             )}
 
             {/* View itinerary */}
