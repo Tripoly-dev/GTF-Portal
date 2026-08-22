@@ -361,11 +361,35 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
     <>
       <div style={{ background: 'white', border: '1px solid var(--rule)', overflow: 'hidden', position: 'sticky', top: 20 }}>
         {/* Header */}
-        <div style={{ background: 'linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%)', padding: '20px 22px' }}>
+        <div style={{ background: 'linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%)', padding: '18px 20px' }}>
           <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.14em', fontWeight: 700, marginBottom: 4 }}>QUOTE BUILDER</div>
-          <div className="font-tight" style={{ fontSize: 30, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 4 }}>{f(totalPrice)}</div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', fontWeight: 300 }}>
-            {f(Math.round(totalPrice / Math.max(totalPax, 1)))} per person · {adults} adult{adults > 1 ? 's' : ''}{childrenWithBed > 0 ? ` · ${childrenWithBed} child w/bed` : ''}{childrenWithoutBed > 0 ? ` · ${childrenWithoutBed} child w/o bed` : ''}
+          <div className="font-tight" style={{ fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 12 }}>{f(totalPrice)}</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', background: 'rgba(255,255,255,0.12)', borderRadius: 3 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#7fe8cc', flexShrink: 0 }} />
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.85)' }}>{adults} Adult{adults > 1 ? 's' : ''} · {f(pricePerAdult)} each</span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{f(adultTotal)}</span>
+            </div>
+            {childrenWithBed > 0 && pkg.childWithBedPrice && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', background: 'rgba(255,255,255,0.12)', borderRadius: 3 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#f9a57a', flexShrink: 0 }} />
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.85)' }}>{childrenWithBed} Child w/ bed · {f(pkg.childWithBedPrice)}</span>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{f(cwbTotal)}</span>
+              </div>
+            )}
+            {childrenWithoutBed > 0 && pkg.childWithoutBedPrice && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', background: 'rgba(255,255,255,0.12)', borderRadius: 3 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#93c5fd', flexShrink: 0 }} />
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.85)' }}>{childrenWithoutBed} Child w/o bed · {f(pkg.childWithoutBedPrice)}</span>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{f(cwobTotal)}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -430,13 +454,10 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                     <div style={{ fontSize: 11, color: 'var(--teal)', fontWeight: 600, marginTop: 1 }}>{f(pkg.basePrice)} per adult</div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--teal)', borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                    <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: adults <= 1 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                    <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{adults}</span>
-                    <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: adults >= 45 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-                  </div>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--teal)', background: 'rgba(10,110,94,0.12)', padding: '2px 7px', borderRadius: 10, whiteSpace: 'nowrap', minWidth: 60, textAlign: 'right' }}>{f(adultTotal)}</span>
+                <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--teal)', borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
+                  <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: adults <= 1 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{adults}</span>
+                  <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: adults >= 45 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                 </div>
               </div>
 
@@ -454,34 +475,28 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                           <div style={{ fontSize: 11, color: childrenWithBed > 0 ? 'var(--orange)' : 'var(--ink-light)', fontWeight: 600, marginTop: 1 }}>Age 2–11 · {f(pkg.childWithBedPrice)} per child</div>
                         </div>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${childrenWithBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                          <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                          <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{childrenWithBed}</span>
-                          <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-                        </div>
-                        {childrenWithBed > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--orange)', background: 'rgba(232,97,58,0.1)', padding: '2px 7px', borderRadius: 10, whiteSpace: 'nowrap', minWidth: 60, textAlign: 'right' }}>{f(cwbTotal)}</span>}
+                      <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${childrenWithBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
+                        <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                        <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{childrenWithBed}</span>
+                        <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
                   )}
                   {pkg.childWithoutBedPrice !== undefined && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: `1.5px solid ${childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, background: childrenWithoutBed > 0 ? 'var(--orange-lt)' : '#fff', borderRadius: 4, transition: 'all 0.15s' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: `1.5px solid ${childrenWithoutBed > 0 ? '#0284c7' : 'var(--rule)'}`, background: childrenWithoutBed > 0 ? '#e0f2fe' : '#fff', borderRadius: 4, transition: 'all 0.15s' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 34, height: 34, borderRadius: '50%', background: childrenWithoutBed > 0 ? 'rgba(232,97,58,0.12)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--ink-light)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>
+                        <div style={{ width: 34, height: 34, borderRadius: '50%', background: childrenWithoutBed > 0 ? 'rgba(2,132,199,0.1)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={childrenWithoutBed > 0 ? '#0284c7' : 'var(--ink-light)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>
                         </div>
                         <div>
                           <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}>Child — Without Bed</div>
-                          <div style={{ fontSize: 11, color: childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--ink-light)', fontWeight: 600, marginTop: 1 }}>Age 2–11 · {f(pkg.childWithoutBedPrice)} per child</div>
+                          <div style={{ fontSize: 11, color: childrenWithoutBed > 0 ? '#0284c7' : 'var(--ink-light)', fontWeight: 600, marginTop: 1 }}>Age 2–11 · {f(pkg.childWithoutBedPrice)} per child</div>
                         </div>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                          <button onClick={() => setChildrenWithoutBed(c => Math.max(0, c - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithoutBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
-                          <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{childrenWithoutBed}</span>
-                          <button onClick={() => setChildrenWithoutBed(c => c + 1)} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-                        </div>
-                        {childrenWithoutBed > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--orange)', background: 'rgba(232,97,58,0.1)', padding: '2px 7px', borderRadius: 10, whiteSpace: 'nowrap', minWidth: 60, textAlign: 'right' }}>{f(cwobTotal)}</span>}
+                      <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${childrenWithoutBed > 0 ? '#0284c7' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
+                        <button onClick={() => setChildrenWithoutBed(c => Math.max(0, c - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithoutBed <= 0 ? 'not-allowed' : 'pointer', color: '#0284c7', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                        <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{childrenWithoutBed}</span>
+                        <button onClick={() => setChildrenWithoutBed(c => c + 1)} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: '#0284c7', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
                   )}
@@ -677,7 +692,11 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   )
 
   const flightsIncluded = pkg.flights?.included === true
-  const similarPkgs = PACKAGES.filter(p => p.region === pkg.region && p.id !== pkg.id).slice(0, 4)
+  const similarPkgs = PACKAGES.filter(p => p.id !== pkg.id).sort((a, b) => {
+    if (a.region === pkg.region && b.region !== pkg.region) return -1
+    if (b.region === pkg.region && a.region !== pkg.region) return 1
+    return 0
+  }).slice(0, 3)
 
   const handleSave = async (data: any) => {
     try {
@@ -742,7 +761,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 24px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 12px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 28, alignItems: 'start' }}>
 
           {/* Left column */}
@@ -896,18 +915,27 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
             {similarPkgs.length > 0 && (
               <div style={{ marginTop: 8 }}>
                 <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>SIMILAR PACKAGES</div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {similarPkgs.map(sp => (
                     <Link key={sp.id} href={`/dashboard/packages/${sp.id}`} style={{ textDecoration: 'none', display: 'block' }}>
-                      <div style={{ border: '1px solid var(--rule)', overflow: 'hidden', background: 'white', transition: 'all 0.2s' }} className="pkg-card">
-                        <div style={{ height: 100, overflow: 'hidden' }}>
+                      <div style={{ border: '1px solid var(--rule)', overflow: 'hidden', background: 'white', transition: 'all 0.2s', display: 'flex', flexDirection: 'column' }} className="pkg-card">
+                        <div style={{ height: 160, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
                           <img src={sp.img} alt={sp.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s' }} />
+                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.7) 0%, transparent 50%)' }} />
+                          <div style={{ position: 'absolute', bottom: 10, left: 12 }}>
+                            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>{sp.region.toUpperCase()} · {sp.nights}N/{sp.days}D</div>
+                          </div>
+                          {sp.tag && <div style={{ position: 'absolute', top: 10, left: 10, padding: '2px 7px', background: 'var(--orange)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{sp.tag}</div>}
                         </div>
-                        <div style={{ padding: '10px 12px' }}>
-                          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)', marginBottom: 4, lineHeight: 1.2 }}>{sp.name}</div>
-                          <div style={{ fontSize: 10, color: 'var(--ink-light)' }}>{sp.nights}N · {sp.days}D</div>
-                          <div className="font-tight" style={{ fontSize: 14, fontWeight: 800, color: 'var(--teal)', marginTop: 4 }}>
-                            {fmtCurrency(sp.basePrice, sp.currency)}
+                        <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 6, lineHeight: 1.3 }}>{sp.name}</div>
+                          <div>
+                            <div className="font-tight" style={{ fontSize: 15, fontWeight: 800, color: 'var(--teal)', marginBottom: 8 }}>
+                              {fmtCurrency(sp.basePrice, sp.currency)}
+                            </div>
+                            <div style={{ padding: '8px 0', background: 'var(--teal)', color: '#fff', fontSize: 10, fontWeight: 700, textAlign: 'center', letterSpacing: '0.06em' }}>
+                              VIEW PACKAGE →
+                            </div>
                           </div>
                         </div>
                       </div>
