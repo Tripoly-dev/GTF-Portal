@@ -13,11 +13,9 @@ export default function DashboardPage() {
   }, [])
 
   const regions = [
-    { name: 'Europe', count: 15, href: '/dashboard/packages?region=europe', img: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80', status: 'active' },
-    { name: 'Africa', count: 9, href: '/dashboard/packages?region=africa', img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=80', status: 'active' },
-    { name: 'Oceania', count: 2, href: '/dashboard/packages?region=oceania', img: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&q=80', status: 'active' },
-    { name: 'Asia', count: 0, href: '/dashboard/packages?region=asia', img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80', status: 'coming' },
-    { name: 'Americas', count: 0, href: '/dashboard/packages?region=americas', img: 'https://static.wixstatic.com/media/11062b_f5be68c7acbc4b1b91a684d8acd6acb9~mv2.jpg', status: 'coming' },
+    { name: 'Europe', count: 10, href: '/dashboard/packages?region=europe', img: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80', status: 'active' },
+    { name: 'Africa', count: 2, href: '/dashboard/packages?region=africa', img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=80', status: 'active' },
+    { name: 'Asia', count: 5, href: '/dashboard/packages?region=asia', img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80', status: 'active' },
   ]
 
   const featuredPackages = PACKAGES.filter(p => p.tag !== 'COMING SOON').slice(0, 6)

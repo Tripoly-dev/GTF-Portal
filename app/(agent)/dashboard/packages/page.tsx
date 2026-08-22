@@ -148,7 +148,7 @@ function PackagesInner() {
         </div>
 
         <Section title="REGION">
-          {['all', 'europe', 'africa', 'asia', 'americas', 'oceania'].map(r => (
+          {['all', 'europe', 'africa', 'asia'].map(r => (
             <Checkbox key={r} label={r === 'all' ? 'All Regions' : r.charAt(0).toUpperCase() + r.slice(1)}
               checked={region === r} onChange={() => setRegion(r)} />
           ))}
@@ -212,20 +212,10 @@ function PackagesInner() {
 
         {filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            {region === 'oceania' ? (
-              <>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>🦘</div>
-                <h3 className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', marginBottom: 8 }}>Oceania — Coming Soon</h3>
-                <p style={{ fontSize: 14, color: 'var(--ink-light)', marginBottom: 20 }}>Our Australia series is being curated. Check back soon or contact us for custom packages.</p>
-              </>
-            ) : (
-              <>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
-                <h3 className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', marginBottom: 8 }}>No packages match</h3>
-                <p style={{ fontSize: 14, color: 'var(--ink-light)', marginBottom: 20 }}>Try adjusting your filters</p>
-                <button onClick={clearAll} className="btn-teal">Clear all filters</button>
-              </>
-            )}
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
+            <h3 className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', marginBottom: 8 }}>No packages match</h3>
+            <p style={{ fontSize: 14, color: 'var(--ink-light)', marginBottom: 20 }}>Try adjusting your filters</p>
+            <button onClick={clearAll} className="btn-teal">Clear all filters</button>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>

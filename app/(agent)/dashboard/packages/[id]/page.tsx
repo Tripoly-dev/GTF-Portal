@@ -4,9 +4,14 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES, Package, DepartureSlot } from '@/data/packages'
 
+// ── CURRENCY HELPERS ─────────────────────────────────────────────────────────
+const fmtCurrency = (n: number, currency: string) => {
+  if (currency === 'USD') return '$' + Math.round(n).toLocaleString('en-US')
+  if (currency === 'EUR') return '€' + Math.round(n).toLocaleString('en-IN')
+  return '₹' + Math.round(n).toLocaleString('en-IN')
+}
 const fmt = (n: number) => '₹' + Math.round(n).toLocaleString('en-IN')
 const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
-const fmtMonth = (d: string) => new Date(d + '-01').toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
 
 const STATUS_STYLE: Record<string, React.CSSProperties> = {
   'available':    { background: '#D1FAE5', color: '#065F46' },
@@ -19,17 +24,37 @@ const STATUS_LABEL: Record<string, string> = {
 
 const EX_CITIES = ['Mumbai', 'Delhi', 'Ahmedabad', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Pune']
 
+// ── TABLER ICONS (SVG) ────────────────────────────────────────────────────────
+const Icon = ({ path, size = 20, color = 'var(--teal)' }: { path: string; size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+    <path d={path} />
+  </svg>
+)
+const ICONS = {
+  duration:   'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2M12 6v6l4 2',
+  group:      'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75',
+  hotel:      'M3 21h18M3 7v14M21 7v14M6 3h12a2 2 0 0 1 2 2v2H4V5a2 2 0 0 1 2-2M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4',
+  meals:      'M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3',
+  manager:    'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8',
+  flightOn:   'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 17',
+  flightOff:  'M3 3l18 18M10.5 10.677A5 5 0 0 0 17 17M20 17.8l1.4 1.4a2 2 0 0 1-2.58 2.04A19.8 19.8 0 0 1 10.16 18M4.15 12A19.79 19.79 0 0 1 1.08 3.33 2 2 0 0 1 3.06 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81',
+}
+
 // ── SAVE PROPOSAL MODAL ───────────────────────────────────────────────────────
 function SaveProposalModal({ pkg, summary, onClose, onSave }: {
   pkg: Package
-  summary: { totalPrice: number; adults: number; roomType: string; departureDate: string; addOnsTotal: number; selectedAddOnLabels: string[] }
+  summary: {
+    totalPrice: number; adults: number; childrenWithBed: number; childrenWithoutBed: number;
+    roomType: string; departureDate: string; addOnsTotal: number; selectedAddOnLabels: string[]
+    currency: string
+  }
   onClose: () => void
   onSave: (data: any) => void
 }) {
   const [form, setForm] = useState({
     client_name: '', client_type: 'repeat', trip_name: pkg.name,
     estimated_booking_date: '', flights_booked: false, notes: '',
-    markup_type: 'percentage', markup_value: 4, ex_city: 'Mumbai',
+    markup_type: 'percentage', markup_value: 0, ex_city: 'Mumbai',
   })
   const [saving, setSaving] = useState(false)
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
@@ -39,6 +64,8 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
     ? (summary.totalPrice * Number(form.markup_value)) / 100
     : Number(form.markup_value)
   const finalTotal = summary.totalPrice + markupAmount
+  const cur = summary.currency
+  const f = (n: number) => fmtCurrency(n, cur)
 
   const handleSave = async () => {
     if (!form.client_name.trim()) { alert('Client name is required'); return }
@@ -50,61 +77,59 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.65)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ background: 'white', width: '100%', maxWidth: 580, maxHeight: '92vh', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-
-        {/* Header */}
         <div style={{ background: 'var(--ink)', padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', marginBottom: 4 }}>SAVE PROPOSAL</div>
             <h2 className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>{pkg.name}</h2>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{fmtDate(summary.departureDate)} · {summary.adults} adults · {summary.roomType}</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>
+              {fmtDate(summary.departureDate)} · {summary.adults} adult{summary.adults > 1 ? 's' : ''}
+              {summary.childrenWithBed > 0 ? ` · ${summary.childrenWithBed} child w/ bed` : ''}
+              {summary.childrenWithoutBed > 0 ? ` · ${summary.childrenWithoutBed} child w/o bed` : ''}
+            </p>
           </div>
           <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', width: 32, height: 32, fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>✕</button>
         </div>
 
         <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-
-          {/* Price summary */}
           <div style={{ background: 'var(--teal-lt)', border: '1px solid var(--rule)', padding: '16px 20px' }}>
             <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 12 }}>PRICE SUMMARY</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--ink-mid)', marginBottom: 6 }}>
-              <span>Land package ({summary.adults} pax · {summary.roomType})</span>
-              <span>{fmt(summary.totalPrice - summary.addOnsTotal)}</span>
+              <span>Package ({summary.adults} adult{summary.adults > 1 ? 's' : ''} · {summary.roomType})</span>
+              <span>{f(summary.totalPrice - summary.addOnsTotal)}</span>
             </div>
             {summary.addOnsTotal > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--ink-mid)', marginBottom: 6 }}>
-                <span>Add-ons</span><span>+ {fmt(summary.addOnsTotal)}</span>
+                <span>Add-ons</span><span>+ {f(summary.addOnsTotal)}</span>
               </div>
             )}
             {markupAmount > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--orange)', marginBottom: 6 }}>
                 <span>Your markup ({form.markup_type === 'percentage' ? `${form.markup_value}%` : 'fixed'})</span>
-                <span>+ {fmt(markupAmount)}</span>
+                <span>+ {f(markupAmount)}</span>
               </div>
             )}
             <div style={{ borderTop: '1px solid var(--rule)', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
               <span className="font-tight" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>Client quote total</span>
-              <span className="font-tight" style={{ fontSize: 22, fontWeight: 800, color: 'var(--teal)' }}>{fmt(finalTotal)}</span>
+              <span className="font-tight" style={{ fontSize: 22, fontWeight: 800, color: 'var(--teal)' }}>{f(finalTotal)}</span>
             </div>
             <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 4, textAlign: 'right' }}>
-              {fmt(Math.round(finalTotal / summary.adults))} per person
+              {f(Math.round(finalTotal / summary.adults))} per adult
             </div>
           </div>
 
-          {/* Markup */}
           <div>
-            <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 12 }}>YOUR MARKUP</div>
+            <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 12 }}>YOUR MARKUP (OPTIONAL)</div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <input type="number" min="0" className="input-field" style={{ maxWidth: 100 }}
                 value={form.markup_value} onChange={e => setForm(f => ({ ...f, markup_value: Number(e.target.value) }))} />
               <select className="input-field" style={{ maxWidth: 160 }} value={form.markup_type} onChange={set('markup_type')}>
                 <option value="percentage">% Percentage</option>
-                <option value="fixed">₹ Fixed Amount</option>
+                <option value="fixed">{cur === 'USD' ? '$' : cur === 'EUR' ? '€' : '₹'} Fixed Amount</option>
               </select>
-              {markupAmount > 0 && <span style={{ fontSize: 14, color: 'var(--teal)', fontWeight: 700, whiteSpace: 'nowrap' }}>= +{fmt(markupAmount)}</span>}
+              {markupAmount > 0 && <span style={{ fontSize: 14, color: 'var(--teal)', fontWeight: 700, whiteSpace: 'nowrap' }}>= +{f(markupAmount)}</span>}
             </div>
           </div>
 
-          {/* Client details */}
           <div>
             <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 12 }}>CLIENT DETAILS</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -128,14 +153,12 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
             </div>
           </div>
 
-          {/* Proposal details */}
           <div>
             <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 12 }}>PROPOSAL DETAILS</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 6 }}>TRIP NAME</label>
                 <input className="input-field" value={form.trip_name} onChange={set('trip_name')} />
-                <p style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 4 }}>Shared with client in all correspondence</p>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
@@ -167,9 +190,8 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
             </div>
           </div>
 
-          {/* Save button */}
           <button onClick={handleSave} disabled={saving} className="btn-teal" style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: 14, marginTop: 4 }}>
-            {saving ? 'SAVING PROPOSAL...' : `SAVE PROPOSAL — ${fmt(finalTotal)} →`}
+            {saving ? 'SAVING PROPOSAL...' : `SAVE PROPOSAL — ${f(finalTotal)} →`}
           </button>
         </div>
       </div>
@@ -177,56 +199,36 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
   )
 }
 
-// ── DAY-WISE ITINERARY COMPONENT ──────────────────────────────────────────────
+// ── DAY-WISE ITINERARY ────────────────────────────────────────────────────────
 function DayItinerary({ itinerary }: { itinerary: import('@/data/packages').ItineraryDay[] }) {
   const [expandedDays, setExpandedDays] = useState<number[]>([1])
   const toggle = (day: number) => setExpandedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])
-
   return (
-    <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
-      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>
-        DAY-WISE ITINERARY
-      </div>
+    <div>
+      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>DAY-WISE ITINERARY</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
         {itinerary.map((item, i) => {
           const isExpanded = expandedDays.includes(item.day)
           return (
             <div key={item.day} style={{ borderBottom: i < itinerary.length - 1 ? '1px solid var(--rule)' : 'none' }}>
-              <button
-                onClick={() => toggle(item.day)}
+              <button onClick={() => toggle(item.day)}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontFamily: 'Inter, sans-serif' }}>
-                {/* Day badge */}
                 <div style={{ background: 'var(--orange)', color: '#fff', width: 44, height: 44, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, lineHeight: 1 }}>
                   <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.08em' }}>DAY</span>
                   <span style={{ fontSize: 16, fontWeight: 800 }}>{item.day}</span>
                 </div>
-                {/* Title */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3 }}>{item.title}</div>
-                  {item.hotel && !isExpanded && (
-                    <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>🏨 {item.hotel}</div>
-                  )}
+                  {item.hotel && !isExpanded && <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>🏨 {item.hotel}</div>}
                 </div>
-                {/* Chevron */}
                 <span style={{ fontSize: 11, color: 'var(--ink-light)', transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }}>▾</span>
               </button>
-              {/* Expanded content */}
               {isExpanded && (
                 <div style={{ padding: '0 0 16px 58px' }}>
                   <p style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 12 }}>{item.description}</p>
                   <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                    {item.hotel && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <span style={{ fontSize: 12 }}>🏨</span>
-                        <span style={{ fontSize: 12, color: 'var(--ink-mid)', fontWeight: 600 }}>{item.hotel}</span>
-                      </div>
-                    )}
-                    {item.meals && item.meals.length > 0 && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <span style={{ fontSize: 12 }}>🍽</span>
-                        <span style={{ fontSize: 12, color: 'var(--teal)', fontWeight: 600 }}>{item.meals.join(' · ')} — Included</span>
-                      </div>
-                    )}
+                    {item.hotel && <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 12 }}>🏨</span><span style={{ fontSize: 12, color: 'var(--ink-mid)', fontWeight: 600 }}>{item.hotel}</span></div>}
+                    {item.meals && item.meals.length > 0 && <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 12 }}>🍽</span><span style={{ fontSize: 12, color: 'var(--teal)', fontWeight: 600 }}>{item.meals.join(' · ')} — Included</span></div>}
                   </div>
                 </div>
               )}
@@ -238,58 +240,140 @@ function DayItinerary({ itinerary }: { itinerary: import('@/data/packages').Itin
   )
 }
 
+// ── FLIGHTS TAB ───────────────────────────────────────────────────────────────
+function FlightsTab({ pkg, selectedDepartureDate }: { pkg: Package; selectedDepartureDate: string }) {
+  const flightInfo = pkg.flights
+  if (!flightInfo || !flightInfo.included) return null
+
+  const [activeDep, setActiveDep] = useState(selectedDepartureDate || flightInfo.departurewise[0]?.departureDate || '')
+  useEffect(() => { if (selectedDepartureDate) setActiveDep(selectedDepartureDate) }, [selectedDepartureDate])
+
+  const depData = flightInfo.departurewise.find(d => d.departureDate === activeDep) || flightInfo.departurewise[0]
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em' }}>FLIGHT DETAILS</div>
+        <span style={{ fontSize: 11, padding: '3px 10px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 700, border: '1px solid var(--rule)' }}>✈ Ex {flightInfo.exCity}</span>
+      </div>
+
+      {flightInfo.departurewise.length > 1 && (
+        <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
+          {flightInfo.departurewise.map(d => (
+            <button key={d.departureDate} onClick={() => setActiveDep(d.departureDate)} style={{
+              padding: '5px 12px', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              border: `1.5px solid ${activeDep === d.departureDate ? 'var(--teal)' : 'var(--rule)'}`,
+              background: activeDep === d.departureDate ? 'var(--teal)' : 'white',
+              color: activeDep === d.departureDate ? '#fff' : 'var(--ink-mid)',
+            }}>
+              {new Date(d.departureDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {depData && (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+            <thead>
+              <tr style={{ background: 'var(--bg)' }}>
+                {['FLIGHT', 'AIRLINE', 'SECTOR', 'DATE', 'DEPARTS', 'ARRIVES'].map(h => (
+                  <th key={h} style={{ padding: '9px 12px', textAlign: 'left', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: 'var(--ink-light)', borderBottom: '1px solid var(--rule)', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {depData.segments.map((seg, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid var(--rule)' }}>
+                  <td style={{ padding: '10px 12px', fontWeight: 700, color: 'var(--teal)', fontSize: 12 }}>{seg.flightNo}</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--ink-mid)' }}>{seg.airline}</td>
+                  <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--ink)' }}>{seg.sector}</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--ink-mid)', whiteSpace: 'nowrap' }}>{seg.depDate || ''}</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--ink-mid)', fontWeight: 600 }}>{seg.depTime}</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--ink-mid)', fontWeight: 600 }}>{seg.arrTime}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <p style={{ fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic', marginTop: 12 }}>* Flight schedule subject to change. Seats subject to availability at time of booking.</p>
+    </div>
+  )
+}
+
 // ── QUOTE BUILDER PANEL ───────────────────────────────────────────────────────
-function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void }) {
+function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: (data: any) => void; onDepartureChange: (date: string) => void }) {
   const [departureDate, setDepartureDate] = useState(pkg.departures.find(d => d.status !== 'sold-out')?.date || '')
   const [adults, setAdults] = useState(2)
   const [roomType, setRoomType] = useState<'double' | 'single' | 'triple'>('double')
+  const [childrenWithBed, setChildrenWithBed] = useState(0)
+  const [childrenWithoutBed, setChildrenWithoutBed] = useState(0)
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
   const [showModal, setShowModal] = useState(false)
 
-  // Group departures by month
+  const cur = pkg.currency
+  const f = (n: number) => fmtCurrency(n, cur)
+
   const byMonth = pkg.departures.reduce<Record<string, DepartureSlot[]>>((acc, d) => {
     const m = d.date.slice(0, 7)
     if (!acc[m]) acc[m] = []
     acc[m].push(d)
     return acc
   }, {})
-
   const monthKeys = Object.keys(byMonth)
   const [activeMonth, setActiveMonth] = useState('')
   useEffect(() => { if (monthKeys.length) setActiveMonth(monthKeys[0]) }, [pkg.id])
+  useEffect(() => { onDepartureChange(departureDate) }, [departureDate])
 
-  const roomSupplement = roomType === 'single' ? pkg.singleSupplement : roomType === 'triple' ? -pkg.tripleReduction : 0
-  const pricePerPerson = pkg.basePrice + roomSupplement
-  const landTotal = pricePerPerson * adults
-  const addOnsTotal = pkg.addOns.filter(a => selectedAddOns.includes(a.id)).reduce((s, a) => s + a.price * adults, 0)
-  const totalPrice = landTotal + addOnsTotal
-  const defaultMarkup = totalPrice * 0.04
-  const clientTotal = totalPrice + defaultMarkup
+  const roomSupplement = roomType === 'single'
+    ? (pkg.singlePrice ? pkg.singlePrice - pkg.basePrice : pkg.singleSupplement)
+    : roomType === 'triple' ? -pkg.tripleReduction : 0
+  const pricePerAdult = pkg.basePrice + (roomType === 'single' ? (pkg.singlePrice ? pkg.singlePrice - pkg.basePrice : pkg.singleSupplement) : roomType === 'triple' ? -pkg.tripleReduction : 0)
+  const adultTotal = pkg.basePrice * adults + (roomType === 'single' ? (pkg.singlePrice ? (pkg.singlePrice - pkg.basePrice) * adults : pkg.singleSupplement * adults) : roomType === 'triple' ? -pkg.tripleReduction * adults : 0)
+  const cwbTotal = (pkg.childWithBedPrice || 0) * childrenWithBed
+  const cwobTotal = (pkg.childWithoutBedPrice || 0) * childrenWithoutBed
+  const addOnsTotal = pkg.addOns.filter(a => selectedAddOns.includes(a.id)).reduce((s, a) => s + a.price * (adults + childrenWithBed + childrenWithoutBed), 0)
+  const totalPrice = adultTotal + cwbTotal + cwobTotal + addOnsTotal
+  const tacTotal = pkg.tacAdult * adults + pkg.tacChild * (childrenWithBed + childrenWithoutBed)
 
   const toggleAddOn = (id: string) => setSelectedAddOns(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id])
   const selectedDep = pkg.departures.find(d => d.date === departureDate)
+  const hasChildren = pkg.hasPrice && (pkg.childWithBedPrice !== undefined || pkg.childWithoutBedPrice !== undefined)
+  const totalPax = adults + childrenWithBed + childrenWithoutBed
+
+  // Pill counter component
+  const PillCounter = ({ label, subLabel, value, onDec, onInc, min = 0, max = 45 }: { label: string; subLabel?: string; value: number; onDec: () => void; onInc: () => void; min?: number; max?: number }) => (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{label}</div>
+        {subLabel && <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 1 }}>{subLabel}</div>}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1.5px solid var(--rule)', borderRadius: 24, overflow: 'hidden', background: 'white' }}>
+        <button onClick={onDec} disabled={value <= min} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value <= min ? 'not-allowed' : 'pointer', color: value <= min ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+        <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', minWidth: 28, textAlign: 'center' }}>{value}</span>
+        <button onClick={onInc} disabled={value >= max} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+      </div>
+    </div>
+  )
 
   return (
     <>
       <div style={{ background: 'white', border: '1px solid var(--rule)', overflow: 'hidden', position: 'sticky', top: 20 }}>
         {/* Header */}
         <div style={{ background: 'linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%)', padding: '20px 22px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.14em', fontWeight: 700 }}>QUOTE BUILDER</div>
-            <div style={{ padding: '3px 8px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>4% MARKUP</div>
-          </div>
-          <div className="font-tight" style={{ fontSize: 32, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 4 }}>{fmt(clientTotal)}</div>
+          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.14em', fontWeight: 700, marginBottom: 4 }}>QUOTE BUILDER</div>
+          <div className="font-tight" style={{ fontSize: 30, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 4 }}>{f(totalPrice)}</div>
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', fontWeight: 300 }}>
-            {fmt(Math.round(clientTotal / adults))} per person · {adults} adult{adults > 1 ? 's' : ''}
+            {f(Math.round(totalPrice / Math.max(totalPax, 1)))} per person · {adults} adult{adults > 1 ? 's' : ''}{childrenWithBed > 0 ? ` · ${childrenWithBed} child w/bed` : ''}{childrenWithoutBed > 0 ? ` · ${childrenWithoutBed} child w/o bed` : ''}
           </div>
         </div>
 
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 18 }}>
 
-          {/* Departure — month tabs + date grid */}
+          {/* Departure */}
           <div>
             <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 10 }}>SELECT DEPARTURE</div>
-            {/* Month tab strip */}
             <div style={{ display: 'flex', overflowX: 'auto', gap: 0, borderBottom: '2px solid var(--rule)', marginBottom: 12 }}>
               {monthKeys.map(m => (
                 <button key={m} onClick={() => setActiveMonth(m)} style={{
@@ -305,7 +389,6 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
                 </button>
               ))}
             </div>
-            {/* Dates for active month */}
             {activeMonth && byMonth[activeMonth] && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                 {byMonth[activeMonth].map(slot => (
@@ -331,15 +414,38 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
             )}
           </div>
 
-          {/* Adults */}
+          {/* Passengers */}
           <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 10 }}>NUMBER OF ADULTS</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 34, height: 34, border: '1.5px solid var(--rule)', background: 'white', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif' }}>−</button>
-              <span className="font-tight" style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', minWidth: 28, textAlign: 'center' }}>{adults}</span>
-              <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 34, height: 34, border: '1.5px solid var(--rule)', background: 'white', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif' }}>+</button>
-              <span style={{ fontSize: 11, color: 'var(--ink-light)' }}>Max 45 pax</span>
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 4 }}>PASSENGERS</div>
+            <div style={{ borderBottom: '1px solid var(--rule)' }}>
+              <PillCounter label="Adults" value={adults} onDec={() => setAdults(a => Math.max(1, a - 1))} onInc={() => setAdults(a => Math.min(45, a + 1))} min={1} max={45} />
             </div>
+            {hasChildren && (
+              <>
+                {pkg.childWithBedPrice !== undefined && (
+                  <div style={{ borderBottom: pkg.childWithoutBedPrice !== undefined ? '1px solid var(--rule)' : 'none' }}>
+                    <PillCounter
+                      label="Children — With Bed"
+                      subLabel={`Age 2–11 yrs · ${f(pkg.childWithBedPrice)} per child`}
+                      value={childrenWithBed}
+                      onDec={() => setChildrenWithBed(c => Math.max(0, c - 1))}
+                      onInc={() => setChildrenWithBed(c => c + 1)}
+                    />
+                  </div>
+                )}
+                {pkg.childWithoutBedPrice !== undefined && (
+                  <div>
+                    <PillCounter
+                      label="Children — Without Bed"
+                      subLabel={`Age 2–11 yrs · ${f(pkg.childWithoutBedPrice)} per child`}
+                      value={childrenWithoutBed}
+                      onDec={() => setChildrenWithoutBed(c => Math.max(0, c - 1))}
+                      onInc={() => setChildrenWithoutBed(c => c + 1)}
+                    />
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           {/* Room type */}
@@ -348,8 +454,8 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {[
                 { id: 'double', label: 'Double / Twin', note: 'Base price' },
-                { id: 'single', label: 'Single Room', note: `+${fmt(pkg.singleSupplement)} supplement` },
-                { id: 'triple', label: 'Triple Sharing', note: `−${fmt(pkg.tripleReduction)} reduction` },
+                { id: 'single', label: 'Single Room', note: pkg.singlePrice ? `${f(pkg.singlePrice)} / person` : `+${f(pkg.singleSupplement)} supplement` },
+                { id: 'triple', label: 'Triple Sharing', note: `−${f(pkg.tripleReduction)} reduction` },
               ].map(r => (
                 <button key={r.id} onClick={() => setRoomType(r.id as any)} style={{
                   padding: '9px 12px', border: `1.5px solid ${roomType === r.id ? 'var(--teal)' : 'var(--rule)'}`,
@@ -395,19 +501,34 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
             <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 10 }}>PRICE BREAKDOWN (NET)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-mid)' }}>
-                <span>{fmt(pricePerPerson)} × {adults} pax</span><span>{fmt(landTotal)}</span>
+                <span>{f(pkg.basePrice)} × {adults} adult{adults > 1 ? 's' : ''}{roomType !== 'double' ? ` (${roomType})` : ''}</span>
+                <span>{f(adultTotal)}</span>
               </div>
+              {childrenWithBed > 0 && pkg.childWithBedPrice && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-mid)' }}>
+                  <span>{f(pkg.childWithBedPrice)} × {childrenWithBed} child w/ bed</span>
+                  <span>{f(cwbTotal)}</span>
+                </div>
+              )}
+              {childrenWithoutBed > 0 && pkg.childWithoutBedPrice && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-mid)' }}>
+                  <span>{f(pkg.childWithoutBedPrice)} × {childrenWithoutBed} child w/o bed</span>
+                  <span>{f(cwobTotal)}</span>
+                </div>
+              )}
               {addOnsTotal > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-mid)' }}>
                   <span>Add-ons</span><span>+{fmt(addOnsTotal)}</span>
                 </div>
               )}
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--orange)' }}>
-                <span>Default markup (4%)</span><span>+{fmt(defaultMarkup)}</span>
-              </div>
+              {tacTotal > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--orange)' }}>
+                  <span>Agent Royalty (TAC)</span><span>{f(tacTotal)}</span>
+                </div>
+              )}
               <div style={{ borderTop: '1px solid var(--rule)', paddingTop: 8, marginTop: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <span className="font-tight" style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>Client total</span>
-                <span className="font-tight" style={{ fontSize: 18, fontWeight: 800, color: 'var(--teal)' }}>{fmt(clientTotal)}</span>
+                <span className="font-tight" style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>Net total</span>
+                <span className="font-tight" style={{ fontSize: 18, fontWeight: 800, color: 'var(--teal)' }}>{f(totalPrice)}</span>
               </div>
             </div>
           </div>
@@ -419,13 +540,12 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
               </button>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
                 <div style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--teal-lt)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'var(--teal)', fontWeight: 800 }}>i</div>
-                <p style={{ fontSize: 11, color: 'var(--ink-light)' }}>Markup is adjustable in the next step</p>
+                <p style={{ fontSize: 11, color: 'var(--ink-light)' }}>Add your markup in the next step</p>
               </div>
             </>
           ) : (
             <>
-              <a
-                href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D). Please share the nett rate and TAC so I can create a quote for my client.`)}`}
+              <a href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D). Please share the nett rate and TAC so I can create a quote for my client.`)}`}
                 target="_blank" rel="noopener noreferrer"
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '16px', background: 'var(--orange)', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', boxSizing: 'border-box' }}>
                 REQUEST PRICING →
@@ -442,11 +562,11 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
       {showModal && (
         <SaveProposalModal
           pkg={pkg}
-          summary={{ totalPrice, adults, roomType, departureDate, addOnsTotal, selectedAddOnLabels: pkg.addOns.filter(a => selectedAddOns.includes(a.id)).map(a => a.label) }}
+          summary={{ totalPrice, adults, childrenWithBed, childrenWithoutBed, roomType, departureDate, addOnsTotal, selectedAddOnLabels: pkg.addOns.filter(a => selectedAddOns.includes(a.id)).map(a => a.label), currency: pkg.currency }}
           onClose={() => setShowModal(false)}
           onSave={async (data) => {
             setShowModal(false)
-            await onSave({ ...data, totalPrice, adults, roomType, departureDate, addOnsTotal, selectedAddOns: pkg.addOns.filter(a => selectedAddOns.includes(a.id)), pricePerPerson, landTotal })
+            await onSave({ ...data, totalPrice, adults, childrenWithBed, childrenWithoutBed, roomType, departureDate, addOnsTotal, selectedAddOns: pkg.addOns.filter(a => selectedAddOns.includes(a.id)), adultTotal, cwbTotal, cwobTotal })
           }}
         />
       )}
@@ -454,9 +574,7 @@ function QuotePanel({ pkg, onSave }: { pkg: Package; onSave: (data: any) => void
   )
 }
 
-// ── MAIN PAGE ─────────────────────────────────────────────────────────────────
-
-// Hotel images per city
+// ── HOTEL IMAGES ──────────────────────────────────────────────────────────────
 const HOTEL_IMAGES: Record<string, string> = {
   'Paris':        'https://static.wixstatic.com/media/226760_aaf73d04b8b845e488c4736ee77ba918~mv2.jpg',
   'Amsterdam':    'https://static.wixstatic.com/media/226760_707548668df94335af359cb5fad6fc5c~mv2.jpg',
@@ -469,70 +587,46 @@ const HOTEL_IMAGES: Record<string, string> = {
   'Frankfurt':    'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80',
   'Prague':       'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=400&q=80',
   'Vienna':       'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=400&q=80',
-  'Barcelona':    'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?w=400&q=80',
-  'Madrid':       'https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=400&q=80',
   'London':       'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80',
-  'Oslo':         'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400&q=80',
-  'Stockholm':    'https://images.unsplash.com/photo-1538332576228-eb5b4c4de6f5?w=400&q=80',
-  'Copenhagen':   'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=400&q=80',
   'Milan':        'https://images.unsplash.com/photo-1478005405000-f02f57bb0769?w=400&q=80',
   'Lucerne':      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
-  'Arusha':       'https://static.wixstatic.com/media/226760_7ca6ca64382c4255bbf3c91c7109a4e4~mv2.jpg',
-  'Serengeti':    'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=80',
-  'Ngorongoro':   'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&q=80',
-  'Zanzibar':     'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&q=80',
-  'Nairobi':      'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&q=80',
-  'Masai Mara':   'https://images.unsplash.com/photo-1551655510-555dc3be8633?w=400&q=80',
-  'Amboseli':     'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=80',
-  'Lake Nakuru':  'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=400&q=80',
-  'Sydney':       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
-  'Melbourne':    'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&q=80',
-  'Cairns':       'https://images.unsplash.com/photo-1538614484459-75c7cfc2df6f?w=400&q=80',
-  // Japan
+  'Budapest':     'https://images.unsplash.com/photo-1541849546-216549ae216d?w=400&q=80',
+  'Munich':       'https://images.unsplash.com/photo-1595867818082-083862f3d630?w=400&q=80',
+  'Cairo':        'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=400&q=80',
+  'Nile Cruise':  'https://images.unsplash.com/photo-1569519024219-3e272822ab04?w=400&q=80',
+  'Cairo–Aswan Sleeper Train': 'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6c?w=400&q=80',
+  'Hurghada':     'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=400&q=80',
+  'Cape Town':    'https://images.unsplash.com/photo-1484318571209-661cf29a69c3?w=400&q=80',
+  'Garden Route': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80',
+  'Sun City':     'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&q=80',
+  'Johannesburg': 'https://images.unsplash.com/photo-1576485375217-d6a95e34d043?w=400&q=80',
+  'Mauritius':    'https://images.unsplash.com/photo-1504457047772-27faf1c00561?w=400&q=80',
   'Narita':       'https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=400&q=80',
   'Tokyo':        'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80',
   'Nagoya':       'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=400&q=80',
   'Hiroshima':    'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=400&q=80',
   'Osaka':        'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&q=80',
   'Kansai':       'https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=400&q=80',
-  // Turkey
   'Istanbul':     'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=400&q=80',
   'Ankara':       'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=400&q=80',
   'Cappadocia':   'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=400&q=80',
   'Antalya':      'https://images.unsplash.com/photo-1570939274717-7eda259b50ed?w=400&q=80',
   'Pamukkale':    'https://images.unsplash.com/photo-1589561454226-796a8aa89b05?w=400&q=80',
   'Kusadasi':     'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=400&q=80',
-  // Vietnam
   'Ho Chi Minh City': 'https://images.unsplash.com/photo-1528127269322-539801943592?w=400&q=80',
   'Da Nang':      'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400&q=80',
   'Hanoi':        'https://images.unsplash.com/photo-1557456170-0cf4f4d0d362?w=400&q=80',
-  // Egypt
-  'Cairo':        'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=400&q=80',
-  'Nile Cruise':  'https://images.unsplash.com/photo-1569519024219-3e272822ab04?w=400&q=80',
-  'Cairo–Aswan Sleeper Train': 'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6c?w=400&q=80',
-  'Hurghada':     'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?w=400&q=80',
-  // South Africa
-  'Cape Town':    'https://images.unsplash.com/photo-1484318571209-661cf29a69c3?w=400&q=80',
-  'Garden Route': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80',
-  'Sun City':     'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&q=80',
-  'Johannesburg': 'https://images.unsplash.com/photo-1576485375217-d6a95e34d043?w=400&q=80',
-  // Mauritius
-  'Mauritius':    'https://images.unsplash.com/photo-1504457047772-27faf1c00561?w=400&q=80',
-  // USA
-  'New York':     'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&q=80',
-  'Washington DC':'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&q=80',
-  'Niagara':      'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80',
-  'Las Vegas':    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
-  'Los Angeles':  'https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?w=400&q=80',
-  'San Francisco':'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&q=80',
 }
 
+// ── MAIN PAGE ─────────────────────────────────────────────────────────────────
 export default function PackageDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
   const pkg = PACKAGES.find(p => p.id === id)
   const [galleryIdx, setGalleryIdx] = useState(0)
   const [saved, setSaved] = useState(false)
+  const [activeTab, setActiveTab] = useState<'itinerary' | 'flights' | 'hotels'>('itinerary')
+  const [selectedDepartureDate, setSelectedDepartureDate] = useState(pkg?.departures.find(d => d.status !== 'sold-out')?.date || '')
 
   if (!pkg) return (
     <div style={{ padding: 40, textAlign: 'center' }}>
@@ -540,7 +634,8 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
     </div>
   )
 
-  const similarPkgs = PACKAGES.filter(p => p.region === pkg.region && p.id !== pkg.id && p.tag !== 'COMING SOON').slice(0, 4)
+  const flightsIncluded = pkg.flights?.included === true
+  const similarPkgs = PACKAGES.filter(p => p.region === pkg.region && p.id !== pkg.id).slice(0, 4)
 
   const handleSave = async (data: any) => {
     try {
@@ -549,11 +644,12 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           package_id: pkg.id, package_name: pkg.name, region: pkg.region,
-          departure_date: data.departureDate, adults: data.adults, room_type: data.roomType,
-          base_price: pkg.basePrice, markup_type: data.markup_type,
-          markup_value: data.markup_value, markup_amount: data.markup_amount,
-          add_ons: data.selectedAddOns || [], add_ons_total: data.addOnsTotal || 0,
-          total_price: data.final_total,
+          departure_date: data.departureDate, adults: data.adults,
+          children_with_bed: data.childrenWithBed, children_without_bed: data.childrenWithoutBed,
+          room_type: data.roomType, base_price: pkg.basePrice, currency: pkg.currency,
+          markup_type: data.markup_type, markup_value: data.markup_value,
+          markup_amount: data.markup_amount, add_ons: data.selectedAddOns || [],
+          add_ons_total: data.addOnsTotal || 0, total_price: data.final_total,
           client_name: data.client_name, client_type: data.client_type,
           trip_name: data.trip_name, estimated_booking_date: data.estimated_booking_date,
           flights_booked: data.flights_booked, notes: data.notes,
@@ -571,9 +667,28 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
     </div>
   )
 
+  const pkgInfoItems = [
+    { icon: ICONS.duration, label: 'Duration', value: `${pkg.nights}N / ${pkg.days}D` },
+    { icon: ICONS.group, label: 'Group Size', value: '25–45 passengers' },
+    { icon: ICONS.hotel, label: 'Hotels', value: `${pkg.starRating}★ Selected / Equivalent` },
+    { icon: ICONS.meals, label: 'Meals', value: 'As per itinerary' },
+    { icon: ICONS.manager, label: 'Tour Manager', value: 'Included' },
+    {
+      icon: flightsIncluded ? ICONS.flightOn : ICONS.flightOff,
+      label: 'Flights',
+      value: flightsIncluded ? `Included · Ex ${pkg.flights!.exCity}` : 'Land only (not included)',
+      valueColor: flightsIncluded ? 'var(--teal)' : 'var(--ink-mid)',
+    },
+  ]
+
+  const TABS = [
+    { id: 'itinerary', label: 'ITINERARY' },
+    ...(flightsIncluded ? [{ id: 'flights', label: 'FLIGHTS' }] : []),
+    { id: 'hotels', label: 'HOTELS' },
+  ] as { id: 'itinerary' | 'flights' | 'hotels'; label: string }[]
+
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
-
       {/* Breadcrumb */}
       <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '12px 32px' }}>
         <div style={{ display: 'flex', gap: 8, fontSize: 12, color: 'var(--ink-light)', alignItems: 'center' }}>
@@ -592,10 +707,8 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
           <div>
             {/* Gallery */}
             <div style={{ marginBottom: 24 }}>
-              {/* Main image */}
               <div style={{ position: 'relative', height: 340, overflow: 'hidden', marginBottom: 8 }}>
-                <img src={pkg.gallery[galleryIdx]} alt={pkg.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.3s' }} />
+                <img src={pkg.gallery[galleryIdx]} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.3s' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.75) 0%, transparent 55%)' }} />
                 {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff' }}>{pkg.tag}</div>}
                 <div style={{ position: 'absolute', bottom: 20, left: 20 }}>
@@ -607,7 +720,6 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 </div>
               </div>
-              {/* Thumbnail strip */}
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${pkg.gallery.length}, 1fr)`, gap: 6 }}>
                 {pkg.gallery.map((img, i) => (
                   <div key={i} onClick={() => setGalleryIdx(i)} style={{
@@ -621,29 +733,24 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
               </div>
             </div>
 
-            {/* Package info grid */}
+            {/* Package Highlights */}
             <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
-              <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>PACKAGE HIGHLIGHTS</div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
-                {[
-                  { icon: '🌍', label: 'Duration', value: `${pkg.nights}N / ${pkg.days}D` },
-                  { icon: '👥', label: 'Group Size', value: '25–45 passengers' },
-                  { icon: '🏨', label: 'Hotels', value: `${pkg.starRating}★ Selected / Equivalent` },
-                  { icon: '🍽', label: 'Meals', value: 'As per itinerary' },
-                  { icon: '🎯', label: 'Tour Manager', value: 'Included' },
-                  { icon: '✈', label: 'Flights', value: 'Land only (not included)' },
-                ].map((h, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 10 }}>
-                    <span style={{ fontSize: 18, flexShrink: 0 }}>{h.icon}</span>
+              <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 20 }}>PACKAGE HIGHLIGHTS</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+                {pkgInfoItems.map((h, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <div style={{ flexShrink: 0, marginTop: 1 }}>
+                      <Icon path={h.icon} size={22} color={flightsIncluded && i === 5 ? 'var(--teal)' : 'var(--teal)'} />
+                    </div>
                     <div>
-                      <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 2 }}>{h.label.toUpperCase()}</div>
-                      <div style={{ fontSize: 13, color: 'var(--ink-mid)', fontWeight: 500 }}>{h.value}</div>
+                      <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>{h.label.toUpperCase()}</div>
+                      <div style={{ fontSize: 13, color: (h as any).valueColor || 'var(--ink-mid)', fontWeight: 500 }}>{h.value}</div>
                     </div>
                   </div>
                 ))}
               </div>
-              {/* Tags */}
-              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--rule)', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {/* Traveler & Theme tags */}
+              <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--rule)', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {pkg.travelerTypes.map(t => (
                   <span key={t} style={{ padding: '4px 10px', background: 'var(--teal-lt)', border: '1px solid var(--rule)', fontSize: 11, color: 'var(--teal)', fontWeight: 600 }}>{t}</span>
                 ))}
@@ -653,78 +760,97 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
               </div>
             </div>
 
-            {/* Hotels section */}
-            {pkg.hotels.length > 0 && (
-              <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
-                <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>ACCOMMODATION</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  {pkg.hotels.map((h, i) => (
-                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 120px 1fr 110px 110px', gap: 14, padding: '14px 0', borderBottom: i < pkg.hotels.length - 1 ? '1px solid var(--rule)' : 'none', alignItems: 'center' }}>
-                      {/* Hotel image */}
-                      <div style={{ width: 80, height: 60, overflow: 'hidden', flexShrink: 0 }}>
-                        <img
-                          src={HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'}
-                          alt={h.city}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
+            {/* TAB BAR */}
+            <div style={{ background: 'white', border: '1px solid var(--rule)', borderBottom: 'none', display: 'flex', marginBottom: 0 }}>
+              {TABS.map(tab => (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+                  padding: '14px 24px', background: 'none', border: 'none', borderBottom: `3px solid ${activeTab === tab.id ? 'var(--teal)' : 'transparent'}`,
+                  cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 12, fontWeight: 700,
+                  color: activeTab === tab.id ? 'var(--teal)' : 'var(--ink-light)', letterSpacing: '0.08em',
+                  transition: 'all 0.15s',
+                }}>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* TAB CONTENT */}
+            <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
+
+              {activeTab === 'itinerary' && (
+                <div>
+                  {pkg.highlights && pkg.highlights.length > 0 && (
+                    <div style={{ marginBottom: 24 }}>
+                      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ color: '#F59E0B', fontSize: 14 }}>★</span> TRIP HIGHLIGHTS
                       </div>
-                      {/* City + nights */}
-                      <div>
-                        <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>CITY</div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{h.city}</div>
-                        <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                        {pkg.highlights.map((h, i) => (
+                          <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0, marginTop: 6 }} />
+                            <span style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{h}</span>
+                          </div>
+                        ))}
                       </div>
-                      {/* Hotel name + stars */}
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)', marginBottom: 3 }}>{h.name}</div>
-                        <div style={{ display: 'flex', gap: 1 }}>
-                          {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 11 }}>★</span>)}
-                        </div>
-                      </div>
-                      {/* Room type */}
-                      <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{h.roomType}</div>
-                      {/* Meal */}
-                      <div style={{ fontSize: 11, padding: '4px 10px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, textAlign: 'center' }}>{h.meal}</div>
                     </div>
-                  ))}
-                </div>
-                <div style={{ marginTop: 12, fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic' }}>
-                  * Hotels or equivalent. Subject to availability at time of booking.
-                </div>
-              </div>
-            )}
-
-            {/* Trip Highlights */}
-            {pkg.highlights && pkg.highlights.length > 0 && (
-              <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
-                <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ color: '#F59E0B', fontSize: 14 }}>★</span> TRIP HIGHLIGHTS
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {pkg.highlights.map((h, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0, marginTop: 6 }} />
-                      <span style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{h}</span>
+                  )}
+                  {pkg.itinerary && pkg.itinerary.length > 0 ? (
+                    <DayItinerary itinerary={pkg.itinerary} />
+                  ) : (
+                    <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--ink-light)', fontSize: 13 }}>
+                      Detailed day-wise itinerary available in the PDF brochure below.
                     </div>
-                  ))}
+                  )}
+                  {pkg.workdriveUrl && (
+                    <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 24px', background: 'var(--paper)', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 13, fontWeight: 600, textDecoration: 'none', letterSpacing: '0.04em', marginTop: 20 }}>
+                      📄 VIEW DETAILED ITINERARY (PDF) ↗
+                    </a>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Day-wise Itinerary */}
-            {pkg.itinerary && pkg.itinerary.length > 0 && (
-              <DayItinerary itinerary={pkg.itinerary} />
-            )}
+              {activeTab === 'flights' && flightsIncluded && (
+                <FlightsTab pkg={pkg} selectedDepartureDate={selectedDepartureDate} />
+              )}
 
-            {/* View itinerary */}
-            {pkg.workdriveUrl && (
-              <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 24px', background: 'var(--paper)', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 13, fontWeight: 600, textDecoration: 'none', letterSpacing: '0.04em', marginBottom: 32 }}>
-                📄 VIEW DETAILED ITINERARY (PDF) ↗
-              </a>
-            )}
+              {activeTab === 'hotels' && (
+                <div>
+                  <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>ACCOMMODATION</div>
+                  {pkg.hotels.length > 0 ? (
+                    <>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                        {pkg.hotels.map((h, i) => (
+                          <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 120px 1fr 110px 110px', gap: 14, padding: '14px 0', borderBottom: i < pkg.hotels.length - 1 ? '1px solid var(--rule)' : 'none', alignItems: 'center' }}>
+                            <div style={{ width: 80, height: 60, overflow: 'hidden', flexShrink: 0 }}>
+                              <img src={HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'} alt={h.city} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                            <div>
+                              <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>CITY</div>
+                              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{h.city}</div>
+                              <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
+                            </div>
+                            <div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)', marginBottom: 3 }}>{h.name}</div>
+                              <div style={{ display: 'flex', gap: 1 }}>
+                                {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 11 }}>★</span>)}
+                              </div>
+                            </div>
+                            <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{h.roomType}</div>
+                            <div style={{ fontSize: 11, padding: '4px 10px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, textAlign: 'center' }}>{h.meal}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ marginTop: 12, fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic' }}>* Hotels or equivalent. Subject to availability at time of booking.</div>
+                    </>
+                  ) : (
+                    <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--ink-light)', fontSize: 13 }}>Hotel details available in the PDF brochure.</div>
+                  )}
+                </div>
+              )}
+            </div>
 
-            {/* Similar packages */}
+            {/* Similar Packages */}
             {similarPkgs.length > 0 && (
               <div style={{ marginTop: 8 }}>
                 <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>SIMILAR PACKAGES</div>
@@ -738,7 +864,9 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                         <div style={{ padding: '10px 12px' }}>
                           <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)', marginBottom: 4, lineHeight: 1.2 }}>{sp.name}</div>
                           <div style={{ fontSize: 10, color: 'var(--ink-light)' }}>{sp.nights}N · {sp.days}D</div>
-                          <div className="font-tight" style={{ fontSize: 14, fontWeight: 800, color: 'var(--teal)', marginTop: 4 }}>₹{sp.basePrice.toLocaleString('en-IN')}</div>
+                          <div className="font-tight" style={{ fontSize: 14, fontWeight: 800, color: 'var(--teal)', marginTop: 4 }}>
+                            {fmtCurrency(sp.basePrice, sp.currency)}
+                          </div>
                         </div>
                       </div>
                     </Link>
@@ -749,7 +877,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
           </div>
 
           {/* Right — Quote panel */}
-          <QuotePanel pkg={pkg} onSave={handleSave} />
+          <QuotePanel pkg={pkg} onSave={handleSave} onDepartureChange={setSelectedDepartureDate} />
         </div>
       </div>
     </div>

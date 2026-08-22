@@ -9,7 +9,7 @@ const NAV = [
   { label: 'My Quotes', href: '/dashboard/quotes' },
   { label: 'Europe', href: '/dashboard/packages?region=europe' },
   { label: 'Africa', href: '/dashboard/packages?region=africa' },
-  { label: 'Oceania', href: '/dashboard/packages?region=oceania' },
+  { label: 'Asia', href: '/dashboard/packages?region=asia' },
 ]
 
 export default function AgentLayout({ children }: { children: React.ReactNode }) {
