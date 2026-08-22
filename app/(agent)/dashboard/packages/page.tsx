@@ -266,7 +266,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
 
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
           <span className="font-tight" style={{ fontSize: 20, fontWeight: 800, color: 'var(--teal)', letterSpacing: '-0.02em' }}>
-            ₹{pkg.basePrice.toLocaleString('en-IN')}
+            {pkg.currency === 'USD' ? '$' : pkg.currency === 'EUR' ? '€' : '₹'}{pkg.basePrice.toLocaleString(pkg.currency === 'USD' ? 'en-US' : 'en-IN')}
           </span>
           <span style={{ fontSize: 10, color: 'var(--ink-light)' }}>per person</span>
         </div>

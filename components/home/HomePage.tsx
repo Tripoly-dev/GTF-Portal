@@ -79,7 +79,7 @@ function Hero() {
           transform: loaded ? 'translateY(0)' : 'translateY(16px)',
           transition: 'opacity 0.7s 0.18s ease, transform 0.7s 0.18s ease',
         }}>
-          Curated global departures built exclusively for travel professionals. Series Departures · White Label · Bespoke Holidays — one B2B platform, five continents, zero B2C.
+          Curated global departures built exclusively for travel professionals. Series Departures · White Label · Bespoke Holidays — one B2B platform, three continents, zero B2C.
         </p>
 
         {/* CTAs — zip exact: pill 999px, coral #FF5A5F primary */}
@@ -136,8 +136,8 @@ function Hero() {
           transition: 'opacity 0.7s 0.38s ease',
         }}>
           {[
-            { n: '5', l: 'CONTINENTS' },
-            { n: '25+', l: 'ACTIVE PACKAGES' },
+            { n: '3', l: 'CONTINENTS' },
+            { n: '17', l: 'ACTIVE PACKAGES' },
             { n: '100%', l: 'B2B ONLY' },
             { n: 'Global', l: 'OPS SUPPORT' },
           ].map((s, i) => (
@@ -255,7 +255,7 @@ function Hero() {
           borderRadius: 999, zIndex: 3,
           opacity: loaded ? 1 : 0,
           transition: 'opacity 0.7s 1s ease',
-        }}>5 CONTINENTS</div>
+        }}>3 CONTINENTS</div>
       </div>
 
       {/* Float animations — exact from zip */}
@@ -281,7 +281,7 @@ function Hero() {
 }
 // ── MARQUEE ───────────────────────────────────────────────────────────────────
 function DestinationMarquee() {
-  const items = ['European Delights', 'Alpine Wonders', 'Sparkling Europe', "Kenya's Ultimate Safari", 'Tanzania Untamed', 'Best of Australia', 'Japan — Coming Soon', 'Mediterranean Discovery']
+  const items = ['Grand Europe', 'Mystical Egypt', 'Japan Autumn Discovery', 'Vietnam Escapes', 'South African Splendour', 'Grand Türkiye', 'Timeless Japan', 'Mauritian Paradise', 'East European Delights', 'Paris & Amsterdam Escape']
   return (
     <div className="marquee-strip" aria-label="GTF featured departures">
       <div className="marquee-track">
@@ -297,11 +297,9 @@ function DestinationMarquee() {
 function ProductStream() {
   const [active, setActive] = useState(0)
   const products = [
-    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '15', price: '₹78,000', next: '12 SEP', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['European Delights — 9D', 'Swiss Alpine Escape — 8D', 'Mediterranean Discovery — 10D'] },
-    { name: 'Africa', category: 'SAFARI & GROUP TOURS', packages: '9', price: '₹65,000', next: '18 OCT', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1000&q=85', href: '/departures/africa', popular: ["Kenya's Ultimate Safari — 8D", 'Tanzania Untamed — 5D', 'Wild Serenade — 4D'] },
-    { name: 'Oceania', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,10,000', next: '08 NOV', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=1000&q=85', href: '/departures/oceania', popular: ['Best of Australia — 10D', 'Discover Australia — 10D'] },
-    { name: 'Asia', category: 'COMING SOON', packages: '—', price: 'ENQUIRE', next: 'TBA', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&q=85', href: '/departures/asia', popular: ['Japan — coming soon', 'South Korea — coming soon'] },
-    { name: 'Americas', category: 'COMING SOON', packages: '—', price: 'ENQUIRE', next: 'TBA', image: 'https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=1000&q=85', href: '/departures/americas', popular: ['North America — coming soon', 'South America — coming soon'] },
+    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '10', price: '₹78,000', next: '18 SEP', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['Grand Europe — 12N', 'East European Delights — 7N', 'Paris & Amsterdam Escape — 5N'] },
+    { name: 'Africa', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,99,999', next: '09 OCT', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1000&q=85', href: '/departures/africa', popular: ['South African Splendour — 9N', 'Mystical Egypt — 8N'] },
+    { name: 'Asia', category: 'GROUP DEPARTURES', packages: '5', price: '₹1,39,999', next: '20 SEP', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&q=85', href: '/departures/asia', popular: ['Japan Autumn Discovery — 8N', 'Grand Türkiye — 10N', 'Vietnam Escapes — 8N'] },
   ]
 
   return (
@@ -310,7 +308,7 @@ function ProductStream() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 24, marginBottom: 42, flexWrap: 'wrap' }}>
           <div>
             <div className="eyebrow" style={{ color: '#79D8C5', marginBottom: 12 }}>THE SIGNATURE FEATURE</div>
-            <h2 className="font-tight product-stream-heading" style={{ margin: 0, fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em' }}>Five continents. <span style={{ color: '#79D8C5', fontWeight: 300, fontStyle: 'italic' }}>Ready-to-sell departures.</span></h2>
+            <h2 className="font-tight product-stream-heading" style={{ margin: 0, fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em' }}>Three continents. <span style={{ color: '#79D8C5', fontWeight: 300, fontStyle: 'italic' }}>Ready-to-sell departures.</span></h2>
           </div>
           <Link href="/departures/europe" style={{ color: '#79D8C5', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>BROWSE ALL DEPARTURES →</Link>
         </div>
@@ -411,7 +409,7 @@ function Bento() {
   const [active, setActive] = useState(0)
   const cells = [
     { title: '100% B2B & NON-COMPETE', text: 'Your clients stay yours. We never sell direct.', coords: 'NON-COMPETE', col: 'span 2', row: 'span 2', accent: '#FBBF24', visual: 'GLOBAL ROUTE' },
-    { title: 'GLOBAL PRODUCT', text: 'Products across continents and travel categories.', coords: '5 CONTINENTS', col: 'span 2', row: 'span 1', accent: '#14B8A6', visual: '05 / 05' },
+    { title: 'GLOBAL PRODUCT', text: 'Products across continents and travel categories.', coords: '3 CONTINENTS', col: 'span 2', row: 'span 1', accent: '#14B8A6', visual: '03 / 03' },
     { title: 'GUARANTEED DEPARTURES', text: 'Confirmed dates and ready-to-sell itineraries.', coords: 'FIXED SERIES', col: 'span 2', row: 'span 1', accent: '#FBBF24', visual: '12 SEP →' },
     { title: 'COMPETITIVE B2B RATES', text: 'Commercial pricing designed for travel professionals.', coords: 'PARTNER PRICING', col: 'span 1', row: 'span 1', accent: '#14B8A6', visual: 'B2B' },
     { title: 'OPERATIONAL SUPPORT', text: 'Reliable support before and during the journey.', coords: '24/7 OPS', col: 'span 1', row: 'span 1', accent: '#FBBF24', visual: 'ONLINE' },

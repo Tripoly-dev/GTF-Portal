@@ -416,36 +416,78 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
 
           {/* Passengers */}
           <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 4 }}>PASSENGERS</div>
-            <div style={{ borderBottom: '1px solid var(--rule)' }}>
-              <PillCounter label="Adults" value={adults} onDec={() => setAdults(a => Math.max(1, a - 1))} onInc={() => setAdults(a => Math.min(45, a + 1))} min={1} max={45} />
-            </div>
-            {hasChildren && (
-              <>
-                {pkg.childWithBedPrice !== undefined && (
-                  <div style={{ borderBottom: pkg.childWithoutBedPrice !== undefined ? '1px solid var(--rule)' : 'none' }}>
-                    <PillCounter
-                      label="Children — With Bed"
-                      subLabel={`Age 2–11 yrs · ${f(pkg.childWithBedPrice)} per child`}
-                      value={childrenWithBed}
-                      onDec={() => setChildrenWithBed(c => Math.max(0, c - 1))}
-                      onInc={() => setChildrenWithBed(c => c + 1)}
-                    />
+            <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 10 }}>PASSENGERS</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+
+              {/* Adults row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: '1.5px solid var(--teal)', background: 'var(--teal-lt)', borderRadius: 4 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'rgba(10,110,94,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                   </div>
-                )}
-                {pkg.childWithoutBedPrice !== undefined && (
                   <div>
-                    <PillCounter
-                      label="Children — Without Bed"
-                      subLabel={`Age 2–11 yrs · ${f(pkg.childWithoutBedPrice)} per child`}
-                      value={childrenWithoutBed}
-                      onDec={() => setChildrenWithoutBed(c => Math.max(0, c - 1))}
-                      onInc={() => setChildrenWithoutBed(c => c + 1)}
-                    />
+                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}>Adults</div>
+                    <div style={{ fontSize: 11, color: 'var(--teal)', fontWeight: 600, marginTop: 1 }}>{f(pkg.basePrice)} per adult</div>
                   </div>
-                )}
-              </>
-            )}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--teal)', borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
+                    <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: adults <= 1 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                    <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{adults}</span>
+                    <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: adults >= 45 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                  </div>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--teal)', background: 'rgba(10,110,94,0.12)', padding: '2px 7px', borderRadius: 10, whiteSpace: 'nowrap', minWidth: 60, textAlign: 'right' }}>{f(adultTotal)}</span>
+                </div>
+              </div>
+
+              {/* Children rows */}
+              {hasChildren && (
+                <>
+                  {pkg.childWithBedPrice !== undefined && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: `1.5px solid ${childrenWithBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, background: childrenWithBed > 0 ? 'var(--orange-lt)' : '#fff', borderRadius: 4, transition: 'all 0.15s' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 34, height: 34, borderRadius: '50%', background: childrenWithBed > 0 ? 'rgba(232,97,58,0.12)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={childrenWithBed > 0 ? 'var(--orange)' : 'var(--ink-light)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><line x1="12" y1="11" x2="12" y2="14"/><line x1="10" y1="13" x2="14" y2="13"/></svg>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}>Child — With Bed</div>
+                          <div style={{ fontSize: 11, color: childrenWithBed > 0 ? 'var(--orange)' : 'var(--ink-light)', fontWeight: 600, marginTop: 1 }}>Age 2–11 · {f(pkg.childWithBedPrice)} per child</div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${childrenWithBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
+                          <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                          <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{childrenWithBed}</span>
+                          <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        </div>
+                        {childrenWithBed > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--orange)', background: 'rgba(232,97,58,0.1)', padding: '2px 7px', borderRadius: 10, whiteSpace: 'nowrap', minWidth: 60, textAlign: 'right' }}>{f(cwbTotal)}</span>}
+                      </div>
+                    </div>
+                  )}
+                  {pkg.childWithoutBedPrice !== undefined && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: `1.5px solid ${childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, background: childrenWithoutBed > 0 ? 'var(--orange-lt)' : '#fff', borderRadius: 4, transition: 'all 0.15s' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 34, height: 34, borderRadius: '50%', background: childrenWithoutBed > 0 ? 'rgba(232,97,58,0.12)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--ink-light)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink)' }}>Child — Without Bed</div>
+                          <div style={{ fontSize: 11, color: childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--ink-light)', fontWeight: 600, marginTop: 1 }}>Age 2–11 · {f(pkg.childWithoutBedPrice)} per child</div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${childrenWithoutBed > 0 ? 'var(--orange)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
+                          <button onClick={() => setChildrenWithoutBed(c => Math.max(0, c - 1))} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithoutBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                          <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--ink)', minWidth: 22, textAlign: 'center' }}>{childrenWithoutBed}</span>
+                          <button onClick={() => setChildrenWithoutBed(c => c + 1)} style={{ width: 30, height: 30, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        </div>
+                        {childrenWithoutBed > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--orange)', background: 'rgba(232,97,58,0.1)', padding: '2px 7px', borderRadius: 10, whiteSpace: 'nowrap', minWidth: 60, textAlign: 'right' }}>{f(cwobTotal)}</span>}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
 
           {/* Room type */}
@@ -700,7 +742,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '32px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 28, alignItems: 'start' }}>
 
           {/* Left column */}

@@ -42,8 +42,8 @@ export default function DashboardPage() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 36 }}>
           {[
-            { n: '25+', l: 'Active Packages', color: 'var(--teal)' },
-            { n: '5', l: 'Continents', color: 'var(--orange)' },
+            { n: '17', l: 'Active Packages', color: 'var(--teal)' },
+            { n: '3', l: 'Continents', color: 'var(--orange)' },
             { n: '100%', l: 'B2B Non-Compete', color: 'var(--teal)' },
             { n: '24/7', l: 'Ops Support', color: 'var(--orange)' },
           ].map((s, i) => (
