@@ -218,7 +218,7 @@ function DayItinerary({ itinerary }: { itinerary: import('@/data/packages').Itin
           </div>
           {/* Content */}
           <div style={{ flex: 1, paddingLeft: 14, paddingBottom: 24, paddingTop: 4 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3, marginBottom: 6 }}>{item.title}</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3, marginBottom: 6, fontFamily: 'Georgia, serif' }}>{item.title}</div>
             <p style={{ fontSize: 12, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 8 }}>{item.description}</p>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {item.hotel && item.hotel.trim() && (
@@ -363,7 +363,13 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
         {/* 1. Top Price Block — calmer, more breathing room, lighter green */}
         <div style={{ background: 'var(--teal)', padding: '26px 22px 20px' }}>
           <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.16em', fontWeight: 600, marginBottom: 8 }}>QUOTE BUILDER</div>
-          <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 16 }}>{f(totalPrice)}</div>
+          <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10 }}>{f(totalPrice)}</div>
+          {tacTotal > 0 && (
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 3, marginBottom: 12 }}>
+              <span style={{ fontSize: 11, color: '#7fe8cc' }}>✓</span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>Inclusive of Agent Commission</span>
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -530,7 +536,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
           {/* 5. Optional Add-ons — quieter, tighter */}
           {pkg.addOns.length > 0 && (
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.12em', marginBottom: 8 }}>OPTIONAL ADD-ONS</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.12em', marginBottom: 8 }}>OPTIONAL ADD-ONS</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {pkg.addOns.map(a => (
                   <label key={a.id} style={{
@@ -552,7 +558,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
 
           {/* 6. Price Breakdown — cleaner box, stronger total hierarchy */}
           <div style={{ border: '1px solid var(--rule)', padding: '14px 16px', background: '#fff' }}>
-            <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 10 }}>PRICE BREAKDOWN (NET)</div>
+            <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 10 }}>PRICE BREAKDOWN (NET)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ink-mid)', fontWeight: 400 }}>
                 <span>{f(pkg.basePrice)} × {adults} adult{adults > 1 ? 's' : ''}{roomType !== 'double' ? ` (${roomType})` : ''}</span>
@@ -576,8 +582,8 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                 </div>
               )}
               {tacTotal > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--ink-light)', fontWeight: 400, marginTop: 2 }}>
-                  <span>Agent Royalty (TAC)</span><span>{f(tacTotal)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--teal)', fontWeight: 600, marginTop: 2 }}>
+                  <span>Agent Royalty (TAC) — Included</span><span>{f(tacTotal)}</span>
                 </div>
               )}
               <div style={{ borderTop: '1px solid var(--rule)', paddingTop: 10, marginTop: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -757,58 +763,49 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
-      {/* ── FULL-BLEED GALLERY ─────────────────────────────────────────────── */}
-      <div style={{ position: 'relative', height: 420, background: '#071a17', overflow: 'hidden' }}>
-        {/* Main image */}
-        <img src={pkg.gallery[galleryIdx]} alt={pkg.name}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85, transition: 'opacity 0.3s' }} />
-        {/* Gradient overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.3) 50%, transparent 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)' }} />
-
-        {/* Tag */}
-        {pkg.tag && <div style={{ position: 'absolute', top: 20, left: 24, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2 }}>{pkg.tag}</div>}
-
-        {/* Thumbnail strip — vertical, right side */}
-        <div style={{ position: 'absolute', right: 16, top: 16, bottom: 16, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 2 }}>
-          {pkg.gallery.map((img, i) => (
-            <div key={i} onClick={() => setGalleryIdx(i)} style={{
-              width: 64, flex: 1, maxHeight: 70, overflow: 'hidden', cursor: 'pointer',
-              border: `2px solid ${galleryIdx === i ? '#fff' : 'rgba(255,255,255,0.2)'}`,
-              opacity: galleryIdx === i ? 1 : 0.6, transition: 'all 0.2s', borderRadius: 2,
-            }}>
-              <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
-          ))}
-        </div>
-
-        {/* Package info — bottom overlay */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 90, padding: '24px 24px 20px', zIndex: 2 }}>
-          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 6 }}>{pkg.region.toUpperCase()}</div>
-          <h1 className="font-tight" style={{ fontSize: 34, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 6 }}>{pkg.name}</h1>
-          {pkg.tagline && <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', marginBottom: 14, lineHeight: 1.4 }}>{pkg.tagline}</p>}
-          {/* Info strip */}
-          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-            {pkgInfoItems.map((h, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Icon path={h.icon} size={14} color="rgba(255,255,255,0.5)" />
-                <div>
-                  <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', fontWeight: 600, letterSpacing: '0.06em' }}>{h.label}</div>
-                  <div style={{ fontSize: 12, color: (h as any).valueColor || 'rgba(255,255,255,0.85)', fontWeight: 600 }}>{h.value}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── MAIN CONTENT ────────────────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 16px 40px' }}>
+      {/* ── MAIN CONTENT — grid starts right below breadcrumb ─────────────── */}
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '20px 16px 40px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 24, alignItems: 'start' }}>
 
           {/* Left column */}
           <div>
-            {/* TAB BAR */}
+            {/* ── GALLERY — inside left column ─────────────────────────────── */}
+            <div style={{ position: 'relative', height: 420, background: '#071a17', overflow: 'hidden', marginBottom: 0 }}>
+              <img src={pkg.gallery[galleryIdx]} alt={pkg.name}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85, transition: 'opacity 0.3s' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.3) 50%, transparent 100%)' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)' }} />
+              {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2 }}>{pkg.tag}</div>}
+              {/* Thumbnail strip — vertical, right side */}
+              <div style={{ position: 'absolute', right: 12, top: 12, bottom: 12, display: 'flex', flexDirection: 'column', gap: 5, zIndex: 2, width: 70 }}>
+                {pkg.gallery.map((img, i) => (
+                  <div key={i} onClick={() => setGalleryIdx(i)} style={{
+                    width: 70, flex: 1, overflow: 'hidden', cursor: 'pointer',
+                    border: `2px solid ${galleryIdx === i ? '#fff' : 'rgba(255,255,255,0.25)'}`,
+                    opacity: galleryIdx === i ? 1 : 0.55, transition: 'all 0.2s',
+                  }}>
+                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                ))}
+              </div>
+              {/* Package info — bottom overlay */}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 96, padding: '20px 20px 18px', zIndex: 2 }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{pkg.region.toUpperCase()}</div>
+                <h1 style={{ fontSize: 32, fontWeight: 700, color: '#fff', lineHeight: 1.1, marginBottom: 5, fontFamily: 'Georgia, serif', letterSpacing: '-0.01em' }}>{pkg.name}</h1>
+                {pkg.tagline && <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', marginBottom: 14, lineHeight: 1.4, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>{pkg.tagline}</p>}
+                <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
+                  {pkgInfoItems.map((h, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <Icon path={h.icon} size={13} color="rgba(255,255,255,0.45)" />
+                      <div>
+                        <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.06em' }}>{h.label}</div>
+                        <div style={{ fontSize: 11, color: (h as any).valueColor || 'rgba(255,255,255,0.85)', fontWeight: 600 }}>{h.value}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div style={{ background: 'white', borderBottom: '2px solid var(--rule)', display: 'flex', marginBottom: 0, position: 'sticky', top: 0, zIndex: 10 }}>
               {TABS.map(tab => (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} style={{
