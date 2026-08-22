@@ -199,43 +199,42 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
   )
 }
 
-// ── DAY-WISE ITINERARY ────────────────────────────────────────────────────────
+// ── DAY-WISE ITINERARY — TIMELINE STYLE ──────────────────────────────────────
 function DayItinerary({ itinerary }: { itinerary: import('@/data/packages').ItineraryDay[] }) {
-  const [expandedDays, setExpandedDays] = useState<number[]>([1])
-  const toggle = (day: number) => setExpandedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])
   return (
-    <div>
-      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>DAY-WISE ITINERARY</div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-        {itinerary.map((item, i) => {
-          const isExpanded = expandedDays.includes(item.day)
-          return (
-            <div key={item.day} style={{ borderBottom: i < itinerary.length - 1 ? '1px solid var(--rule)' : 'none' }}>
-              <button onClick={() => toggle(item.day)}
-                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontFamily: 'Inter, sans-serif' }}>
-                <div style={{ background: 'var(--orange)', color: '#fff', width: 44, height: 44, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, lineHeight: 1 }}>
-                  <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.08em' }}>DAY</span>
-                  <span style={{ fontSize: 16, fontWeight: 800 }}>{item.day}</span>
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3 }}>{item.title}</div>
-                  {item.hotel && !isExpanded && <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>🏨 {item.hotel}</div>}
-                </div>
-                <span style={{ fontSize: 11, color: 'var(--ink-light)', transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }}>▾</span>
-              </button>
-              {isExpanded && (
-                <div style={{ padding: '0 0 16px 58px' }}>
-                  <p style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 12 }}>{item.description}</p>
-                  <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                    {item.hotel && <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 12 }}>🏨</span><span style={{ fontSize: 12, color: 'var(--ink-mid)', fontWeight: 600 }}>{item.hotel}</span></div>}
-                    {item.meals && item.meals.length > 0 && <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 12 }}>🍽</span><span style={{ fontSize: 12, color: 'var(--teal)', fontWeight: 600 }}>{item.meals.join(' · ')} — Included</span></div>}
-                  </div>
-                </div>
-              )}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+      {itinerary.map((item, i) => (
+        <div key={item.day} style={{ display: 'flex', gap: 0, position: 'relative' }}>
+          {/* Timeline line */}
+          {i < itinerary.length - 1 && (
+            <div style={{ position: 'absolute', left: 19, top: 48, bottom: 0, width: 2, background: 'var(--rule)', zIndex: 0 }} />
+          )}
+          {/* Day circle */}
+          <div style={{ flexShrink: 0, width: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 4, position: 'relative', zIndex: 1 }}>
+            <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--teal)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', lineHeight: 1, flexShrink: 0 }}>
+              <span style={{ fontSize: 7, color: 'rgba(255,255,255,0.7)', fontWeight: 700, letterSpacing: '0.06em' }}>DAY</span>
+              <span style={{ fontSize: 13, color: '#fff', fontWeight: 800 }}>{String(item.day).padStart(2, '0')}</span>
             </div>
-          )
-        })}
-      </div>
+          </div>
+          {/* Content */}
+          <div style={{ flex: 1, paddingLeft: 14, paddingBottom: 24, paddingTop: 4 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3, marginBottom: 6 }}>{item.title}</div>
+            <p style={{ fontSize: 12, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 8 }}>{item.description}</p>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {item.hotel && item.hotel.trim() && (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--ink-mid)', background: 'var(--bg)', padding: '3px 8px', border: '1px solid var(--rule)', borderRadius: 3 }}>
+                  🏨 {item.hotel}
+                </span>
+              )}
+              {item.meals && item.meals.length > 0 && item.meals.map((m, mi) => (
+                <span key={mi} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--teal)', background: 'var(--teal-lt)', padding: '3px 8px', border: '1px solid rgba(10,110,94,0.15)', borderRadius: 3 }}>
+                  🍽 {m}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
@@ -675,7 +674,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   const pkg = PACKAGES.find(p => p.id === id)
   const [galleryIdx, setGalleryIdx] = useState(0)
   const [saved, setSaved] = useState(false)
-  const [activeTab, setActiveTab] = useState<'itinerary' | 'flights' | 'hotels'>('itinerary')
+  const [activeTab, setActiveTab] = useState<string>('overview')
   const [selectedDepartureDate, setSelectedDepartureDate] = useState(pkg?.departures.find(d => d.status !== 'sold-out')?.date || '')
 
   if (!pkg) return (
@@ -722,29 +721,33 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   )
 
   const pkgInfoItems = [
-    { icon: ICONS.duration, label: 'Duration', value: `${pkg.nights}N / ${pkg.days}D` },
-    { icon: ICONS.group, label: 'Group Size', value: '25–45 passengers' },
-    { icon: ICONS.hotel, label: 'Hotels', value: `${pkg.starRating}★ Selected / Equivalent` },
-    { icon: ICONS.meals, label: 'Meals', value: 'As per itinerary' },
-    { icon: ICONS.manager, label: 'Tour Manager', value: 'Included' },
+    { icon: ICONS.duration, label: 'DURATION', value: `${pkg.nights}N / ${pkg.days}D` },
+    { icon: ICONS.group, label: 'GROUP SIZE', value: '25–45' },
+    { icon: ICONS.hotel, label: 'HOTELS', value: `${pkg.starRating}★ Selected` },
+    { icon: ICONS.meals, label: 'MEALS', value: 'As per itinerary' },
+    { icon: ICONS.manager, label: 'TOUR MANAGER', value: 'Included' },
     {
       icon: flightsIncluded ? ICONS.flightOn : ICONS.flightOff,
-      label: 'Flights',
-      value: flightsIncluded ? `Included · Ex ${pkg.flights!.exCity}` : 'Land only (not included)',
-      valueColor: flightsIncluded ? 'var(--teal)' : 'var(--ink-mid)',
+      label: 'FLIGHTS',
+      value: flightsIncluded ? `Included · Ex ${pkg.flights!.exCity}` : 'Land only',
+      valueColor: flightsIncluded ? '#7fe8cc' : 'rgba(255,255,255,0.6)',
     },
   ]
 
+  const hasInclusionsTab = pkg.region !== 'europe' && pkg.inclusions.length > 0
   const TABS = [
+    { id: 'overview', label: 'OVERVIEW' },
     { id: 'itinerary', label: 'ITINERARY' },
     ...(flightsIncluded ? [{ id: 'flights', label: 'FLIGHTS' }] : []),
     { id: 'hotels', label: 'HOTELS' },
-  ] as { id: 'itinerary' | 'flights' | 'hotels'; label: string }[]
+    ...(hasInclusionsTab ? [{ id: 'inclusions', label: 'INCLUSIONS' }] : []),
+    ...(hasInclusionsTab && pkg.exclusions.length > 0 ? [{ id: 'exclusions', label: 'EXCLUSIONS' }] : []),
+  ] as { id: string; label: string }[]
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
       {/* Breadcrumb */}
-      <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '12px 32px' }}>
+      <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '10px 24px' }}>
         <div style={{ display: 'flex', gap: 8, fontSize: 12, color: 'var(--ink-light)', alignItems: 'center' }}>
           <Link href="/dashboard" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Dashboard</Link>
           <span>→</span>
@@ -754,100 +757,107 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 12px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 28, alignItems: 'start' }}>
+      {/* ── FULL-BLEED GALLERY ─────────────────────────────────────────────── */}
+      <div style={{ position: 'relative', height: 420, background: '#071a17', overflow: 'hidden' }}>
+        {/* Main image */}
+        <img src={pkg.gallery[galleryIdx]} alt={pkg.name}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85, transition: 'opacity 0.3s' }} />
+        {/* Gradient overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.3) 50%, transparent 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)' }} />
+
+        {/* Tag */}
+        {pkg.tag && <div style={{ position: 'absolute', top: 20, left: 24, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2 }}>{pkg.tag}</div>}
+
+        {/* Thumbnail strip — vertical, right side */}
+        <div style={{ position: 'absolute', right: 16, top: 16, bottom: 16, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 2 }}>
+          {pkg.gallery.map((img, i) => (
+            <div key={i} onClick={() => setGalleryIdx(i)} style={{
+              width: 64, flex: 1, maxHeight: 70, overflow: 'hidden', cursor: 'pointer',
+              border: `2px solid ${galleryIdx === i ? '#fff' : 'rgba(255,255,255,0.2)'}`,
+              opacity: galleryIdx === i ? 1 : 0.6, transition: 'all 0.2s', borderRadius: 2,
+            }}>
+              <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+          ))}
+        </div>
+
+        {/* Package info — bottom overlay */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 90, padding: '24px 24px 20px', zIndex: 2 }}>
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 6 }}>{pkg.region.toUpperCase()}</div>
+          <h1 className="font-tight" style={{ fontSize: 34, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 6 }}>{pkg.name}</h1>
+          {pkg.tagline && <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', marginBottom: 14, lineHeight: 1.4 }}>{pkg.tagline}</p>}
+          {/* Info strip */}
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            {pkgInfoItems.map((h, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Icon path={h.icon} size={14} color="rgba(255,255,255,0.5)" />
+                <div>
+                  <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', fontWeight: 600, letterSpacing: '0.06em' }}>{h.label}</div>
+                  <div style={{ fontSize: 12, color: (h as any).valueColor || 'rgba(255,255,255,0.85)', fontWeight: 600 }}>{h.value}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── MAIN CONTENT ────────────────────────────────────────────────────── */}
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 16px 40px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 24, alignItems: 'start' }}>
 
           {/* Left column */}
           <div>
-            {/* Gallery */}
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ position: 'relative', height: 340, overflow: 'hidden', marginBottom: 8 }}>
-                <img src={pkg.gallery[galleryIdx]} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.3s' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.75) 0%, transparent 55%)' }} />
-                {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff' }}>{pkg.tag}</div>}
-                <div style={{ position: 'absolute', bottom: 20, left: 20 }}>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', marginBottom: 6, fontWeight: 600, letterSpacing: '0.08em' }}>{pkg.region.toUpperCase()}</div>
-                  <h1 className="font-tight" style={{ fontSize: 30, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 8 }}>{pkg.name}</h1>
-                  <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                    <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>{pkg.nights} Nights · {pkg.days} Days</span>
-                    <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: '#F59E0B', fontSize: 13 }}>★</span>)}</div>
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${pkg.gallery.length}, 1fr)`, gap: 6 }}>
-                {pkg.gallery.map((img, i) => (
-                  <div key={i} onClick={() => setGalleryIdx(i)} style={{
-                    height: 60, overflow: 'hidden', cursor: 'pointer',
-                    border: `2px solid ${galleryIdx === i ? 'var(--teal)' : 'transparent'}`,
-                    opacity: galleryIdx === i ? 1 : 0.65, transition: 'all 0.2s',
-                  }}>
-                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Package Highlights */}
-            <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
-              <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 20 }}>PACKAGE HIGHLIGHTS</div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
-                {pkgInfoItems.map((h, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                    <div style={{ flexShrink: 0, marginTop: 1 }}>
-                      <Icon path={h.icon} size={22} color={flightsIncluded && i === 5 ? 'var(--teal)' : 'var(--teal)'} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>{h.label.toUpperCase()}</div>
-                      <div style={{ fontSize: 13, color: (h as any).valueColor || 'var(--ink-mid)', fontWeight: 500 }}>{h.value}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Traveler & Theme tags */}
-              <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--rule)', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {pkg.travelerTypes.map(t => (
-                  <span key={t} style={{ padding: '4px 10px', background: 'var(--teal-lt)', border: '1px solid var(--rule)', fontSize: 11, color: 'var(--teal)', fontWeight: 600 }}>{t}</span>
-                ))}
-                {pkg.themes.map(t => (
-                  <span key={t} style={{ padding: '4px 10px', background: 'var(--orange-lt)', border: '1px solid rgba(232,97,58,0.2)', fontSize: 11, color: 'var(--orange)', fontWeight: 600 }}>{t}</span>
-                ))}
-              </div>
-            </div>
-
             {/* TAB BAR */}
-            <div style={{ background: 'white', border: '1px solid var(--rule)', borderBottom: 'none', display: 'flex', marginBottom: 0 }}>
+            <div style={{ background: 'white', borderBottom: '2px solid var(--rule)', display: 'flex', marginBottom: 0, position: 'sticky', top: 0, zIndex: 10 }}>
               {TABS.map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-                  padding: '14px 24px', background: 'none', border: 'none', borderBottom: `3px solid ${activeTab === tab.id ? 'var(--teal)' : 'transparent'}`,
-                  cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: 12, fontWeight: 700,
-                  color: activeTab === tab.id ? 'var(--teal)' : 'var(--ink-light)', letterSpacing: '0.08em',
-                  transition: 'all 0.15s',
+                <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} style={{
+                  padding: '14px 20px', background: 'none', border: 'none',
+                  borderBottom: `2px solid ${activeTab === tab.id ? 'var(--teal)' : 'transparent'}`,
+                  marginBottom: -2, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                  fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+                  color: activeTab === tab.id ? 'var(--teal)' : 'var(--ink-light)',
+                  transition: 'all 0.15s', whiteSpace: 'nowrap',
                 }}>
                   {tab.label}
                 </button>
               ))}
+              {/* Traveler tags pushed right */}
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 16px', gap: 6 }}>
+                {pkg.travelerTypes.slice(0, 3).map(t => (
+                  <span key={t} style={{ padding: '3px 8px', background: 'var(--teal-lt)', fontSize: 10, color: 'var(--teal)', fontWeight: 600, borderRadius: 2 }}>{t}</span>
+                ))}
+              </div>
             </div>
 
             {/* TAB CONTENT */}
-            <div style={{ background: 'white', border: '1px solid var(--rule)', padding: '22px 26px', marginBottom: 20 }}>
+            <div style={{ background: 'white', border: '1px solid var(--rule)', borderTop: 'none', padding: '24px 28px', marginBottom: 20 }}>
 
-              {activeTab === 'itinerary' && (
+              {/* OVERVIEW TAB */}
+              {activeTab === 'overview' && (
                 <div>
+                  {pkg.tagline && (
+                    <p style={{ fontSize: 15, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 24, fontStyle: 'italic', borderLeft: '3px solid var(--teal)', paddingLeft: 16 }}>{pkg.tagline}</p>
+                  )}
                   {pkg.highlights && pkg.highlights.length > 0 && (
-                    <div style={{ marginBottom: 24 }}>
-                      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ color: '#F59E0B', fontSize: 14 }}>★</span> TRIP HIGHLIGHTS
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <div>
+                      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>★ TRIP HIGHLIGHTS</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                         {pkg.highlights.map((h, i) => (
                           <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0, marginTop: 6 }} />
+                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0, marginTop: 5 }} />
                             <span style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{h}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* ITINERARY TAB */}
+              {activeTab === 'itinerary' && (
+                <div>
                   {pkg.itinerary && pkg.itinerary.length > 0 ? (
                     <DayItinerary itinerary={pkg.itinerary} />
                   ) : (
@@ -857,17 +867,19 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                   )}
                   {pkg.workdriveUrl && (
                     <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 24px', background: 'var(--paper)', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 13, fontWeight: 600, textDecoration: 'none', letterSpacing: '0.04em', marginTop: 20 }}>
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 20px', background: 'var(--bg)', border: '1px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 12, fontWeight: 600, textDecoration: 'none', marginTop: 20 }}>
                       📄 VIEW DETAILED ITINERARY (PDF) ↗
                     </a>
                   )}
                 </div>
               )}
 
+              {/* FLIGHTS TAB */}
               {activeTab === 'flights' && flightsIncluded && (
                 <FlightsTab pkg={pkg} selectedDepartureDate={selectedDepartureDate} />
               )}
 
+              {/* HOTELS TAB */}
               {activeTab === 'hotels' && (
                 <div>
                   <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>ACCOMMODATION</div>
@@ -875,8 +887,8 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                     <>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                         {pkg.hotels.map((h, i) => (
-                          <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 120px 1fr 110px 110px', gap: 14, padding: '14px 0', borderBottom: i < pkg.hotels.length - 1 ? '1px solid var(--rule)' : 'none', alignItems: 'center' }}>
-                            <div style={{ width: 80, height: 60, overflow: 'hidden', flexShrink: 0 }}>
+                          <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 140px 1fr 120px 120px', gap: 14, padding: '14px 0', borderBottom: i < pkg.hotels.length - 1 ? '1px solid var(--rule)' : 'none', alignItems: 'center' }}>
+                            <div style={{ width: 80, height: 60, overflow: 'hidden' }}>
                               <img src={HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'} alt={h.city} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div>
@@ -895,11 +907,45 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                           </div>
                         ))}
                       </div>
-                      <div style={{ marginTop: 12, fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic' }}>* Hotels or equivalent. Subject to availability at time of booking.</div>
+                      <p style={{ marginTop: 12, fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic' }}>* Hotels or equivalent. Subject to availability at time of booking.</p>
                     </>
                   ) : (
                     <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--ink-light)', fontSize: 13 }}>Hotel details available in the PDF brochure.</div>
                   )}
+                </div>
+              )}
+
+              {/* INCLUSIONS TAB */}
+              {activeTab === 'inclusions' && (
+                <div>
+                  <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 20 }}>WHAT'S INCLUDED</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {pkg.inclusions.map((item, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                        <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#d1fae5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                          <span style={{ fontSize: 11, color: '#065f46' }}>✓</span>
+                        </div>
+                        <span style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* EXCLUSIONS TAB */}
+              {activeTab === 'exclusions' && (
+                <div>
+                  <div style={{ fontSize: 10, color: 'var(--orange)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 20 }}>WHAT'S NOT INCLUDED</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {pkg.exclusions.map((item, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                        <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                          <span style={{ fontSize: 11, color: '#991b1b' }}>✕</span>
+                        </div>
+                        <span style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
