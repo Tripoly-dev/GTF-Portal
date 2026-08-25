@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import GlobeSection from './GlobeSection'
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
 // Exact implementation matching zip HTML prototype (GTF Portal Homepage.dc.html)
@@ -978,6 +979,7 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
+      <GlobeSection />
       <DestinationMarquee />
       <ProductStream />
       <CustomerJourney />
