@@ -71,22 +71,14 @@ export default function GlobeSection() {
       markerColor: [0.5, 0.95, 0.85],
       glowColor: [0.06, 0.45, 0.4],
       markers: MARKERS,
+      onRender(state: Record<string, any>) {
+        state.phi = phiRef.current
+        phiRef.current += 0.003
+      },
     })
 
-    // Animate rotation manually
-    let animFrame: number
-    const animate = () => {
-      phiRef.current += 0.003
-      globe.update({ phi: phiRef.current })
-      animFrame = requestAnimationFrame(animate)
-    }
-    animFrame = requestAnimationFrame(animate)
-
     globeRef.current = globe
-    return () => {
-      cancelAnimationFrame(animFrame)
-      globe.destroy()
-    }
+    return () => { globe.destroy() }
   }, [visible])
 
   return (
