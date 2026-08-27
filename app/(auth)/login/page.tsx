@@ -22,7 +22,7 @@ export default function LoginPage() {
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Login failed'); return }
       if (data.role === 'admin') router.push('/admin')
-      else router.push('/dashboard')
+      else router.push('/dashboard/packages')
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {

@@ -5,7 +5,7 @@ import { PACKAGES } from '@/data/packages'
 
 // ── DESIGN TOKENS (from zip Modernist design system) ─────────────────────────
 const C = {
-  bg:       '#efebe3',  // warm cream background
+  bg:       '#F4F8F7',  // warm cream background
   ink:      '#18161a',  // near-black text
   inkMid:   '#494540',  // secondary text
   inkLight: '#6b655c',  // tertiary / muted text
@@ -118,7 +118,7 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
-    fetch('/api/quotes/list')
+    fetch('/api/quotes/list', { credentials: 'include' })
       .then(r => r.json())
       .then(d => { setQuotes(d.quotes || []); setLoading(false) })
       .catch(() => setLoading(false))
@@ -152,7 +152,7 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', background: C.bg, color: C.ink, fontFamily: font }}>
+    <div style={{ minHeight: '100vh', background: '#F4F8F7', color: C.ink, fontFamily: font }}>
       <main style={{ maxWidth: 1560, margin: '0 auto', padding: '0 40px 88px' }}>
 
         {/* ── GREETING ───────────────────────────────────────────────────────── */}
@@ -340,8 +340,8 @@ export default function DashboardPage() {
                 <div style={{ position: 'absolute', top: 0, right: 0, bottom: 132, left: 0, overflow: 'hidden' }}>
                   <img src={r.img} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease', filter: 'grayscale(20%)' }} />
                 </div>
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 132, boxSizing: 'border-box', padding: '18px 24px', background: C.nav, color: C.navFg, overflow: 'hidden' }}>
-                  <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: font }}>{r.name}</div>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 132, boxSizing: 'border-box', padding: '18px 24px', background: '#241f2b', color: '#efebe3', overflow: 'hidden' }}>
+                  <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: font, color: '#efebe3' }}>{r.name}</div>
                   <div style={{ fontSize: 11.5, letterSpacing: '0.08em', color: 'rgba(239,236,229,0.65)', marginTop: 7 }}>{r.count} PACKAGES</div>
                 </div>
               </Link>

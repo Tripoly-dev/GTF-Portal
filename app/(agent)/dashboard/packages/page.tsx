@@ -6,7 +6,7 @@ import { PACKAGES, Package } from '@/data/packages'
 
 // ── DESIGN TOKENS ─────────────────────────────────────────────────────────────
 const C = {
-  bg:       '#efebe3',
+  bg:       '#F4F8F7',
   ink:      '#18161a',
   inkMid:   '#494540',
   inkLight: '#6b655c',
@@ -153,14 +153,17 @@ function PackageCard({ pkg }: { pkg: Package }) {
         <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
           {pkg.hasPrice ? (
             <Link href={`/dashboard/packages/${pkg.id}`} style={{
-              flex: 1, textAlign: 'center', padding: '10px 0',
-              background: C.ink, color: C.navFg,
-              fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
-              textDecoration: 'none', display: 'block', fontFamily: font,
-              textTransform: 'uppercase', border: `2px solid ${C.ink}`,
-              transition: 'all 0.15s',
-            }}>
-              Create Quote →
+              flex: 1, textAlign: 'left', padding: '10px 18px',
+              background: C.gold, color: '#fff',
+              fontSize: 12, fontWeight: 800, letterSpacing: '0.1em',
+              textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              fontFamily: font, textTransform: 'uppercase',
+              border: `2px solid ${C.gold}`, transition: 'background 0.15s',
+            }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.nav; (e.currentTarget as HTMLElement).style.borderColor = C.nav }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = C.gold; (e.currentTarget as HTMLElement).style.borderColor = C.gold }}
+            >
+              <span>Create quote</span><span style={{ fontSize: 15 }}>→</span>
             </Link>
           ) : (
             <a href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D).`)}`}
@@ -260,7 +263,7 @@ function PackagesInner() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: C.bg, color: C.ink, fontFamily: font }}>
+    <div style={{ minHeight: '100vh', background: '#F4F8F7', color: C.ink, fontFamily: font }}>
       <div style={{ maxWidth: 1560, margin: '0 auto', padding: '0 40px 88px', display: 'grid', gridTemplateColumns: '250px 1fr', gap: 0 }}>
 
         {/* ── FILTER SIDEBAR ─────────────────────────────────────────────────── */}
@@ -352,7 +355,7 @@ function PackagesInner() {
                   onChange={e => setSearch(e.target.value)}
                   style={{
                     fontFamily: font, fontSize: 13, padding: '9px 12px',
-                    border: `1px solid ${C.rule}`, background: C.bg,
+                    border: `1px solid ${C.rule}`, background: '#F4F8F7',
                     color: C.ink, outline: 'none', width: 220,
                   }}
                 />
