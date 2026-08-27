@@ -6,7 +6,6 @@ import Link from 'next/link'
 const NAV = [
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Browse Packages', href: '/dashboard/packages' },
-  { label: 'My Quotes', href: '/dashboard/quotes' },
   { label: 'Europe', href: '/dashboard/packages?region=europe' },
   { label: 'Africa', href: '/dashboard/packages?region=africa' },
   { label: 'Asia', href: '/dashboard/packages?region=asia' },

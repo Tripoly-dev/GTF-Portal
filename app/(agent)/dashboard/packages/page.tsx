@@ -367,16 +367,43 @@ function PackagesInner() {
           {activeCount > 0 && (
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
               {region !== 'all' && (
-                <button onClick={() => setRegion('all')} style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  border: `1px solid ${C.ink}`, background: '#fff',
-                  padding: '6px 10px', fontSize: 12, fontWeight: 600,
-                  cursor: 'pointer', fontFamily: font, color: C.ink,
-                  letterSpacing: '0.04em',
-                }}>
+                <button onClick={() => setRegion('all')} style={{ display: 'flex', alignItems: 'center', gap: 8, border: `1px solid ${C.ink}`, background: '#fff', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: font, color: C.ink, letterSpacing: '0.04em' }}>
                   {region.toUpperCase()} <span style={{ fontSize: 13 }}>✕</span>
                 </button>
               )}
+              {durations.map(d => (
+                <button key={d} onClick={() => toggle(durations, setDurations, d)} style={{ display: 'flex', alignItems: 'center', gap: 8, border: `1px solid ${C.ink}`, background: '#fff', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: font, color: C.ink, letterSpacing: '0.04em' }}>
+                  {d} <span style={{ fontSize: 13 }}>✕</span>
+                </button>
+              ))}
+              {priceRanges.map(p => (
+                <button key={p} onClick={() => toggle(priceRanges, setPriceRanges, p)} style={{ display: 'flex', alignItems: 'center', gap: 8, border: `1px solid ${C.ink}`, background: '#fff', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: font, color: C.ink, letterSpacing: '0.04em' }}>
+                  {p} <span style={{ fontSize: 13 }}>✕</span>
+                </button>
+              ))}
+              {stars.map(s => (
+                <button key={s} onClick={() => toggleN(stars, setStars, s)} style={{ display: 'flex', alignItems: 'center', gap: 8, border: `1px solid ${C.ink}`, background: '#fff', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: font, color: C.ink, letterSpacing: '0.04em' }}>
+                  {s}★ Hotels <span style={{ fontSize: 13 }}>✕</span>
+                </button>
+              ))}
+              {months.map(m => {
+                const label = MONTHS.find(mo => mo.value === m)?.label || m
+                return (
+                  <button key={m} onClick={() => toggle(months, setMonths, m)} style={{ display: 'flex', alignItems: 'center', gap: 8, border: `1px solid ${C.ink}`, background: '#fff', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: font, color: C.ink, letterSpacing: '0.04em' }}>
+                    {label} <span style={{ fontSize: 13 }}>✕</span>
+                  </button>
+                )
+              })}
+              {travelerTypes.map(t => (
+                <button key={t} onClick={() => toggle(travelerTypes, setTravelerTypes, t)} style={{ display: 'flex', alignItems: 'center', gap: 8, border: `1px solid ${C.ink}`, background: '#fff', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: font, color: C.ink, letterSpacing: '0.04em' }}>
+                  {t} <span style={{ fontSize: 13 }}>✕</span>
+                </button>
+              ))}
+              {themes.map(t => (
+                <button key={t} onClick={() => toggle(themes, setThemes, t)} style={{ display: 'flex', alignItems: 'center', gap: 8, border: `1px solid ${C.ink}`, background: '#fff', padding: '6px 10px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: font, color: C.ink, letterSpacing: '0.04em' }}>
+                  {t} <span style={{ fontSize: 13 }}>✕</span>
+                </button>
+              ))}
             </div>
           )}
 
@@ -395,7 +422,7 @@ function PackagesInner() {
               </button>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, background: C.rule }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
               {filtered.map(pkg => <PackageCard key={pkg.id} pkg={pkg} />)}
             </div>
           )}

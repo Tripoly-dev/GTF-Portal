@@ -362,8 +362,8 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
 
         {/* 1. Top Price Block — calmer, more breathing room, lighter green */}
         <div style={{ background: 'var(--teal)', padding: '26px 22px 20px' }}>
-          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.16em', fontWeight: 600, marginBottom: 8 }}>QUOTE BUILDER</div>
-          <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10 }}>{f(totalPrice)}</div>
+          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.16em', fontWeight: 600, marginBottom: 8, fontFamily: 'Archivo, Inter, sans-serif' }}>QUOTE BUILDER</div>
+          <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10, fontFamily: 'Archivo, Inter, sans-serif' }}>{f(totalPrice)}</div>
           {tacTotal > 0 && (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 3, marginBottom: 12 }}>
               <span style={{ fontSize: 11, color: '#7fe8cc' }}>✓</span>
@@ -582,7 +582,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                 </div>
               )}
               {tacTotal > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--teal)', fontWeight: 600, marginTop: 2 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#9e2233', fontWeight: 600, marginTop: 2 }}>
                   <span>Agent Royalty (TAC) — Included</span><span>{f(tacTotal)}</span>
                 </div>
               )}
@@ -596,7 +596,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
           {/* 7. Primary button — more space above, quieter helper text */}
           {pkg.hasPrice ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 4 }}>
-              <button onClick={() => setShowModal(true)} className="btn-orange" style={{ width: '100%', justifyContent: 'center', padding: '15px', fontSize: 13, letterSpacing: '0.06em', fontWeight: 700 }}>
+              <button onClick={() => setShowModal(true)} style={{ width: '100%', justifyContent: 'center', padding: '15px', fontSize: 13, letterSpacing: '0.06em', fontWeight: 700, background: '#9e2233', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.15s' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#85182a')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#9e2233')}>
                 SAVE AS PROPOSAL →
               </button>
               <p style={{ fontSize: 10, color: 'var(--ink-light)', textAlign: 'center', fontWeight: 400 }}>Markup adjustable in the next step</p>
@@ -605,7 +607,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 4 }}>
               <a href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D). Please share the nett rate and TAC so I can create a quote for my client.`)}`}
                 target="_blank" rel="noopener noreferrer"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '15px', background: 'var(--orange)', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', boxSizing: 'border-box' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '15px', background: '#9e2233', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', boxSizing: 'border-box', borderRadius: 8, fontFamily: 'Archivo, Inter, sans-serif' }}>
                 REQUEST PRICING →
               </a>
               <p style={{ fontSize: 10, color: 'var(--ink-light)', textAlign: 'center', fontWeight: 400 }}>Pricing not yet available — contact GTF team</p>
