@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES, Package } from '@/data/packages'
@@ -87,38 +87,61 @@ const STATUS_LABEL: Record<string, string> = {
 // ── PACKAGE CARD ──────────────────────────────────────────────────────────────
 function PackageCard({ pkg }: { pkg: Package }) {
   const nextDep = pkg.departures.find(d => d.status !== 'sold-out')
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [glowPos, setGlowPos] = useState({ x: 0, y: 0 })
+  const [hovered, setHovered] = useState(false)
+
   const fmtPrice = () => {
     if (pkg.currency === 'USD') return `$${pkg.basePrice.toLocaleString('en-US')}`
     if (pkg.currency === 'EUR') return `€${pkg.basePrice.toLocaleString('en-IN')}`
     return `₹${pkg.basePrice.toLocaleString('en-IN')}`
   }
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (!rect) return
+    setGlowPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }
+
   return (
-    <div style={{ background: C.cardBg, overflow: 'hidden', border: `1px solid ${C.rule}`, display: 'flex', flexDirection: 'column' }}>
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: C.cardBg, overflow: 'hidden', display: 'flex', flexDirection: 'column',
+        position: 'relative', cursor: 'pointer',
+        border: hovered ? '1.5px solid transparent' : `1px solid ${C.rule}`,
+        transition: 'border-color 0.2s',
+        // Magnetic glow border via background-image on border
+        backgroundImage: hovered
+          ? `radial-gradient(circle at ${glowPos.x}px ${glowPos.y}px, rgba(10,110,94,0.5) 0%, rgba(10,110,94,0.15) 40%, transparent 70%)`
+          : 'none',
+        backgroundClip: hovered ? 'padding-box' : 'unset',
+        boxShadow: hovered ? `0 0 0 1.5px rgba(10,110,94,0.4), 0 8px 32px rgba(10,110,94,0.12)` : 'none',
+      }}
+    >
       {/* Image */}
       <div style={{ position: 'relative', height: 180, overflow: 'hidden', flexShrink: 0 }}>
-        <img src={pkg.img} alt={pkg.name} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(15%)', transition: 'transform 0.5s ease' }} />
+        <img src={pkg.img} alt={pkg.name} style={{
+          width: '100%', height: '100%', objectFit: 'cover',
+          filter: hovered ? 'grayscale(0%) brightness(1)' : 'grayscale(35%) brightness(0.92)',
+          transform: hovered ? 'scale(1.04)' : 'scale(1)',
+          transition: 'filter 0.5s ease, transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94)',
+        }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(24,22,26,0.72) 0%, transparent 55%)' }} />
         {pkg.tag && pkg.tag !== 'COMING SOON' && (
-          <div style={{ position: 'absolute', top: 0, left: 0, padding: '5px 10px', background: C.accent, fontSize: 9, fontWeight: 800, letterSpacing: '0.12em', color: '#fff', textTransform: 'uppercase', fontFamily: font }}>
-            {pkg.tag}
-          </div>
+          <div style={{ position: 'absolute', top: 0, left: 0, padding: '5px 10px', background: C.accent, fontSize: 9, fontWeight: 800, letterSpacing: '0.12em', color: '#fff', textTransform: 'uppercase', fontFamily: font }}>{pkg.tag}</div>
         )}
         <div style={{ position: 'absolute', bottom: 10, left: 14, right: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div style={{ fontSize: 9, color: 'rgba(239,236,229,0.75)', letterSpacing: '0.1em', fontWeight: 700, fontFamily: font }}>
-            {pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D
-          </div>
-          <div>
-            {'★'.repeat(pkg.starRating).split('').map((_, i) => (
-              <span key={i} style={{ color: '#d9b877', fontSize: 10 }}>★</span>
-            ))}
-          </div>
+          <div style={{ fontSize: 9, color: 'rgba(239,236,229,0.75)', letterSpacing: '0.1em', fontWeight: 700, fontFamily: font }}>{pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D</div>
+          <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: '#d9b877', fontSize: 10 }}>★</span>)}</div>
         </div>
       </div>
 
       {/* Content */}
       <div style={{ padding: '16px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Traveler tags */}
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
           {pkg.travelerTypes.slice(0, 2).map(t => (
             <span key={t} style={{ padding: '2px 7px', border: `1px solid ${C.rule}`, fontSize: 9.5, color: C.inkMid, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
@@ -127,38 +150,27 @@ function PackageCard({ pkg }: { pkg: Package }) {
             <span key={t} style={{ padding: '2px 7px', border: `1px solid ${C.accent}`, fontSize: 9.5, color: C.accent, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
           ))}
         </div>
-
-        {/* Package name */}
         <h3 style={{ margin: '0 0 12px', fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink, lineHeight: 1.2, fontFamily: font }}>{pkg.name}</h3>
-
-        {/* Price */}
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8 }}>
           <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink, fontFamily: font }}>{fmtPrice()}</span>
           <span style={{ fontSize: 12, color: C.inkLight }}>per person</span>
         </div>
-
-        {/* Next departure */}
         {nextDep && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: C.inkLight, marginBottom: 14 }}>
-            Next: <strong style={{ color: C.inkMid, fontWeight: 600 }}>
-              {new Date(nextDep.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-            </strong>
+            Next: <strong style={{ color: C.inkMid, fontWeight: 600 }}>{new Date(nextDep.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</strong>
             <span style={{ background: STATUS_BG[nextDep.status] || '#D1FAE5', color: STATUS_FG[nextDep.status] || '#065F46', padding: '1px 6px', fontSize: 9.5, fontWeight: 700, letterSpacing: '0.04em', fontFamily: font }}>
               {STATUS_LABEL[nextDep.status] || 'AVAILABLE'}
             </span>
           </div>
         )}
-
-        {/* CTA */}
         <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
           {pkg.hasPrice ? (
             <Link href={`/dashboard/packages/${pkg.id}`} style={{
-              flex: 1, textAlign: 'left', padding: '10px 18px',
-              background: C.gold, color: '#fff',
+              flex: 1, textAlign: 'left', padding: '10px 18px', background: C.gold, color: '#fff',
               fontSize: 12, fontWeight: 800, letterSpacing: '0.1em',
               textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              fontFamily: font, textTransform: 'uppercase',
-              border: `2px solid ${C.gold}`, transition: 'background 0.15s',
+              fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.gold}`,
+              transition: 'background 0.15s', borderRadius: 6,
             }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.nav; (e.currentTarget as HTMLElement).style.borderColor = C.nav }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = C.gold; (e.currentTarget as HTMLElement).style.borderColor = C.gold }}
@@ -168,11 +180,9 @@ function PackageCard({ pkg }: { pkg: Package }) {
           ) : (
             <a href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D).`)}`}
               target="_blank" rel="noopener noreferrer" style={{
-                flex: 1, textAlign: 'center', padding: '10px 0',
-                background: C.accent, color: '#fff',
-                fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
-                textDecoration: 'none', display: 'block', fontFamily: font,
-                textTransform: 'uppercase', border: `2px solid ${C.accent}`,
+                flex: 1, textAlign: 'center', padding: '10px 0', background: C.accent, color: '#fff',
+                fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', display: 'block',
+                fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.accent}`, borderRadius: 6,
               }}>
               Request Pricing →
             </a>
@@ -181,7 +191,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
             <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer" style={{
               padding: '10px 14px', border: `2px solid ${C.rule}`, color: C.inkMid,
               fontSize: 12, fontWeight: 700, textDecoration: 'none',
-              display: 'flex', alignItems: 'center', fontFamily: font,
+              display: 'flex', alignItems: 'center', fontFamily: font, borderRadius: 6,
             }}>
               PDF ↗
             </a>

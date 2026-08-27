@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, use, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES, Package, DepartureSlot } from '@/data/packages'
@@ -145,7 +145,7 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
                       padding: '5px 12px', border: `1.5px solid ${form.client_type === t ? 'var(--teal)' : 'var(--rule)'}`,
                       background: form.client_type === t ? 'var(--teal)' : 'white',
                       color: form.client_type === t ? '#fff' : 'var(--ink-mid)',
-                      fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif', textTransform: 'capitalize',
+                      fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif', textTransform: 'capitalize',
                     }}>{t}</button>
                   ))}
                 </div>
@@ -260,10 +260,11 @@ function FlightsTab({ pkg, selectedDepartureDate }: { pkg: Package; selectedDepa
         <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
           {flightInfo.departurewise.map(d => (
             <button key={d.departureDate} onClick={() => setActiveDep(d.departureDate)} style={{
-              padding: '5px 12px', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              padding: '5px 12px', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif',
               border: `1.5px solid ${activeDep === d.departureDate ? 'var(--teal)' : 'var(--rule)'}`,
               background: activeDep === d.departureDate ? 'var(--teal)' : 'white',
               color: activeDep === d.departureDate ? '#fff' : 'var(--ink-mid)',
+              borderRadius: 6,
             }}>
               {new Date(d.departureDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
             </button>
@@ -349,9 +350,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
         {subLabel && <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 1 }}>{subLabel}</div>}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1.5px solid var(--rule)', borderRadius: 24, overflow: 'hidden', background: 'white' }}>
-        <button onClick={onDec} disabled={value <= min} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value <= min ? 'not-allowed' : 'pointer', color: value <= min ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+        <button onClick={onDec} disabled={value <= min} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value <= min ? 'not-allowed' : 'pointer', color: value <= min ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
         <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', minWidth: 28, textAlign: 'center' }}>{value}</span>
-        <button onClick={onInc} disabled={value >= max} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+        <button onClick={onInc} disabled={value >= max} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
       </div>
     </div>
   )
@@ -412,7 +413,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                   marginBottom: -1, cursor: 'pointer', whiteSpace: 'nowrap',
                   fontSize: 11, fontWeight: activeMonth === m ? 700 : 400,
                   color: activeMonth === m ? 'var(--teal)' : 'var(--ink-light)',
-                  fontFamily: 'Inter, sans-serif', transition: 'all 0.15s',
+                  fontFamily: 'Archivo, Inter, sans-serif', transition: 'all 0.15s',
                 }}>
                   {new Date(m + '-01').toLocaleDateString('en-IN', { month: 'short', year: '2-digit' })}
                   <span style={{ marginLeft: 4, fontSize: 10, color: 'var(--ink-light)', fontWeight: 400 }}>({byMonth[m]?.length})</span>
@@ -430,7 +431,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                       background: departureDate === slot.date ? 'var(--teal-lt)' : 'white',
                       cursor: slot.status === 'sold-out' ? 'not-allowed' : 'pointer',
                       opacity: slot.status === 'sold-out' ? 0.45 : 1,
-                      fontFamily: 'Inter, sans-serif', transition: 'all 0.15s',
+                      fontFamily: 'Archivo, Inter, sans-serif', transition: 'all 0.15s',
                     }}>
                     <span style={{ fontSize: 13, fontWeight: departureDate === slot.date ? 700 : 500, color: departureDate === slot.date ? 'var(--teal)' : 'var(--ink-mid)' }}>
                       {new Date(slot.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
@@ -461,9 +462,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(10,110,94,0.3)', borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                  <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults <= 1 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                  <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults <= 1 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                   <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', minWidth: 20, textAlign: 'center' }}>{adults}</span>
-                  <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults >= 45 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                  <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults >= 45 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                 </div>
               </div>
 
@@ -482,9 +483,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${childrenWithBed > 0 ? 'rgba(232,97,58,0.3)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                        <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                        <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', minWidth: 20, textAlign: 'center' }}>{childrenWithBed}</span>
-                        <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
                   )}
@@ -500,9 +501,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${childrenWithoutBed > 0 ? 'rgba(2,132,199,0.3)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                        <button onClick={() => setChildrenWithoutBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithoutBed <= 0 ? 'not-allowed' : 'pointer', color: '#0284c7', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                        <button onClick={() => setChildrenWithoutBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithoutBed <= 0 ? 'not-allowed' : 'pointer', color: '#0284c7', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', minWidth: 20, textAlign: 'center' }}>{childrenWithoutBed}</span>
-                        <button onClick={() => setChildrenWithoutBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: '#0284c7', fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        <button onClick={() => setChildrenWithoutBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: '#0284c7', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
                   )}
@@ -524,7 +525,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                   padding: '9px 12px', border: roomType === r.id ? '1.5px solid var(--teal)' : '1px solid var(--rule)',
                   background: roomType === r.id ? 'var(--teal-lt)' : 'white',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.15s',
+                  cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif', transition: 'all 0.15s',
                 }}>
                   <span style={{ fontSize: 12, fontWeight: roomType === r.id ? 700 : 500, color: roomType === r.id ? 'var(--teal)' : 'var(--ink-mid)' }}>{r.label}</span>
                   <span style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 400 }}>{r.note}</span>
@@ -675,6 +676,62 @@ const HOTEL_IMAGES: Record<string, string> = {
   'Hanoi':        'https://images.unsplash.com/photo-1557456170-0cf4f4d0d362?w=400&q=80',
 }
 
+// ── SIMILAR PACKAGE CARD — magnetic glow + grayscale-to-color ────────────────
+function SimilarPackageCard({ sp }: { sp: import('@/data/packages').Package }) {
+  const [hovered, setHovered] = useState(false)
+  const [glowPos, setGlowPos] = useState({ x: 0, y: 0 })
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (!rect) return
+    setGlowPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }
+
+  return (
+    <Link href={`/dashboard/packages/${sp.id}`} style={{ textDecoration: 'none', display: 'block' }}>
+      <div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          overflow: 'hidden', background: 'white', display: 'flex', flexDirection: 'column',
+          position: 'relative',
+          boxShadow: hovered ? `0 0 0 1.5px rgba(10,110,94,0.4), inset 0 0 60px rgba(10,110,94,0.04)` : `0 0 0 1px var(--rule)`,
+          backgroundImage: hovered ? `radial-gradient(circle at ${glowPos.x}px ${glowPos.y}px, rgba(10,110,94,0.08) 0%, transparent 60%)` : 'none',
+          transition: 'box-shadow 0.2s',
+        }}
+      >
+        <div style={{ height: 160, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
+          <img src={sp.img} alt={sp.name} style={{
+            width: '100%', height: '100%', objectFit: 'cover',
+            filter: hovered ? 'grayscale(0%) brightness(1)' : 'grayscale(35%) brightness(0.9)',
+            transform: hovered ? 'scale(1.05)' : 'scale(1)',
+            transition: 'filter 0.5s ease, transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94)',
+          }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.7) 0%, transparent 50%)' }} />
+          <div style={{ position: 'absolute', bottom: 10, left: 12 }}>
+            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>{sp.region.toUpperCase()} · {sp.nights}N/{sp.days}D</div>
+          </div>
+          {sp.tag && <div style={{ position: 'absolute', top: 10, left: 10, padding: '2px 7px', background: 'var(--orange)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{sp.tag}</div>}
+        </div>
+        <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 6, lineHeight: 1.3, fontFamily: 'Archivo, Inter, sans-serif' }}>{sp.name}</div>
+          <div>
+            <div className="font-tight" style={{ fontSize: 15, fontWeight: 800, color: 'var(--teal)', marginBottom: 8, fontFamily: 'Archivo, Inter, sans-serif' }}>
+              {sp.currency === 'USD' ? '$' : sp.currency === 'EUR' ? '€' : '₹'}{sp.basePrice.toLocaleString(sp.currency === 'USD' ? 'en-US' : 'en-IN')}
+            </div>
+            <div style={{ padding: '8px 14px', background: 'var(--teal)', color: '#fff', fontSize: 10, fontWeight: 700, textAlign: 'center', letterSpacing: '0.06em', borderRadius: 6 }}>
+              VIEW PACKAGE →
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 // ── MAIN PAGE ─────────────────────────────────────────────────────────────────
 export default function PackageDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -813,7 +870,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                 <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} style={{
                   padding: '14px 20px', background: 'none', border: 'none',
                   borderBottom: `2px solid ${activeTab === tab.id ? 'var(--teal)' : 'transparent'}`,
-                  marginBottom: -2, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                  marginBottom: -2, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif',
                   fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
                   color: activeTab === tab.id ? 'var(--teal)' : 'var(--ink-light)',
                   transition: 'all 0.15s', whiteSpace: 'nowrap',
@@ -866,7 +923,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                   )}
                   {pkg.workdriveUrl && (
                     <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 20px', background: 'var(--bg)', border: '1px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 12, fontWeight: 600, textDecoration: 'none', marginTop: 20 }}>
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 20px', background: 'var(--bg)', border: '1px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 12, fontWeight: 600, textDecoration: 'none', marginTop: 20, borderRadius: 8 }}>
                       📄 VIEW DETAILED ITINERARY (PDF) ↗
                     </a>
                   )}
@@ -955,29 +1012,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                 <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>SIMILAR PACKAGES</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {similarPkgs.map(sp => (
-                    <Link key={sp.id} href={`/dashboard/packages/${sp.id}`} style={{ textDecoration: 'none', display: 'block' }}>
-                      <div style={{ border: '1px solid var(--rule)', overflow: 'hidden', background: 'white', transition: 'all 0.2s', display: 'flex', flexDirection: 'column' }} className="pkg-card">
-                        <div style={{ height: 160, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
-                          <img src={sp.img} alt={sp.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s' }} />
-                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.7) 0%, transparent 50%)' }} />
-                          <div style={{ position: 'absolute', bottom: 10, left: 12 }}>
-                            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>{sp.region.toUpperCase()} · {sp.nights}N/{sp.days}D</div>
-                          </div>
-                          {sp.tag && <div style={{ position: 'absolute', top: 10, left: 10, padding: '2px 7px', background: 'var(--orange)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{sp.tag}</div>}
-                        </div>
-                        <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 6, lineHeight: 1.3 }}>{sp.name}</div>
-                          <div>
-                            <div className="font-tight" style={{ fontSize: 15, fontWeight: 800, color: 'var(--teal)', marginBottom: 8 }}>
-                              {fmtCurrency(sp.basePrice, sp.currency)}
-                            </div>
-                            <div style={{ padding: '8px 0', background: 'var(--teal)', color: '#fff', fontSize: 10, fontWeight: 700, textAlign: 'center', letterSpacing: '0.06em' }}>
-                              VIEW PACKAGE →
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
+                    <SimilarPackageCard key={sp.id} sp={sp} />
                   ))}
                 </div>
               </div>
