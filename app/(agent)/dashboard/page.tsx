@@ -324,7 +324,7 @@ export default function DashboardPage() {
         </section>
 
         {/* ── EXPLORE BY REGION ──────────────────────────────────────────────── */}
-        <section style={{ padding: '34px 0 0' }}>
+        <section style={{ padding: '34px 0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
             <div>
               <h2 style={{ fontSize: 15, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 6px', fontFamily: font }}>Explore by region</h2>
@@ -334,7 +334,7 @@ export default function DashboardPage() {
               All 17 packages →
             </Link>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2, background: C.ink }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'rgba(24,22,26,0.2)', marginBottom: 0 }}>
             {regions.map(r => (
               <Link key={r.name} href={r.href} style={{ position: 'relative', height: 300, display: 'block', overflow: 'hidden', background: '#e4dfd5', textDecoration: 'none' }}>
                 <div style={{ position: 'absolute', top: 0, right: 0, bottom: 132, left: 0, overflow: 'hidden' }}>

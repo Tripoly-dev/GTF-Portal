@@ -368,11 +368,13 @@ function PackagesInner() {
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
               {region !== 'all' && (
                 <button onClick={() => setRegion('all')} style={{
-                  padding: '4px 10px', background: C.ink, color: C.navFg,
-                  fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', cursor: 'pointer',
-                  border: 'none', fontFamily: font, display: 'flex', alignItems: 'center', gap: 6,
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  border: `1px solid ${C.ink}`, background: '#fff',
+                  padding: '6px 10px', fontSize: 12, fontWeight: 600,
+                  cursor: 'pointer', fontFamily: font, color: C.ink,
+                  letterSpacing: '0.04em',
                 }}>
-                  {region.toUpperCase()} <span>✕</span>
+                  {region.toUpperCase()} <span style={{ fontSize: 13 }}>✕</span>
                 </button>
               )}
             </div>
