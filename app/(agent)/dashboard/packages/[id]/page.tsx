@@ -1024,7 +1024,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
       </div>
 
       {/* ── MAIN CONTENT — grid starts right below breadcrumb ─────────────── */}
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '20px 16px 40px' }}>
+      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '20px 16px 40px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 24, alignItems: 'start' }}>
 
           {/* Left column */}
