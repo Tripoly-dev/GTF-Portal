@@ -786,91 +786,109 @@ const HOTEL_IMAGES: Record<string, string> = {
 }
 
 // ── HOTELS TAB — card with image carousel ────────────────────────────────────
-function HotelsTab({ hotels }: { hotels: import('@/data/packages').Hotel[] }) {
-  const [imgIdx, setImgIdx] = useState<number[]>(hotels.map(() => 0))
+function HotelCard({ h, cardIdx }: { h: import('@/data/packages').Hotel, cardIdx: number }) {
+  const gallery = HOTEL_GALLERY[normalizeHotelName(h.name)] || []
+  const fallback = HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'
+  const images = gallery.length > 0 ? gallery : [fallback]
+  const hasMultiple = images.length > 1
 
-  const go = (hotelIdx: number, dir: number, total: number) => {
-    setImgIdx(prev => {
-      const next = [...prev]
-      next[hotelIdx] = (next[hotelIdx] + dir + total) % total
-      return next
-    })
+  const [idx, setIdx] = useState(0)
+  const pauseRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const go = (dir: number) => {
+    setIdx(prev => (prev + dir + images.length) % images.length)
+    // Pause auto-advance for 8 seconds on manual interaction
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    if (pauseRef.current) clearTimeout(pauseRef.current)
+    pauseRef.current = setTimeout(() => startAuto(), 8000)
   }
 
+  const jumpTo = (i: number) => {
+    setIdx(i)
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    if (pauseRef.current) clearTimeout(pauseRef.current)
+    pauseRef.current = setTimeout(() => startAuto(), 8000)
+  }
+
+  const startAuto = () => {
+    if (!hasMultiple) return
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => {
+      setIdx(prev => (prev + 1) % images.length)
+    }, 4000)
+  }
+
+  useEffect(() => {
+    startAuto()
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      if (pauseRef.current) clearTimeout(pauseRef.current)
+    }
+  }, [images.length])
+
+  return (
+    <div style={{ display: 'flex', border: '1px solid var(--rule)', overflow: 'hidden', background: 'white' }}>
+      {/* Image panel */}
+      <div style={{ position: 'relative', width: 380, minWidth: 380, height: 200, flexShrink: 0, background: '#071a17' }}>
+        <img
+          src={images[idx]}
+          alt={h.name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'opacity 0.4s' }}
+        />
+        {hasMultiple && (
+          <>
+            <button onClick={() => go(-1)} style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', border: 'none', color: 'white', width: 30, height: 30, borderRadius: '50%', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>‹</button>
+            <button onClick={() => go(1)} style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', border: 'none', color: 'white', width: 30, height: 30, borderRadius: '50%', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>›</button>
+            <div style={{ position: 'absolute', bottom: 8, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 5, zIndex: 2 }}>
+              {images.map((_, d) => (
+                <div key={d} onClick={() => jumpTo(d)} style={{ width: 6, height: 6, borderRadius: '50%', background: d === idx ? 'white' : 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'background 0.2s' }} />
+              ))}
+            </div>
+            <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.5)', color: 'white', fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 3, zIndex: 2 }}>{idx + 1}/{images.length}</div>
+          </>
+        )}
+      </div>
+
+      {/* Info panel */}
+      <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 5 }}>{h.name}</div>
+            <div style={{ display: 'flex', gap: 1, marginBottom: 0 }}>
+              {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 12 }}>★</span>)}
+            </div>
+          </div>
+          <div style={{ fontSize: 12, padding: '5px 12px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>{h.meal}</div>
+        </div>
+        <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap', marginTop: 4 }}>
+          <div>
+            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>CITY</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{h.city}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>DURATION</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>ROOM TYPE</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{h.roomType}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HotelsTab({ hotels }: { hotels: import('@/data/packages').Hotel[] }) {
   if (hotels.length === 0) {
     return <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--ink-light)', fontSize: 13 }}>Hotel details available in the PDF brochure.</div>
   }
-
   return (
     <div>
       <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>ACCOMMODATION</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {hotels.map((h, i) => {
-          const gallery = HOTEL_GALLERY[normalizeHotelName(h.name)] || []
-          const fallback = HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'
-          const images = gallery.length > 0 ? gallery : [fallback]
-          const idx = imgIdx[i] || 0
-          const hasMultiple = images.length > 1
-
-          return (
-            <div key={i} style={{ display: 'flex', border: '1px solid var(--rule)', overflow: 'hidden', background: 'white' }}>
-              {/* Image panel */}
-              <div style={{ position: 'relative', width: 240, minWidth: 240, height: 160, flexShrink: 0, background: '#071a17' }}>
-                <img
-                  src={images[idx]}
-                  alt={h.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'opacity 0.3s' }}
-                />
-                {/* Prev / Next arrows */}
-                {hasMultiple && (
-                  <>
-                    <button onClick={() => go(i, -1, images.length)} style={{ position: 'absolute', left: 6, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: 'white', width: 26, height: 26, borderRadius: '50%', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>‹</button>
-                    <button onClick={() => go(i, 1, images.length)} style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: 'white', width: 26, height: 26, borderRadius: '50%', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>›</button>
-                  </>
-                )}
-                {/* Dot indicators */}
-                {hasMultiple && (
-                  <div style={{ position: 'absolute', bottom: 6, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 4 }}>
-                    {images.map((_, d) => (
-                      <div key={d} onClick={() => setImgIdx(prev => { const n = [...prev]; n[i] = d; return n })} style={{ width: 5, height: 5, borderRadius: '50%', background: d === idx ? 'white' : 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'background 0.2s' }} />
-                    ))}
-                  </div>
-                )}
-                {/* Image count badge */}
-                {hasMultiple && (
-                  <div style={{ position: 'absolute', top: 7, right: 7, background: 'rgba(0,0,0,0.5)', color: 'white', fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 3 }}>{idx + 1}/{images.length}</div>
-                )}
-              </div>
-
-              {/* Info panel */}
-              <div style={{ flex: 1, padding: '14px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 4 }}>{h.name}</div>
-                    <div style={{ display: 'flex', gap: 1, marginBottom: 6 }}>
-                      {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 11 }}>★</span>)}
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 11, padding: '4px 10px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>{h.meal}</div>
-                </div>
-                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-                  <div>
-                    <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 2 }}>CITY</div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{h.city}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 2 }}>DURATION</div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 2 }}>ROOM</div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{h.roomType}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        })}
+        {hotels.map((h, i) => <HotelCard key={i} h={h} cardIdx={i} />)}
       </div>
       <p style={{ marginTop: 12, fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic' }}>* Hotels or equivalent. Subject to availability at time of booking.</p>
     </div>
@@ -939,6 +957,8 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   const router = useRouter()
   const pkg = PACKAGES.find(p => p.id === id)
   const [galleryIdx, setGalleryIdx] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIdx, setLightboxIdx] = useState(0)
   const [saved, setSaved] = useState(false)
   const [activeTab, setActiveTab] = useState<string>('overview')
   const [selectedDepartureDate, setSelectedDepartureDate] = useState(pkg?.departures.find(d => d.status !== 'sold-out')?.date || '')
@@ -1030,19 +1050,25 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
           {/* Left column */}
           <div>
             {/* ── GALLERY — inside left column ─────────────────────────────── */}
-            <div style={{ position: 'relative', height: 420, background: '#071a17', overflow: 'hidden', marginBottom: 0 }}>
-              <img src={pkg.gallery[galleryIdx]} alt={pkg.name}
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85, transition: 'opacity 0.3s' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.3) 50%, transparent 100%)' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)' }} />
+            <div style={{ position: 'relative', height: 500, background: '#071a17', overflow: 'hidden', marginBottom: 0 }}>
+              {/* Main image — clickable opens lightbox */}
+              <img
+                src={pkg.gallery[galleryIdx]} alt={pkg.name}
+                onClick={() => { setLightboxIdx(galleryIdx); setLightboxOpen(true) }}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85, transition: 'opacity 0.3s', cursor: 'zoom-in' }}
+              />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.3) 50%, transparent 100%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)', pointerEvents: 'none' }} />
               {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2 }}>{pkg.tag}</div>}
-              {/* Thumbnail strip — vertical, right side */}
-              <div style={{ position: 'absolute', right: 12, top: 12, bottom: 12, display: 'flex', flexDirection: 'column', gap: 5, zIndex: 2, width: 70 }}>
+              {/* Click to expand hint */}
+              <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.45)', color: 'rgba(255,255,255,0.8)', fontSize: 10, fontWeight: 600, padding: '4px 10px', letterSpacing: '0.06em', zIndex: 2, pointerEvents: 'none' }}>CLICK TO EXPAND</div>
+              {/* Thumbnail strip — vertical, right side, scrollable */}
+              <div style={{ position: 'absolute', right: 12, top: 12, bottom: 12, display: 'flex', flexDirection: 'column', gap: 5, zIndex: 2, width: 72, overflowY: 'auto', scrollbarWidth: 'none' }}>
                 {pkg.gallery.map((img, i) => (
                   <div key={i} onClick={() => setGalleryIdx(i)} style={{
-                    width: 70, flex: 1, overflow: 'hidden', cursor: 'pointer',
+                    width: 72, height: 54, flexShrink: 0, overflow: 'hidden', cursor: 'pointer',
                     border: `2px solid ${galleryIdx === i ? '#fff' : 'rgba(255,255,255,0.25)'}`,
-                    opacity: galleryIdx === i ? 1 : 0.55, transition: 'all 0.2s',
+                    opacity: galleryIdx === i ? 1 : 0.6, transition: 'all 0.2s',
                   }}>
                     <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
@@ -1193,6 +1219,62 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
           <QuotePanel pkg={pkg} onSave={handleSave} onDepartureChange={setSelectedDepartureDate} />
         </div>
       </div>
+
+      {/* ── LIGHTBOX ─────────────────────────────────────────────────────────── */}
+      {lightboxOpen && (
+        <div
+          onClick={() => setLightboxOpen(false)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          {/* Close button */}
+          <button
+            onClick={() => setLightboxOpen(false)}
+            style={{ position: 'absolute', top: 20, right: 24, background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: 40, height: 40, borderRadius: '50%', fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000 }}
+          >✕</button>
+
+          {/* Image counter */}
+          <div style={{ position: 'absolute', top: 24, left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 600, letterSpacing: '0.08em' }}>
+            {lightboxIdx + 1} / {pkg.gallery.length}
+          </div>
+
+          {/* Prev button */}
+          {pkg.gallery.length > 1 && (
+            <button
+              onClick={e => { e.stopPropagation(); setLightboxIdx(i => (i - 1 + pkg.gallery.length) % pkg.gallery.length) }}
+              style={{ position: 'absolute', left: 20, background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: 48, height: 48, borderRadius: '50%', fontSize: 24, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000 }}
+            >‹</button>
+          )}
+
+          {/* Main lightbox image */}
+          <img
+            src={pkg.gallery[lightboxIdx]}
+            alt={pkg.name}
+            onClick={e => e.stopPropagation()}
+            style={{ maxWidth: '85vw', maxHeight: '85vh', objectFit: 'contain', boxShadow: '0 8px 40px rgba(0,0,0,0.6)' }}
+          />
+
+          {/* Next button */}
+          {pkg.gallery.length > 1 && (
+            <button
+              onClick={e => { e.stopPropagation(); setLightboxIdx(i => (i + 1) % pkg.gallery.length) }}
+              style={{ position: 'absolute', right: 20, background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: 48, height: 48, borderRadius: '50%', fontSize: 24, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000 }}
+            >›</button>
+          )}
+
+          {/* Thumbnail strip at bottom */}
+          <div style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 6, maxWidth: '80vw', overflowX: 'auto', scrollbarWidth: 'none', padding: '4px 0' }}>
+            {pkg.gallery.map((img, i) => (
+              <div
+                key={i}
+                onClick={e => { e.stopPropagation(); setLightboxIdx(i) }}
+                style={{ width: 60, height: 44, flexShrink: 0, overflow: 'hidden', cursor: 'pointer', border: `2px solid ${lightboxIdx === i ? '#fff' : 'rgba(255,255,255,0.25)'}`, opacity: lightboxIdx === i ? 1 : 0.5, transition: 'all 0.2s' }}
+              >
+                <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
