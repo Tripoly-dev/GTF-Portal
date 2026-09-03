@@ -633,6 +633,115 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
 }
 
 // ── HOTEL IMAGES ──────────────────────────────────────────────────────────────
+// ── HOTEL GALLERY — keyed by normalized hotel name (no "or similar") ──────────
+const HOTEL_GALLERY: Record<string, string[]> = {
+  // GRAND TURKIYE
+  'Wyndham Istanbul Old City Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ISTANBUL/WYNDHAM%20ISTANBUL%20OLD%20CITY%20HOTEL/LOBBY.avif',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ISTANBUL/WYNDHAM%20ISTANBUL%20OLD%20CITY%20HOTEL/OUTSIDE%20VIEW.avif',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ISTANBUL/WYNDHAM%20ISTANBUL%20OLD%20CITY%20HOTEL/RESTAURANT.avif',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ISTANBUL/WYNDHAM%20ISTANBUL%20OLD%20CITY%20HOTEL/STANDARD%20ROOM.avif',
+  ],
+  'Mercure Hotel Kızılay': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/LOBBY.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/OUTSIDE%20ENTRY.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/OUTSIDEVIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/RESTAURANT.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/STANDARD%20ROOM.jpg',
+  ],
+  'Aleria Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/CAPPADOCIA/ALLERIA%20HOTEL/HOTEL%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/CAPPADOCIA/ALLERIA%20HOTEL/RESTAURANT.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/CAPPADOCIA/ALLERIA%20HOTEL/STANDARD%20ROOM.jpg',
+  ],
+  'Ring Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANTALYA/RING%20HOTEL/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANTALYA/RING%20HOTEL/DOUBLE%20ROOM.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANTALYA/RING%20HOTEL/RESTAURANT.jpg',
+  ],
+  'Adempira Thermal Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/LOBBY.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/DELUXE%20ROOM.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/RESTAURANT.jpg',
+  ],
+  'Odelia Resort Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/LOBBY.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/STANDARD%20ROOM.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/RESTAURANT.jpg',
+  ],
+  // MYSTICAL EGYPT
+  'Novotel 6 October Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/CAIRO/NOVOTEL%206%20OCTOBER%20HOTEL/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/CAIRO/NOVOTEL%206%20OCTOBER%20HOTEL/DINING.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/CAIRO/NOVOTEL%206%20OCTOBER%20HOTEL/STANDARD%20ROOM.jpg',
+  ],
+  'Semiramis / Commodore': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/NILE%20CRUISE/SEMIRAMIS%20CRUISE/CRUISE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/NILE%20CRUISE/SEMIRAMIS%20CRUISE/INSIDE.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/NILE%20CRUISE/SEMIRAMIS%20CRUISE/ROOM%20VIEW.jpg',
+  ],
+  'Pharaoh Azur Hurgada': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/HURGHADA/PAHROAH%20AZUR%20HOTEL%20AND%20RESORT/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/HURGHADA/PAHROAH%20AZUR%20HOTEL%20AND%20RESORT/DINING.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/HURGHADA/PAHROAH%20AZUR%20HOTEL%20AND%20RESORT/STANDARD%20POOL%20VIEW%20ROOM.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/HURGHADA/PAHROAH%20AZUR%20HOTEL%20AND%20RESORT/STANDARD%20ROOM.jpg',
+  ],
+  // SOUTH AFRICAN SPLENDOUR
+  'Cresta Grande Cape Town': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/DINING%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/DINING.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/STANDARD%20DOUBLE%20ROOM%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/STANDARD%20DOUBLE%20ROOM.jpg',
+  ],
+  'Diaz Hotel & Resort': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/GARDEN%20ROUTE/DIAZ%20HOTEL%20&%20RESORT/OUTSIDE.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/GARDEN%20ROUTE/DIAZ%20HOTEL%20&%20RESORT/DINING.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/GARDEN%20ROUTE/DIAZ%20HOTEL%20&%20RESORT/SUITE%20ROOM.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/GARDEN%20ROUTE/DIAZ%20HOTEL%20&%20RESORT/SUITE%20ROOM%202.jpg',
+  ],
+  'The Catalyst Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/JOHANNESBURG/THE%20CATALYST%20HOTEL/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/JOHANNESBURG/THE%20CATALYST%20HOTEL/DINING.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/JOHANNESBURG/THE%20CATALYST%20HOTEL/BESTSELLER%20ROOM.jpg',
+  ],
+  // MAURITIUS
+  'Pearle Beach Resort & Spa': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/OUTSIDE%20HOTEL.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/OUTSIDE%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/DINING%20SPACE.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/DINING%20SPACE%202.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/BUDGET%20ROOM.jpg',
+  ],
+  // VIETNAM
+  'Muong Thanh Saigon Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HO%20CHI%20MINH/MUONG%20THANH%20SAIGON/OUTSIDE.webp',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HO%20CHI%20MINH/MUONG%20THANH%20SAIGON/LOBBY.webp',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HO%20CHI%20MINH/MUONG%20THANH%20SAIGON/STANDARD%20ROOM.avif',
+  ],
+  'Grand Gold Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/DA%20NANG/GRAND%20GOLD%20HOTEL/OUTSIDE%20VIEW.webp',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/DA%20NANG/GRAND%20GOLD%20HOTEL/LOBBY.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/DA%20NANG/GRAND%20GOLD%20HOTEL/DINING.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/DA%20NANG/GRAND%20GOLD%20HOTEL/SUPERIOR%20DOUBLE%20ROOM.jpg',
+  ],
+  'Gloud Hotel': [
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/OUTSIDE.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/LOBBY.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/LOBBY%20VIEW.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/DINING.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/DOUBLE%20ROOM.jpg',
+    'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/DOUBLE%20ROOM%20VIEW.jpg',
+  ],
+}
+
+// Normalize hotel name — strip "or similar" suffix for gallery lookup
+function normalizeHotelName(name: string): string {
+  return name.replace(/\s*\/?\s*or similar$/i, '').trim()
+}
+
 const HOTEL_IMAGES: Record<string, string> = {
   'Paris':        'https://static.wixstatic.com/media/226760_aaf73d04b8b845e488c4736ee77ba918~mv2.jpg',
   'Amsterdam':    'https://static.wixstatic.com/media/226760_707548668df94335af359cb5fad6fc5c~mv2.jpg',
@@ -674,6 +783,98 @@ const HOTEL_IMAGES: Record<string, string> = {
   'Ho Chi Minh City': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HO%20CHI%20MINH/MUONG%20THANH%20SAIGON/OUTSIDE.webp',
   'Da Nang':      'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/DA%20NANG/GRAND%20GOLD%20HOTEL/OUTSIDE%20VIEW.webp',
   'Hanoi':        'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/OUTSIDE.jpg',
+}
+
+// ── HOTELS TAB — card with image carousel ────────────────────────────────────
+function HotelsTab({ hotels }: { hotels: import('@/data/packages').Hotel[] }) {
+  const [imgIdx, setImgIdx] = useState<number[]>(hotels.map(() => 0))
+
+  const go = (hotelIdx: number, dir: number, total: number) => {
+    setImgIdx(prev => {
+      const next = [...prev]
+      next[hotelIdx] = (next[hotelIdx] + dir + total) % total
+      return next
+    })
+  }
+
+  if (hotels.length === 0) {
+    return <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--ink-light)', fontSize: 13 }}>Hotel details available in the PDF brochure.</div>
+  }
+
+  return (
+    <div>
+      <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>ACCOMMODATION</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {hotels.map((h, i) => {
+          const gallery = HOTEL_GALLERY[normalizeHotelName(h.name)] || []
+          const fallback = HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'
+          const images = gallery.length > 0 ? gallery : [fallback]
+          const idx = imgIdx[i] || 0
+          const hasMultiple = images.length > 1
+
+          return (
+            <div key={i} style={{ display: 'flex', border: '1px solid var(--rule)', overflow: 'hidden', background: 'white' }}>
+              {/* Image panel */}
+              <div style={{ position: 'relative', width: 240, minWidth: 240, height: 160, flexShrink: 0, background: '#071a17' }}>
+                <img
+                  src={images[idx]}
+                  alt={h.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'opacity 0.3s' }}
+                />
+                {/* Prev / Next arrows */}
+                {hasMultiple && (
+                  <>
+                    <button onClick={() => go(i, -1, images.length)} style={{ position: 'absolute', left: 6, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: 'white', width: 26, height: 26, borderRadius: '50%', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>‹</button>
+                    <button onClick={() => go(i, 1, images.length)} style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: 'white', width: 26, height: 26, borderRadius: '50%', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>›</button>
+                  </>
+                )}
+                {/* Dot indicators */}
+                {hasMultiple && (
+                  <div style={{ position: 'absolute', bottom: 6, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 4 }}>
+                    {images.map((_, d) => (
+                      <div key={d} onClick={() => setImgIdx(prev => { const n = [...prev]; n[i] = d; return n })} style={{ width: 5, height: 5, borderRadius: '50%', background: d === idx ? 'white' : 'rgba(255,255,255,0.4)', cursor: 'pointer', transition: 'background 0.2s' }} />
+                    ))}
+                  </div>
+                )}
+                {/* Image count badge */}
+                {hasMultiple && (
+                  <div style={{ position: 'absolute', top: 7, right: 7, background: 'rgba(0,0,0,0.5)', color: 'white', fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 3 }}>{idx + 1}/{images.length}</div>
+                )}
+              </div>
+
+              {/* Info panel */}
+              <div style={{ flex: 1, padding: '14px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 4 }}>{h.name}</div>
+                    <div style={{ display: 'flex', gap: 1, marginBottom: 6 }}>
+                      {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 11 }}>★</span>)}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 11, padding: '4px 10px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>{h.meal}</div>
+                </div>
+                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 2 }}>CITY</div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{h.city}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 2 }}>DURATION</div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 2 }}>ROOM</div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{h.roomType}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <p style={{ marginTop: 12, fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic' }}>* Hotels or equivalent. Subject to availability at time of booking.</p>
+    </div>
+  )
 }
 
 // ── SIMILAR PACKAGE CARD — magnetic glow + grayscale-to-color ────────────────
@@ -937,38 +1138,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
 
               {/* HOTELS TAB */}
               {activeTab === 'hotels' && (
-                <div>
-                  <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 16 }}>ACCOMMODATION</div>
-                  {pkg.hotels.length > 0 ? (
-                    <>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                        {pkg.hotels.map((h, i) => (
-                          <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 140px 1fr 120px 120px', gap: 14, padding: '14px 0', borderBottom: i < pkg.hotels.length - 1 ? '1px solid var(--rule)' : 'none', alignItems: 'center' }}>
-                            <div style={{ width: 80, height: 60, overflow: 'hidden' }}>
-                              <img src={HOTEL_IMAGES[h.city] || 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80'} alt={h.city} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            </div>
-                            <div>
-                              <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>CITY</div>
-                              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{h.city}</div>
-                              <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
-                            </div>
-                            <div>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)', marginBottom: 3 }}>{h.name}</div>
-                              <div style={{ display: 'flex', gap: 1 }}>
-                                {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 11 }}>★</span>)}
-                              </div>
-                            </div>
-                            <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{h.roomType}</div>
-                            <div style={{ fontSize: 11, padding: '4px 10px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, textAlign: 'center' }}>{h.meal}</div>
-                          </div>
-                        ))}
-                      </div>
-                      <p style={{ marginTop: 12, fontSize: 11, color: 'var(--ink-light)', fontStyle: 'italic' }}>* Hotels or equivalent. Subject to availability at time of booking.</p>
-                    </>
-                  ) : (
-                    <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--ink-light)', fontSize: 13 }}>Hotel details available in the PDF brochure.</div>
-                  )}
-                </div>
+                <HotelsTab hotels={pkg.hotels} />
               )}
 
               {/* INCLUSIONS TAB */}
