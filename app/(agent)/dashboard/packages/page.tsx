@@ -15,9 +15,11 @@ const C = {
   navFg:    '#efebe3',
   accent:   '#9e2233',
   gold:     '#6f5320',
+  teal:     '#0a6e5e',
+  tealDark: '#085e50',
   cardBg:   '#ffffff',
 }
-const font = '"Archivo", system-ui, sans-serif'
+const font = '"DM Sans", "Archivo", system-ui, sans-serif'
 
 // ── FILTER DATA ───────────────────────────────────────────────────────────────
 const DURATION_RANGES = [
@@ -45,7 +47,7 @@ function FilterRow({ label, checked, onChange, count }: { label: string; checked
   return (
     <div onClick={onChange} style={{
       display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
-      fontSize: 13.5, color: checked ? C.ink : C.inkMid, fontWeight: checked ? 600 : 400,
+      fontSize: 14, color: checked ? C.ink : C.inkMid, fontWeight: checked ? 600 : 400,
       padding: '5px 0', userSelect: 'none', fontFamily: font,
     }}>
       <span style={{
@@ -58,7 +60,7 @@ function FilterRow({ label, checked, onChange, count }: { label: string; checked
         {checked ? '✓' : ''}
       </span>
       <span style={{ flex: 1 }}>{label}</span>
-      {count !== undefined && <span style={{ fontSize: 11.5, color: '#8f8879' }}>{count}</span>}
+      {count !== undefined && <span style={{ fontSize: 12, color: '#8f8879' }}>{count}</span>}
     </div>
   )
 }
@@ -67,7 +69,7 @@ function FilterRow({ label, checked, onChange, count }: { label: string; checked
 function FilterSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ borderTop: `1px solid ${C.rule}`, padding: '16px 0 6px' }}>
-      <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em', color: C.inkMid, marginBottom: 12, fontFamily: font }}>{title}</div>
+      <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.14em', color: C.inkMid, marginBottom: 12, fontFamily: font }}>{title}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>{children}</div>
     </div>
   )
@@ -132,11 +134,11 @@ function PackageCard({ pkg }: { pkg: Package }) {
         }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(24,22,26,0.72) 0%, transparent 55%)' }} />
         {pkg.tag && pkg.tag !== 'COMING SOON' && (
-          <div style={{ position: 'absolute', top: 0, left: 0, padding: '5px 10px', background: C.accent, fontSize: 9, fontWeight: 800, letterSpacing: '0.12em', color: '#fff', textTransform: 'uppercase', fontFamily: font }}>{pkg.tag}</div>
+          <div style={{ position: 'absolute', top: 0, left: 0, padding: '5px 10px', background: C.accent, fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', color: '#fff', textTransform: 'uppercase', fontFamily: font }}>{pkg.tag}</div>
         )}
         <div style={{ position: 'absolute', bottom: 10, left: 14, right: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div style={{ fontSize: 9, color: 'rgba(239,236,229,0.75)', letterSpacing: '0.1em', fontWeight: 700, fontFamily: font }}>{pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D</div>
-          <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: '#d9b877', fontSize: 10 }}>★</span>)}</div>
+          <div style={{ fontSize: 11, color: 'rgba(239,236,229,0.75)', letterSpacing: '0.1em', fontWeight: 700, fontFamily: font }}>{pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D</div>
+          <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: '#d9b877', fontSize: 11 }}>★</span>)}</div>
         </div>
       </div>
 
@@ -144,21 +146,21 @@ function PackageCard({ pkg }: { pkg: Package }) {
       <div style={{ padding: '16px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
           {pkg.travelerTypes.slice(0, 2).map(t => (
-            <span key={t} style={{ padding: '2px 7px', border: `1px solid ${C.rule}`, fontSize: 9.5, color: C.inkMid, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
+            <span key={t} style={{ padding: '3px 8px', border: `1px solid ${C.rule}`, fontSize: 11, color: C.inkMid, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
           ))}
           {pkg.themes.slice(0, 1).map(t => (
-            <span key={t} style={{ padding: '2px 7px', border: `1px solid ${C.accent}`, fontSize: 9.5, color: C.accent, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
+            <span key={t} style={{ padding: '3px 8px', border: `1px solid ${C.accent}`, fontSize: 11, color: C.accent, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
           ))}
         </div>
-        <h3 style={{ margin: '0 0 12px', fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink, lineHeight: 1.2, fontFamily: font }}>{pkg.name}</h3>
+        <h3 style={{ margin: '0 0 12px', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink, lineHeight: 1.2, fontFamily: font }}>{pkg.name}</h3>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8 }}>
-          <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink, fontFamily: font }}>{fmtPrice()}</span>
-          <span style={{ fontSize: 12, color: C.inkLight }}>per person</span>
+          <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink, fontFamily: font }}>{fmtPrice()}</span>
+          <span style={{ fontSize: 13, color: C.inkLight }}>per person</span>
         </div>
         {nextDep && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: C.inkLight, marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.inkLight, marginBottom: 14 }}>
             Next: <strong style={{ color: C.inkMid, fontWeight: 600 }}>{new Date(nextDep.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</strong>
-            <span style={{ background: STATUS_BG[nextDep.status] || '#D1FAE5', color: STATUS_FG[nextDep.status] || '#065F46', padding: '1px 6px', fontSize: 9.5, fontWeight: 700, letterSpacing: '0.04em', fontFamily: font }}>
+            <span style={{ background: STATUS_BG[nextDep.status] || '#D1FAE5', color: STATUS_FG[nextDep.status] || '#065F46', padding: '2px 7px', fontSize: 11, fontWeight: 700, letterSpacing: '0.04em', fontFamily: font }}>
               {STATUS_LABEL[nextDep.status] || 'AVAILABLE'}
             </span>
           </div>
@@ -166,22 +168,22 @@ function PackageCard({ pkg }: { pkg: Package }) {
         <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
           {pkg.hasPrice ? (
             <Link href={`/dashboard/packages/${pkg.id}`} style={{
-              flex: 1, textAlign: 'left', padding: '10px 18px', background: C.gold, color: '#fff',
-              fontSize: 12, fontWeight: 800, letterSpacing: '0.1em',
+              flex: 1, textAlign: 'left', padding: '11px 18px', background: C.teal, color: '#fff',
+              fontSize: 13, fontWeight: 700, letterSpacing: '0.08em',
               textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.gold}`,
-              transition: 'background 0.15s', borderRadius: 6,
+              fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.teal}`,
+              transition: 'background 0.15s, border-color 0.15s', borderRadius: 6,
             }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.nav; (e.currentTarget as HTMLElement).style.borderColor = C.nav }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = C.gold; (e.currentTarget as HTMLElement).style.borderColor = C.gold }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.tealDark; (e.currentTarget as HTMLElement).style.borderColor = C.tealDark }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = C.teal; (e.currentTarget as HTMLElement).style.borderColor = C.teal }}
             >
               <span>Create quote</span><span style={{ fontSize: 15 }}>→</span>
             </Link>
           ) : (
             <a href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D).`)}`}
               target="_blank" rel="noopener noreferrer" style={{
-                flex: 1, textAlign: 'center', padding: '10px 0', background: C.accent, color: '#fff',
-                fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', display: 'block',
+                flex: 1, textAlign: 'center', padding: '11px 0', background: C.accent, color: '#fff',
+                fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', display: 'block',
                 fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.accent}`, borderRadius: 6,
               }}>
               Request Pricing →
@@ -189,8 +191,8 @@ function PackageCard({ pkg }: { pkg: Package }) {
           )}
           {pkg.workdriveUrl && (
             <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer" style={{
-              padding: '10px 14px', border: `2px solid ${C.rule}`, color: C.inkMid,
-              fontSize: 12, fontWeight: 700, textDecoration: 'none',
+              padding: '11px 14px', border: `2px solid ${C.rule}`, color: C.inkMid,
+              fontSize: 13, fontWeight: 700, textDecoration: 'none',
               display: 'flex', alignItems: 'center', fontFamily: font, borderRadius: 6,
             }}>
               PDF ↗
@@ -279,7 +281,7 @@ function PackagesInner() {
         {/* ── FILTER SIDEBAR ─────────────────────────────────────────────────── */}
         <aside style={{ padding: '36px 32px 60px 0', borderRight: `2px solid rgba(24,22,26,0.35)`, position: 'sticky', top: 54, maxHeight: 'calc(100vh - 54px)', overflowY: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: font }}>Filters</div>
+            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: font }}>Filters</div>
             {activeCount > 0 && (
               <button onClick={clearAll} style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.06em', color: C.accent, cursor: 'pointer', background: 'none', border: 'none', fontFamily: font }}>
                 CLEAR ALL
@@ -348,7 +350,7 @@ function PackagesInner() {
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16 }}>
             <div>
-              <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.025em', margin: '0 0 6px', fontFamily: font, color: C.ink }}>
+              <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.025em', margin: '0 0 6px', fontFamily: font, color: C.ink }}>
                 Browse Packages
               </h1>
               <p style={{ margin: 0, fontSize: 13, color: C.inkLight }}>
