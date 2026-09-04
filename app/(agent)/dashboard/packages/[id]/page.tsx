@@ -998,14 +998,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
       })
       if (res.ok) {
         const resData = await res.json()
-        setSavedQuoteId(resData.quote?.id || null)
-        setSavedQuoteMeta({
-          tripName: data.trip_name || pkg.name,
-          departureDate: data.departure_date ? new Date(data.departure_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
-          adults: data.adults || 1,
-          totalPrice: fmtCurrency(data.final_total, pkg.currency),
-        })
-        setSaved(true)
+        router.push(`/dashboard/quotes/${resData.quote?.id}`)
       }
     } catch (e) { console.error(e) }
   }

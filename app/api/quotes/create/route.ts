@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const {
       package_id, package_name, region,
-      departure_date, adults, room_type,
-      base_price, markup_type, markup_value, markup_amount,
+      departure_date, adults, children_with_bed, children_without_bed, room_type,
+      base_price, currency, markup_type, markup_value, markup_amount,
       add_ons, add_ons_total, total_price,
       client_name, client_type, trip_name,
       estimated_booking_date, flights_booked, notes,
@@ -27,8 +27,11 @@ export async function POST(req: NextRequest) {
       agent_id: payload.id,
       agent_email: payload.email,
       package_id, package_name, region,
-      departure_date, adults, room_type,
-      base_price, markup_type, markup_value, markup_amount,
+      departure_date, adults,
+      children_with_bed: children_with_bed || 0,
+      children_without_bed: children_without_bed || 0,
+      room_type, base_price, currency: currency || 'INR',
+      markup_type, markup_value, markup_amount,
       add_ons: add_ons || [],
       add_ons_total: add_ons_total || 0,
       total_price,
@@ -36,8 +39,8 @@ export async function POST(req: NextRequest) {
       estimated_booking_date: estimated_booking_date || null,
       flights_booked: flights_booked || false,
       notes: notes || null,
-      status: 'draft',
-    }).select().single()
+      status: 'created',
+    }).select('*, quote_number').single()
 
     if (error) {
       console.error('Quote create error:', error)
