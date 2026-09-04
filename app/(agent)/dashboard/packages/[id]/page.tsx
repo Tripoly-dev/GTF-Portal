@@ -145,7 +145,7 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
                       padding: '5px 12px', border: `1.5px solid ${form.client_type === t ? 'var(--teal)' : 'var(--rule)'}`,
                       background: form.client_type === t ? 'var(--teal)' : 'white',
                       color: form.client_type === t ? '#fff' : 'var(--ink-mid)',
-                      fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif', textTransform: 'capitalize',
+                      fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textTransform: 'capitalize',
                     }}>{t}</button>
                   ))}
                 </div>
@@ -218,8 +218,8 @@ function DayItinerary({ itinerary }: { itinerary: import('@/data/packages').Itin
           </div>
           {/* Content */}
           <div style={{ flex: 1, paddingLeft: 14, paddingBottom: 24, paddingTop: 4 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3, marginBottom: 6, fontFamily: 'Georgia, serif' }}>{item.title}</div>
-            <p style={{ fontSize: 12, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 8 }}>{item.description}</p>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.3, marginBottom: 6, fontFamily: "'Cormorant Garamond', Georgia, serif" }}>{item.title}</div>
+            <p style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>{item.description}</p>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {item.hotel && item.hotel.trim() && (
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--ink-mid)', background: 'var(--bg)', padding: '3px 8px', border: '1px solid var(--rule)', borderRadius: 3 }}>
@@ -260,7 +260,7 @@ function FlightsTab({ pkg, selectedDepartureDate }: { pkg: Package; selectedDepa
         <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
           {flightInfo.departurewise.map(d => (
             <button key={d.departureDate} onClick={() => setActiveDep(d.departureDate)} style={{
-              padding: '5px 12px', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif',
+              padding: '5px 12px', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
               border: `1.5px solid ${activeDep === d.departureDate ? 'var(--teal)' : 'var(--rule)'}`,
               background: activeDep === d.departureDate ? 'var(--teal)' : 'white',
               color: activeDep === d.departureDate ? '#fff' : 'var(--ink-mid)',
@@ -350,9 +350,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
         {subLabel && <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 1 }}>{subLabel}</div>}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1.5px solid var(--rule)', borderRadius: 24, overflow: 'hidden', background: 'white' }}>
-        <button onClick={onDec} disabled={value <= min} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value <= min ? 'not-allowed' : 'pointer', color: value <= min ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+        <button onClick={onDec} disabled={value <= min} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value <= min ? 'not-allowed' : 'pointer', color: value <= min ? 'var(--ink-light)' : 'var(--ink)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
         <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', minWidth: 28, textAlign: 'center' }}>{value}</span>
-        <button onClick={onInc} disabled={value >= max} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? 'var(--ink-light)' : 'var(--ink)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+        <button onClick={onInc} disabled={value >= max} style={{ width: 36, height: 36, background: 'none', border: 'none', fontSize: 18, cursor: value >= max ? 'not-allowed' : 'pointer', color: value >= max ? 'var(--ink-light)' : 'var(--ink)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
       </div>
     </div>
   )
@@ -363,8 +363,8 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
 
         {/* 1. Top Price Block — calmer, more breathing room, lighter green */}
         <div style={{ background: 'var(--teal)', padding: '26px 22px 20px' }}>
-          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.16em', fontWeight: 600, marginBottom: 8, fontFamily: 'Archivo, Inter, sans-serif' }}>QUOTE BUILDER</div>
-          <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10, fontFamily: 'Archivo, Inter, sans-serif' }}>{f(totalPrice)}</div>
+          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.16em', fontWeight: 600, marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>QUOTE BUILDER</div>
+          <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>{f(totalPrice)}</div>
           {tacTotal > 0 && (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 3, marginBottom: 12 }}>
               <span style={{ fontSize: 11, color: '#7fe8cc' }}>✓</span>
@@ -413,7 +413,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                   marginBottom: -1, cursor: 'pointer', whiteSpace: 'nowrap',
                   fontSize: 11, fontWeight: activeMonth === m ? 700 : 400,
                   color: activeMonth === m ? 'var(--teal)' : 'var(--ink-light)',
-                  fontFamily: 'Archivo, Inter, sans-serif', transition: 'all 0.15s',
+                  fontFamily: "'DM Sans', sans-serif", transition: 'all 0.15s',
                 }}>
                   {new Date(m + '-01').toLocaleDateString('en-IN', { month: 'short', year: '2-digit' })}
                   <span style={{ marginLeft: 4, fontSize: 10, color: 'var(--ink-light)', fontWeight: 400 }}>({byMonth[m]?.length})</span>
@@ -431,7 +431,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                       background: departureDate === slot.date ? 'var(--teal-lt)' : 'white',
                       cursor: slot.status === 'sold-out' ? 'not-allowed' : 'pointer',
                       opacity: slot.status === 'sold-out' ? 0.45 : 1,
-                      fontFamily: 'Archivo, Inter, sans-serif', transition: 'all 0.15s',
+                      fontFamily: "'DM Sans', sans-serif", transition: 'all 0.15s',
                     }}>
                     <span style={{ fontSize: 13, fontWeight: departureDate === slot.date ? 700 : 500, color: departureDate === slot.date ? 'var(--teal)' : 'var(--ink-mid)' }}>
                       {new Date(slot.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
@@ -462,9 +462,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(10,110,94,0.3)', borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                  <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults <= 1 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                  <button onClick={() => setAdults(a => Math.max(1, a - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults <= 1 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                   <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', minWidth: 20, textAlign: 'center' }}>{adults}</span>
-                  <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults >= 45 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                  <button onClick={() => setAdults(a => Math.min(45, a + 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: adults >= 45 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                 </div>
               </div>
 
@@ -483,9 +483,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${childrenWithBed > 0 ? 'rgba(232,97,58,0.3)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                        <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                        <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', minWidth: 20, textAlign: 'center' }}>{childrenWithBed}</span>
-                        <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: 'var(--orange)', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: 'var(--orange)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
                   )}
@@ -501,9 +501,9 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${childrenWithoutBed > 0 ? 'rgba(2,132,199,0.3)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                        <button onClick={() => setChildrenWithoutBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithoutBed <= 0 ? 'not-allowed' : 'pointer', color: '#0284c7', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                        <button onClick={() => setChildrenWithoutBed(c => Math.max(0, c - 1))} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: childrenWithoutBed <= 0 ? 'not-allowed' : 'pointer', color: '#0284c7', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', minWidth: 20, textAlign: 'center' }}>{childrenWithoutBed}</span>
-                        <button onClick={() => setChildrenWithoutBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: '#0284c7', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        <button onClick={() => setChildrenWithoutBed(c => c + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', fontSize: 15, cursor: 'pointer', color: '#0284c7', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
                   )}
@@ -525,7 +525,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
                   padding: '9px 12px', border: roomType === r.id ? '1.5px solid var(--teal)' : '1px solid var(--rule)',
                   background: roomType === r.id ? 'var(--teal-lt)' : 'white',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif', transition: 'all 0.15s',
+                  cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.15s',
                 }}>
                   <span style={{ fontSize: 12, fontWeight: roomType === r.id ? 700 : 500, color: roomType === r.id ? 'var(--teal)' : 'var(--ink-mid)' }}>{r.label}</span>
                   <span style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 400 }}>{r.note}</span>
@@ -597,7 +597,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
           {/* 7. Primary button — more space above, quieter helper text */}
           {pkg.hasPrice ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 4 }}>
-              <button onClick={() => setShowModal(true)} style={{ width: '100%', justifyContent: 'center', padding: '15px', fontSize: 13, letterSpacing: '0.06em', fontWeight: 700, background: '#9e2233', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.15s' }}
+              <button onClick={() => setShowModal(true)} style={{ width: '100%', justifyContent: 'center', padding: '15px', fontSize: 13, letterSpacing: '0.06em', fontWeight: 700, background: '#9e2233', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.15s' }}
                 onMouseEnter={e => (e.currentTarget.style.background = '#85182a')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#9e2233')}>
                 SAVE AS PROPOSAL →
@@ -608,7 +608,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 4 }}>
               <a href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D). Please share the nett rate and TAC so I can create a quote for my client.`)}`}
                 target="_blank" rel="noopener noreferrer"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '15px', background: '#9e2233', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', boxSizing: 'border-box', borderRadius: 8, fontFamily: 'Archivo, Inter, sans-serif' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '15px', background: '#9e2233', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', boxSizing: 'border-box', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
                 REQUEST PRICING →
               </a>
               <p style={{ fontSize: 10, color: 'var(--ink-light)', textAlign: 'center', fontWeight: 400 }}>Pricing not yet available — contact GTF team</p>
@@ -830,7 +830,7 @@ function HotelCard({ h, cardIdx }: { h: import('@/data/packages').Hotel, cardIdx
   return (
     <div style={{ display: 'flex', border: '1px solid var(--rule)', overflow: 'hidden', background: 'white' }}>
       {/* Image panel */}
-      <div style={{ position: 'relative', width: 380, minWidth: 380, height: 200, flexShrink: 0, background: '#071a17' }}>
+      <div style={{ position: 'relative', width: 420, minWidth: 420, height: 300, flexShrink: 0, background: '#071a17' }}>
         <img
           src={images[idx]}
           alt={h.name}
@@ -854,25 +854,25 @@ function HotelCard({ h, cardIdx }: { h: import('@/data/packages').Hotel, cardIdx
       <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 10 }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 5 }}>{h.name}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>{h.name}</div>
             <div style={{ display: 'flex', gap: 1, marginBottom: 0 }}>
               {'★'.repeat(h.stars).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 12 }}>★</span>)}
             </div>
           </div>
-          <div style={{ fontSize: 12, padding: '5px 12px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>{h.meal}</div>
+          <div style={{ fontSize: 12, padding: '5px 12px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0, fontFamily: "'DM Sans', sans-serif" }}>{h.meal}</div>
         </div>
         <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap', marginTop: 4 }}>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>CITY</div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{h.city}</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', marginBottom: 3, fontFamily: "'DM Sans', sans-serif" }}>CITY</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)', fontFamily: "'DM Sans', sans-serif" }}>{h.city}</div>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>DURATION</div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', marginBottom: 3, fontFamily: "'DM Sans', sans-serif" }}>DURATION</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)', fontFamily: "'DM Sans', sans-serif" }}>{h.nights} night{h.nights > 1 ? 's' : ''}</div>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>ROOM TYPE</div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{h.roomType}</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', marginBottom: 3, fontFamily: "'DM Sans', sans-serif" }}>ROOM TYPE</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)', fontFamily: "'DM Sans', sans-serif" }}>{h.roomType}</div>
           </div>
         </div>
       </div>
@@ -922,7 +922,7 @@ function SimilarPackageCard({ sp }: { sp: import('@/data/packages').Package }) {
           transition: 'box-shadow 0.2s',
         }}
       >
-        <div style={{ height: 160, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
+        <div style={{ height: 220, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
           <img src={sp.img} alt={sp.name} style={{
             width: '100%', height: '100%', objectFit: 'cover',
             filter: hovered ? 'grayscale(0%) brightness(1)' : 'grayscale(35%) brightness(0.9)',
@@ -931,17 +931,17 @@ function SimilarPackageCard({ sp }: { sp: import('@/data/packages').Package }) {
           }} />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.7) 0%, transparent 50%)' }} />
           <div style={{ position: 'absolute', bottom: 10, left: 12 }}>
-            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3 }}>{sp.region.toUpperCase()} · {sp.nights}N/{sp.days}D</div>
+            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3, fontFamily: "'DM Sans', sans-serif" }}>{sp.region.toUpperCase()} · {sp.nights}N/{sp.days}D</div>
           </div>
           {sp.tag && <div style={{ position: 'absolute', top: 10, left: 10, padding: '2px 7px', background: 'var(--orange)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{sp.tag}</div>}
         </div>
-        <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 6, lineHeight: 1.3, fontFamily: 'Archivo, Inter, sans-serif' }}>{sp.name}</div>
+        <div style={{ padding: '14px 14px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 8, lineHeight: 1.3, fontFamily: "'DM Sans', sans-serif" }}>{sp.name}</div>
           <div>
-            <div className="font-tight" style={{ fontSize: 15, fontWeight: 800, color: 'var(--teal)', marginBottom: 8, fontFamily: 'Archivo, Inter, sans-serif' }}>
+            <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--teal)', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>
               {sp.currency === 'USD' ? '$' : sp.currency === 'EUR' ? '€' : '₹'}{sp.basePrice.toLocaleString(sp.currency === 'USD' ? 'en-US' : 'en-IN')}
             </div>
-            <div style={{ padding: '8px 14px', background: 'var(--teal)', color: '#fff', fontSize: 10, fontWeight: 700, textAlign: 'center', letterSpacing: '0.06em', borderRadius: 6 }}>
+            <div style={{ padding: '9px 14px', background: 'var(--teal)', color: '#fff', fontSize: 11, fontWeight: 700, textAlign: 'center', letterSpacing: '0.06em', borderRadius: 6, fontFamily: "'DM Sans', sans-serif" }}>
               VIEW PACKAGE →
             </div>
           </div>
@@ -1050,7 +1050,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
           {/* Left column */}
           <div>
             {/* ── GALLERY — inside left column ─────────────────────────────── */}
-            <div style={{ position: 'relative', height: 500, background: '#071a17', overflow: 'hidden', marginBottom: 0 }}>
+            <div style={{ position: 'relative', height: 580, background: '#071a17', overflow: 'hidden', marginBottom: 0 }}>
               {/* Main image — clickable opens lightbox */}
               <img
                 src={pkg.gallery[galleryIdx]} alt={pkg.name}
@@ -1059,9 +1059,9 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
               />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.3) 50%, transparent 100%)', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)', pointerEvents: 'none' }} />
-              {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2 }}>{pkg.tag}</div>}
+              {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2, fontFamily: "'DM Sans', sans-serif" }}>{pkg.tag}</div>}
               {/* Click to expand hint */}
-              <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.45)', color: 'rgba(255,255,255,0.8)', fontSize: 10, fontWeight: 600, padding: '4px 10px', letterSpacing: '0.06em', zIndex: 2, pointerEvents: 'none' }}>CLICK TO EXPAND</div>
+              <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.45)', color: 'rgba(255,255,255,0.8)', fontSize: 10, fontWeight: 600, padding: '4px 10px', letterSpacing: '0.06em', zIndex: 2, pointerEvents: 'none', fontFamily: "'DM Sans', sans-serif" }}>CLICK TO EXPAND</div>
               {/* Thumbnail strip — vertical, right side, scrollable */}
               <div style={{ position: 'absolute', right: 12, top: 12, bottom: 12, display: 'flex', flexDirection: 'column', gap: 5, zIndex: 2, width: 72, overflowY: 'auto', scrollbarWidth: 'none' }}>
                 {pkg.gallery.map((img, i) => (
@@ -1075,17 +1075,17 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                 ))}
               </div>
               {/* Package info — bottom overlay */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 96, padding: '20px 20px 18px', zIndex: 2 }}>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{pkg.region.toUpperCase()}</div>
-                <h1 style={{ fontSize: 32, fontWeight: 700, color: '#fff', lineHeight: 1.1, marginBottom: 5, fontFamily: 'Georgia, serif', letterSpacing: '-0.01em' }}>{pkg.name}</h1>
-                {pkg.tagline && <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', marginBottom: 14, lineHeight: 1.4, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>{pkg.tagline}</p>}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 96, padding: '24px 24px 22px', zIndex: 2 }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.14em', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>{pkg.region.toUpperCase()}</div>
+                <h1 style={{ fontSize: 42, fontWeight: 600, color: '#fff', lineHeight: 1.05, marginBottom: 6, fontFamily: "'Cormorant Garamond', Georgia, serif", letterSpacing: '-0.01em' }}>{pkg.name}</h1>
+                {pkg.tagline && <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', marginBottom: 18, lineHeight: 1.4, fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontWeight: 400 }}>{pkg.tagline}</p>}
                 <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
                   {pkgInfoItems.map((h, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                       <Icon path={h.icon} size={13} color="rgba(255,255,255,0.45)" />
                       <div>
-                        <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.06em' }}>{h.label}</div>
-                        <div style={{ fontSize: 11, color: (h as any).valueColor || 'rgba(255,255,255,0.85)', fontWeight: 600 }}>{h.value}</div>
+                        <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.08em', fontFamily: "'DM Sans', sans-serif" }}>{h.label}</div>
+                        <div style={{ fontSize: 12, color: (h as any).valueColor || 'rgba(255,255,255,0.85)', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>{h.value}</div>
                       </div>
                     </div>
                   ))}
@@ -1097,7 +1097,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                 <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} style={{
                   padding: '14px 20px', background: 'none', border: 'none',
                   borderBottom: `2px solid ${activeTab === tab.id ? 'var(--teal)' : 'transparent'}`,
-                  marginBottom: -2, cursor: 'pointer', fontFamily: 'Archivo, Inter, sans-serif',
+                  marginBottom: -2, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                   fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
                   color: activeTab === tab.id ? 'var(--teal)' : 'var(--ink-light)',
                   transition: 'all 0.15s', whiteSpace: 'nowrap',
