@@ -312,11 +312,11 @@ function ProductStream() {
           </div>
           <Link href="/departures/europe" style={{ color: '#79D8C5', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>BROWSE ALL DEPARTURES →</Link>
         </div>
-        <div style={{ display: 'flex', alignItems: 'stretch', gap: 14, overflowX: 'auto', padding: '8px 4px 18px', scrollbarWidth: 'thin' }}>
+        <div style={{ display: 'flex', alignItems: 'stretch', gap: 14, justifyContent: 'center', padding: '8px 4px 18px' }}>
           {products.map((p, i) => {
             const expanded = active === i
             return (
-              <Link key={p.name} href={p.href} aria-label={`View ${p.name} departures`} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} style={{ position: 'relative', flex: `0 0 ${expanded ? '440px' : '220px'}`, minHeight: 500, borderRadius: 18, overflow: 'hidden', textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'end', padding: 24, backgroundImage: `linear-gradient(180deg,rgba(3,15,20,0.04) 26%,rgba(3,10,16,0.94) 100%), url(${p.image})`, backgroundPosition: 'center', backgroundSize: 'cover', transform: expanded ? 'translateY(-6px)' : 'translateY(0)', boxShadow: expanded ? '0 24px 54px rgba(0,0,0,0.34)' : '0 12px 28px rgba(0,0,0,0.16)', transition: 'flex-basis .45s ease, transform .35s ease, box-shadow .35s ease' }}>
+              <Link key={p.name} href={p.href} aria-label={`View ${p.name} departures`} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} style={{ position: 'relative', flex: `0 0 ${expanded ? '520px' : '280px'}`, minHeight: 500, borderRadius: 18, overflow: 'hidden', textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'end', padding: 24, backgroundImage: `linear-gradient(180deg,rgba(3,15,20,0.04) 26%,rgba(3,10,16,0.94) 100%), url(${p.image})`, backgroundPosition: 'center', backgroundSize: 'cover', transform: expanded ? 'translateY(-6px)' : 'translateY(0)', boxShadow: expanded ? '0 24px 54px rgba(0,0,0,0.34)' : '0 12px 28px rgba(0,0,0,0.16)', transition: 'flex-basis .45s ease, transform .35s ease, box-shadow .35s ease' }}>
                 <span style={{ position: 'absolute', top: 16, left: 16, padding: '5px 9px', borderRadius: 999, background: 'rgba(3,10,16,.58)', border: '1px solid rgba(255,255,255,.22)', fontSize: 9, fontWeight: 700, letterSpacing: '.08em' }}>{p.category}</span>
                 <div>
                   <div className="font-tight" style={{ fontSize: 27, fontWeight: 800, marginBottom: 8 }}>{p.name}</div>
@@ -433,32 +433,57 @@ function CustomerJourney() {
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
   return (
-    <section className="about-portal" style={{ padding: '48px 0 72px' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 56px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
-        <div>
-          <div className="eyebrow" style={{ marginBottom: 20 }}>ABOUT GTF PORTAL</div>
-          <h2 className="font-tight about-portal-heading" style={{
-            fontSize: 'clamp(36px, 4.5vw, 60px)', fontWeight: 800, lineHeight: 1.0,
-            color: 'var(--ink)', letterSpacing: '-0.03em',
-          }}>
-            One partner.<br />
-            Every departure.<br />
-            <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>Global confidence.</span>
-          </h2>
+    <section style={{ position: 'relative', overflow: 'hidden', minHeight: 560, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+      {/* Left — editorial text */}
+      <div style={{ padding: '72px 56px 72px 56px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: '#fff', zIndex: 1 }}>
+        <div className="eyebrow" style={{ marginBottom: 20 }}>ABOUT GTF PORTAL</div>
+        <h2 className="font-tight about-portal-heading" style={{
+          fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 800, lineHeight: 1.0,
+          color: 'var(--ink)', letterSpacing: '-0.03em', marginBottom: 28,
+        }}>
+          One partner.<br />
+          Every departure.<br />
+          <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>Global confidence.</span>
+        </h2>
+        <p className="about-portal-copy" style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--ink-mid)', marginBottom: 20, fontWeight: 300 }}>
+          GTF Connect gives travel agents and tour operators one dependable B2B partner for guaranteed series departures, white-label operations, and bespoke journeys.
+        </p>
+        <p style={{ fontSize: 14, lineHeight: 1.8, color: 'var(--ink-light)', marginBottom: 36, fontWeight: 300 }}>
+          We coordinate the details behind the scenes so your team can sell with clarity, protect the client relationship, and grow across continents.
+        </p>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 28 }}>
+          <Link href="/register" className="btn-teal">JOIN GTF AS A PARTNER →</Link>
+          <Link href="/contact" className="btn-outline">SCHEDULE A CALL</Link>
         </div>
-        <div>
-          <p className="about-portal-copy" style={{ fontSize: 17, lineHeight: 1.8, color: 'var(--ink-mid)', marginBottom: 28, fontWeight: 300 }}>
-            GTF Connect gives travel agents and tour operators one dependable B2B partner for guaranteed series departures, white-label operations, and bespoke journeys.
+        <div aria-label="GTF operating flow" style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap' }}>
+          {['DISCOVER', 'QUOTE', 'CONFIRM', 'SUPPORT'].map((step, i) => (
+            <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}>
+              <span style={{ padding: '8px 13px', border: '1px solid #CBD5E1', borderRadius: 999, color: 'var(--teal)', fontSize: 10.5, letterSpacing: '.1em', fontWeight: 700 }}>{step}</span>
+              {i < 3 && <span aria-hidden="true" style={{ color: '#CBD5E1' }}>→</span>}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Right — hero image with CTA overlay */}
+      <div style={{ position: 'relative', overflow: 'hidden', minHeight: 560 }}>
+        <img
+          src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1200&q=90"
+          alt="Travel professionals collaborating"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 42%', position: 'absolute', inset: 0 }}
+        />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(7,26,23,0.88) 0%, rgba(7,26,23,0.55) 60%, rgba(7,26,23,0.3) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '56px 56px 56px 52px' }}>
+          <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.6)', marginBottom: 16 }}>JOIN THE GTF NETWORK</div>
+          <h2 className="font-tight" style={{ fontSize: 'clamp(32px, 4vw, 54px)', fontWeight: 800, lineHeight: 0.95, color: '#fff', marginBottom: 20, letterSpacing: '-0.03em' }}>
+            Your next best-seller<br />
+            <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>starts here.</span>
+          </h2>
+          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 36, fontWeight: 300, maxWidth: 380 }}>
+            Join a global partner network built to help travel professionals sell further — while GTF coordinates the world behind the scenes.
           </p>
-          <p style={{ fontSize: 15, lineHeight: 1.8, color: 'var(--ink-light)', marginBottom: 40, fontWeight: 300 }}>
-            We coordinate the details behind the scenes so your team can sell with clarity, protect the client relationship, and grow across continents.
-          </p>
-          <div style={{ display: 'flex', gap: 16 }}>
-            <Link href="/register" className="btn-teal">BECOME A PARTNER</Link>
-            <Link href="/about" className="btn-outline">OUR STORY</Link>
-          </div>
-          <div aria-label="GTF operating flow" style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap', marginTop: 28 }}>
-            {['DISCOVER', 'QUOTE', 'CONFIRM', 'SUPPORT'].map((step, i) => <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}><span style={{ padding: '8px 13px', border: '1px solid #CBD5E1', borderRadius: 999, color: 'var(--teal)', fontSize: 10.5, letterSpacing: '.1em', fontWeight: 700 }}>{step}</span>{i < 3 && <span aria-hidden="true" style={{ color: '#CBD5E1' }}>→</span>}</span>)}
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 16, letterSpacing: '0.08em' }}>
+            B2B ONLY · FREE REGISTRATION · ADMIN APPROVAL REQUIRED
           </div>
         </div>
       </div>
@@ -974,33 +999,6 @@ function Testimonials() {
 }
 
 // ── FINAL CTA ─────────────────────────────────────────────────────────────────
-function FinalCTA() {
-  return (
-    <section className="join-network-cta" style={{ position: 'relative', height: 560, overflow: 'hidden' }}>
-      <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1800&q=90" alt="Travel professionals collaborating around a table" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 42%' }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.9) 0%, rgba(7,26,23,0.48) 52%, rgba(7,26,23,0.18) 100%)' }} />
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 56px', maxWidth: 700 }}>
-        <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 16 }}>JOIN THE GTF NETWORK</div>
-        <h2 className="font-tight" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, lineHeight: 0.95, color: '#fff', marginBottom: 24, letterSpacing: '-0.03em' }}>
-          Your next best-seller<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>starts here.</span>
-        </h2>
-        <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 40, fontWeight: 300, maxWidth: 460 }}>
-          Join a global partner network built to help travel professionals sell further — while GTF coordinates the world behind the scenes.
-        </p>
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-          <Link href="/register" className="btn-teal" style={{ background: '#fff', color: 'var(--ink)' }}>
-            JOIN GTF AS A PARTNER →
-          </Link>
-          <Link href="/contact" className="btn-outline-white">SCHEDULE A CALL</Link>
-        </div>
-        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginTop: 16, letterSpacing: '0.08em' }}>
-          B2B ONLY · FREE REGISTRATION · ADMIN APPROVAL REQUIRED
-        </div>
-      </div>
-    </section>
-  )
-}
-
 // ── THEMES SECTION ─────────────────────────────────────────────────────────────
 function Themes() {
   const themes = [
@@ -1045,7 +1043,6 @@ export default function HomePage() {
       <CustomerJourney />
       <ApprovedBento />
       <EditorialIntro />
-      <FinalCTA />
     </main>
   )
 }

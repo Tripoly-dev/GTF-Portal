@@ -113,11 +113,32 @@ function RegionCard({ region, quotes }: { region: { name: string; count: number;
         style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
           objectFit: 'cover',
-          filter: hovered ? 'grayscale(0%) brightness(0.75)' : 'grayscale(30%) brightness(0.9)',
+          filter: hovered ? 'grayscale(0%) brightness(1.0)' : 'grayscale(0%) brightness(0.88)',
           transform: hovered ? 'scale(1.08) translateX(1%)' : 'scale(1) translateX(0%)',
           transition: 'transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.5s ease',
         }}
       />
+
+      {/* Soft gradient overlay — always visible, lets image show through */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to top, rgba(7,26,23,0.72) 0%, rgba(7,26,23,0.1) 45%, transparent 100%)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Region name + count — always visible text overlay */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '20px 24px 22px',
+        opacity: hovered ? 0 : 1,
+        transform: hovered ? 'translateY(6px)' : 'translateY(0)',
+        transition: 'opacity 0.3s ease, transform 0.3s ease',
+        pointerEvents: 'none',
+        zIndex: 2,
+      }}>
+        <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1, fontFamily: font, color: '#fff' }}>{region.name}</div>
+        <div style={{ fontSize: 11.5, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.65)', marginTop: 7, fontFamily: font }}>{region.count} PACKAGES</div>
+      </div>
 
       {/* Diagonal marquee ribbon — appears on hover */}
       <div style={{
@@ -138,23 +159,6 @@ function RegionCard({ region, quotes }: { region: { name: string; count: number;
             </span>
           ))}
         </div>
-      </div>
-
-      {/* Dark footer — always visible */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: '#241f2b', color: '#efebe3',
-        padding: hovered ? '14px 24px 18px' : '18px 24px',
-        transition: 'padding 0.4s ease, height 0.4s ease',
-        height: hovered ? 0 : 120,
-        overflow: 'hidden',
-        opacity: hovered ? 0 : 1,
-        transitionProperty: 'opacity, height, padding',
-        transitionDuration: '0.3s',
-        transitionTimingFunction: 'ease',
-      }}>
-        <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1, fontFamily: font, color: '#efebe3' }}>{region.name}</div>
-        <div style={{ fontSize: 11.5, letterSpacing: '0.08em', color: 'rgba(239,236,229,0.65)', marginTop: 7 }}>{region.count} PACKAGES</div>
       </div>
 
       {/* Frosted glass drawer — slides up on hover */}
