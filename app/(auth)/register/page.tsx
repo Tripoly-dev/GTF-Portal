@@ -9,13 +9,27 @@ export default function RegisterPage() {
     full_name: '', agency_name: '', city: '', mobile: '',
     email: '', password: '', confirmPassword: '',
     iata_number: '', how_did_you_hear: '',
+    agency_address: '', whatsapp_number: '', agency_website: '',
   })
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }))
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const allowed = ['image/png', 'image/jpeg', 'image/webp']
+    if (!allowed.includes(file.type)) { setError('Logo must be PNG, JPG or WEBP'); return }
+    if (file.size > 500 * 1024) { setError('Logo must be under 500KB'); return }
+    setError('')
+    setLogoFile(file)
+    setLogoPreview(URL.createObjectURL(file))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,6 +38,19 @@ export default function RegisterPage() {
     if (form.password.length < 8) { setError('Password must be at least 8 characters'); return }
     setLoading(true)
     try {
+      let logo_url: string | null = null
+
+      // Upload logo if provided
+      if (logoFile) {
+        const formData = new FormData()
+        formData.append('logo', logoFile)
+        formData.append('email', form.email)
+        const uploadRes = await fetch('/api/auth/upload-logo', { method: 'POST', body: formData })
+        const uploadData = await uploadRes.json()
+        if (!uploadRes.ok) { setError(uploadData.error || 'Logo upload failed'); setLoading(false); return }
+        logo_url = uploadData.url
+      }
+
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -32,6 +59,10 @@ export default function RegisterPage() {
           city: form.city, mobile: form.mobile, email: form.email,
           password: form.password, iata_number: form.iata_number,
           how_did_you_hear: form.how_did_you_hear,
+          agency_address: form.agency_address,
+          whatsapp_number: form.whatsapp_number || form.mobile,
+          agency_website: form.agency_website,
+          logo_url,
         }),
       })
       const data = await res.json()
@@ -70,7 +101,6 @@ export default function RegisterPage() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-
       {/* Left — visual panel */}
       <div style={{ position: 'relative', overflow: 'hidden' }}>
         <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1200&q=85"
@@ -86,7 +116,7 @@ export default function RegisterPage() {
               Join 100s of<br />travel professionals<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'rgba(255,255,255,0.7)' }}>selling GTF.</span>
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {['100% B2B — we never compete with you', 'White label solutions under your brand', '15+ Europe packages ready to sell', 'Africa safari circuits — unique in B2B market', '24/7 operations support for your clients'].map((p, i) => (
+              {['100% B2B — we never compete with you', 'White label proposals under your brand', '15+ Europe packages ready to sell', 'Africa safari circuits — unique in B2B market', '24/7 operations support for your clients'].map((p, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 14, color: 'rgba(255,255,255,0.7)', fontWeight: 300 }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0 }} />
                   {p}
@@ -106,7 +136,7 @@ export default function RegisterPage() {
           <div style={{ marginBottom: 40 }}>
             <h1 className="font-tight" style={{ fontSize: 28, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 8 }}>Partner Registration</h1>
             <p style={{ fontSize: 14, color: 'var(--ink-light)', lineHeight: 1.6, fontWeight: 300 }}>
-              Register your travel agency to access GTF's full B2B platform. All registrations are reviewed by our team before approval.
+              Register your travel agency to access GTF's full B2B platform. All registrations are reviewed before approval.
             </p>
           </div>
 
@@ -120,7 +150,6 @@ export default function RegisterPage() {
 
             {/* Section: Agency Info */}
             <div style={{ fontSize: 10, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 700, marginBottom: 16 }}>AGENCY INFORMATION</div>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
               <div>
                 <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>FULL NAME *</label>
@@ -130,6 +159,10 @@ export default function RegisterPage() {
                 <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>AGENCY / COMPANY NAME *</label>
                 <input className="input-field" required placeholder="Your travel agency name" value={form.agency_name} onChange={set('agency_name')} />
               </div>
+              <div>
+                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>AGENCY ADDRESS</label>
+                <textarea className="input-field" rows={2} placeholder="Full office address" value={form.agency_address} onChange={set('agency_address')} style={{ resize: 'none' }} />
+              </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>CITY *</label>
@@ -138,6 +171,16 @@ export default function RegisterPage() {
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>MOBILE *</label>
                   <input className="input-field" required placeholder="+91 98765 43210" value={form.mobile} onChange={set('mobile')} />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>WHATSAPP NUMBER</label>
+                  <input className="input-field" placeholder="If different from mobile" value={form.whatsapp_number} onChange={set('whatsapp_number')} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>AGENCY WEBSITE</label>
+                  <input className="input-field" placeholder="https://youragency.com" value={form.agency_website} onChange={set('agency_website')} />
                 </div>
               </div>
               <div>
@@ -156,11 +199,33 @@ export default function RegisterPage() {
                   <option>Other</option>
                 </select>
               </div>
+
+              {/* Agency Logo Upload */}
+              <div>
+                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>
+                  AGENCY LOGO <span style={{ color: 'var(--ink-light)', fontWeight: 400 }}>(PNG/JPG, max 500KB — appears on client proposals)</span>
+                </label>
+                <div style={{ border: '2px dashed var(--rule)', padding: '20px', textAlign: 'center', background: '#fff', cursor: 'pointer', position: 'relative' }}
+                  onClick={() => document.getElementById('logo-input')?.click()}>
+                  <input id="logo-input" type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogoChange} style={{ display: 'none' }} />
+                  {logoPreview ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                      <img src={logoPreview} alt="Logo preview" style={{ maxHeight: 60, maxWidth: 200, objectFit: 'contain' }} />
+                      <span style={{ fontSize: 11, color: 'var(--teal)', fontWeight: 600 }}>✓ Logo uploaded — click to change</span>
+                    </div>
+                  ) : (
+                    <div>
+                      <div style={{ fontSize: 24, marginBottom: 8 }}>🖼</div>
+                      <div style={{ fontSize: 13, color: 'var(--ink-light)' }}>Click to upload your agency logo</div>
+                      <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 4 }}>PNG, JPG or WEBP · Max 500KB</div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Section: Login Details */}
             <div style={{ fontSize: 10, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 700, marginBottom: 16 }}>LOGIN DETAILS</div>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
               <div>
                 <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>BUSINESS EMAIL *</label>
@@ -179,7 +244,7 @@ export default function RegisterPage() {
             <button type="submit" className="btn-teal" disabled={loading} style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: 14 }}>
               {loading ? (
                 <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span className="animate-spin" style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', display: 'inline-block' }} />
+                  <span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTop: '2px solid white', borderRadius: '50%', display: 'inline-block', animation: 'spin 1s linear infinite' }} />
                   SUBMITTING APPLICATION...
                 </span>
               ) : 'SUBMIT APPLICATION →'}

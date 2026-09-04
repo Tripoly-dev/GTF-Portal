@@ -960,6 +960,8 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIdx, setLightboxIdx] = useState(0)
   const [saved, setSaved] = useState(false)
+  const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null)
+  const [savedQuoteMeta, setSavedQuoteMeta] = useState<{ tripName: string; departureDate: string; adults: number; totalPrice: string } | null>(null)
   const [activeTab, setActiveTab] = useState<string>('overview')
   const [selectedDepartureDate, setSelectedDepartureDate] = useState(pkg?.departures.find(d => d.status !== 'sold-out')?.date || '')
 
@@ -994,15 +996,60 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
           flights_booked: data.flights_booked, notes: data.notes,
         }),
       })
-      if (res.ok) { setSaved(true); setTimeout(() => router.push('/dashboard/quotes'), 1500) }
+      if (res.ok) {
+        const resData = await res.json()
+        setSavedQuoteId(resData.quote?.id || null)
+        setSavedQuoteMeta({
+          tripName: data.trip_name || pkg.name,
+          departureDate: data.departure_date ? new Date(data.departure_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+          adults: data.adults || 1,
+          totalPrice: fmtCurrency(data.final_total, pkg.currency),
+        })
+        setSaved(true)
+      }
     } catch (e) { console.error(e) }
   }
 
   if (saved) return (
-    <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, background: 'var(--bg)' }}>
+    <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, background: 'var(--bg)', padding: '40px 24px' }}>
       <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--teal-lt)', border: '2px solid var(--teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>✓</div>
       <h2 className="font-tight" style={{ fontSize: 24, fontWeight: 700, color: 'var(--teal)' }}>Proposal Saved!</h2>
-      <p style={{ color: 'var(--ink-light)' }}>Redirecting to My Quotes...</p>
+      <p style={{ color: 'var(--ink-light)', fontSize: 14 }}>
+        {savedQuoteId ? 'Download the proposal PDF or share it via WhatsApp.' : 'Redirecting to My Quotes...'}
+      </p>
+      {savedQuoteId && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 360 }}>
+          {/* Download PDF */}
+          <a
+            href={`/api/quotes/pdf?id=${savedQuoteId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '14px 24px', background: 'var(--teal)', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
+            📄 DOWNLOAD PROPOSAL PDF
+          </a>
+          {/* WhatsApp Share */}
+          <button
+            onClick={() => {
+              const msg = encodeURIComponent(
+                `Hi! Please find attached the travel proposal for *${savedQuoteMeta?.tripName}*.\n\n` +
+                `📅 Departure: ${savedQuoteMeta?.departureDate}\n` +
+                `👥 Passengers: ${savedQuoteMeta?.adults} adult${(savedQuoteMeta?.adults || 1) > 1 ? 's' : ''}\n` +
+                `💰 Total: ${savedQuoteMeta?.totalPrice}\n\n` +
+                `I've downloaded the PDF proposal — please check the attachment.\n\nLooking forward to your confirmation!`
+              )
+              window.open(`https://wa.me/?text=${msg}`, '_blank')
+            }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '14px 24px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', border: 'none', cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
+            💬 SHARE VIA WHATSAPP
+          </button>
+          {/* Go to quotes */}
+          <button
+            onClick={() => router.push('/dashboard/quotes')}
+            style={{ padding: '12px 24px', background: 'none', border: '1px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
+            VIEW MY QUOTES →
+          </button>
+        </div>
+      )}
     </div>
   )
 
