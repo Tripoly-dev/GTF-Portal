@@ -1,11 +1,10 @@
 import {
-  Document, Page, Text, View, StyleSheet, Image, Font
+  Document, Page, Text, View, StyleSheet, Image
 } from '@react-pdf/renderer'
 
-Font.register({
-  family: 'DM Sans',
-  src: 'https://fonts.gstatic.com/s/dmsans/v15/rP2Hp2ywxg089UriOZQ.ttf',
-})
+// Use built-in PDF fonts — no external font loading needed
+const FONT = 'Helvetica'
+const FONT_BOLD = 'Helvetica-Bold'
 
 const C = {
   teal: '#0a6e5e',
@@ -19,7 +18,7 @@ const C = {
 }
 
 const s = StyleSheet.create({
-  page: { fontFamily: 'DM Sans', fontSize: 10, color: C.ink, backgroundColor: C.white },
+  page: { fontFamily: FONT, fontSize: 10, color: C.ink, backgroundColor: C.white },
   // Cover
   cover: { padding: 0, height: '100%', display: 'flex', flexDirection: 'column' },
   coverTop: { backgroundColor: C.teal, padding: '48px 52px 36px', flex: 1 },
