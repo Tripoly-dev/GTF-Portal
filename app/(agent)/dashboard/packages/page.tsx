@@ -125,7 +125,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
       }}
     >
       {/* Image */}
-      <div style={{ position: 'relative', height: 180, overflow: 'hidden', flexShrink: 0 }}>
+      <div style={{ position: 'relative', height: 280, overflow: 'hidden', flexShrink: 0 }}>
         <img src={pkg.img} alt={pkg.name} style={{
           width: '100%', height: '100%', objectFit: 'cover',
           filter: hovered ? 'grayscale(0%) brightness(1)' : 'grayscale(35%) brightness(0.92)',
@@ -146,10 +146,10 @@ function PackageCard({ pkg }: { pkg: Package }) {
       <div style={{ padding: '16px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
           {pkg.travelerTypes.slice(0, 2).map(t => (
-            <span key={t} style={{ padding: '3px 8px', border: `1px solid ${C.rule}`, fontSize: 11, color: C.inkMid, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
+            <span key={t} style={{ padding: '3px 8px', border: `1px solid ${C.teal}`, fontSize: 11, color: C.teal, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
           ))}
           {pkg.themes.slice(0, 1).map(t => (
-            <span key={t} style={{ padding: '3px 8px', border: `1px solid ${C.accent}`, fontSize: 11, color: C.accent, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
+            <span key={t} style={{ padding: '3px 8px', background: C.teal, fontSize: 11, color: '#fff', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
           ))}
         </div>
         <h3 style={{ margin: '0 0 12px', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink, lineHeight: 1.2, fontFamily: font }}>{pkg.name}</h3>
@@ -276,7 +276,7 @@ function PackagesInner() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F4F8F7', color: C.ink, fontFamily: font }}>
-      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '0 40px 88px', display: 'grid', gridTemplateColumns: '250px 1fr', gap: 0 }}>
+      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '0 40px 88px', display: 'grid', gridTemplateColumns: '220px 1fr', gap: 0 }}>
 
         {/* ── FILTER SIDEBAR ─────────────────────────────────────────────────── */}
         <aside style={{ padding: '36px 32px 60px 0', borderRight: `2px solid rgba(24,22,26,0.35)`, position: 'sticky', top: 54, maxHeight: 'calc(100vh - 54px)', overflowY: 'auto' }}>
