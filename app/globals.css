@@ -359,3 +359,37 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .bento-route-title, .bento-route-map-content, .bento-departure-title, .bento-white-label-title, .bento-network-visual span, .bento-network-visual i, .bento-editorial strong, .bento-editorial-kicker, .bento-editorial-foot, .bento-tile-label, .bento-tile-foot, .bento-ticket-top, .bento-ticket-meta, .bento-white-label-kicker, .bento-white-label-stamp, .bento-photo-copy, .bento-barcode::after { animation: none !important; transition: none !important; }
 }
+
+/* ── CUSTOMER JOURNEY v2 ──────────────────────────────────────────────────── */
+.cj2 { padding: 80px 0 92px; background: #fff; color: var(--ink); overflow: hidden; }
+.cj2-inner { max-width: 1400px; margin: 0 auto; padding: 0 48px; }
+.cj2-header { text-align: center; margin-bottom: 48px; }
+.cj2-title { margin: 10px 0 14px; font: 600 clamp(32px, 4vw, 52px)/.96 'Playfair Display', Georgia, serif; letter-spacing: -.03em; }
+.cj2-title em { color: var(--teal); font-style: italic; }
+.cj2-sub { margin: 0; color: var(--ink-mid); font-size: 16px; line-height: 1.6; font-family: 'DM Sans', sans-serif; }
+.cj2-stage { display: flex; align-items: center; gap: 16px; }
+.cj2-arrow { flex: 0 0 48px; width: 48px; height: 48px; border: 1.5px solid var(--rule); border-radius: 50%; background: #fff; color: var(--ink); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .2s, transform .2s; z-index: 2; }
+.cj2-arrow:hover { border-color: var(--teal); transform: scale(1.08); }
+.cj2-track { flex: 1; display: flex; align-items: center; justify-content: center; gap: 12px; overflow: hidden; padding: 24px 0; }
+.cj2-card { position: relative; flex: 0 0 220px; height: 360px; border: 0; padding: 0; border-radius: 20px; overflow: hidden; cursor: pointer; transition: flex-basis .45s cubic-bezier(.22,1,.36,1), transform .45s cubic-bezier(.22,1,.36,1), opacity .45s ease; text-align: left; }
+.cj2-card-active { flex: 0 0 320px !important; height: 420px; }
+.cj2-img { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 6s ease; animation: cj2-ken-burns 8s ease-in-out infinite alternate; }
+.cj2-card:hover .cj2-img { transform: scale(1.06); }
+.cj2-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,10,10,.04) 20%, rgba(2,10,10,.82) 100%); }
+.cj2-play { position: absolute; top: 16px; left: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(8,19,25,.4); border: 1px solid rgba(255,255,255,.65); color: #fff; font-size: 12px; display: flex; align-items: center; justify-content: center; padding-left: 2px; backdrop-filter: blur(8px); transition: transform .25s, background .25s; }
+.cj2-card:hover .cj2-play { transform: scale(1.12); background: rgba(8,19,25,.65); }
+.cj2-chip { position: absolute; bottom: 80px; left: 16px; padding: 4px 10px; background: var(--teal); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .1em; border-radius: 4px; font-family: 'DM Sans', sans-serif; opacity: 0; transform: translateY(6px); transition: opacity .35s .1s, transform .35s .1s; }
+.cj2-card-active .cj2-chip { opacity: 1; transform: translateY(0); }
+.cj2-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; }
+.cj2-name { font: 600 24px/.9 'Playfair Display', Georgia, serif; color: #fff; letter-spacing: -.02em; }
+.cj2-card-active .cj2-name { font-size: 28px; }
+.cj2-quote-wrap { display: flex; flex-direction: column; gap: 6px; animation: cj2-fade-up .4s cubic-bezier(.22,1,.36,1) both; }
+.cj2-quote { margin: 0; font: italic 13px/1.4 'Playfair Display', Georgia, serif; color: rgba(255,255,255,.88); }
+.cj2-partner { font: 700 9px/1.2 ui-monospace, monospace; letter-spacing: .1em; color: #A7F3D0; text-transform: uppercase; }
+.cj2-progress-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,.2); }
+.cj2-progress-fill { height: 100%; background: var(--teal); transition: width .1s linear; }
+.cj2-dots { display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
+.cj2-dot { width: 6px; height: 6px; border-radius: 50%; border: none; background: var(--rule); cursor: pointer; transition: all .25s; padding: 0; }
+.cj2-dot-active { width: 24px; border-radius: 3px; background: var(--teal); }
+@keyframes cj2-ken-burns { from { transform: scale(1.02) translate3d(-1%,-1%,0); } to { transform: scale(1.1) translate3d(1%,1%,0); } }
+@keyframes cj2-fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

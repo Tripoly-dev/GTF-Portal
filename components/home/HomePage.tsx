@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import GlobeSection from './GlobeSection'
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
 // Exact implementation matching zip HTML prototype (GTF Portal Homepage.dc.html)
@@ -299,8 +298,8 @@ function ProductStream() {
   const [active, setActive] = useState(0)
   const products = [
     { name: 'Europe', category: 'GROUP DEPARTURES', packages: '10', price: '₹78,000', next: '18 SEP', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['Grand Europe — 12N', 'East European Delights — 7N', 'Paris & Amsterdam Escape — 5N'] },
-    { name: 'Africa', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,99,999', next: '09 OCT', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1000&q=85', href: '/departures/africa', popular: ['South African Splendour — 9N', 'Mystical Egypt — 8N'] },
-    { name: 'Asia', category: 'GROUP DEPARTURES', packages: '5', price: '₹1,39,999', next: '20 SEP', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&q=85', href: '/departures/asia', popular: ['Japan Autumn Discovery — 8N', 'Grand Türkiye — 10N', 'Vietnam Escapes — 8N'] },
+    { name: 'Africa', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,99,999', next: '09 OCT', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/SOUTH%20AFRICAN%20SPLENDOUR/SOUTH%20AFRICAN%20SPLENDOUR-0.jpg', href: '/departures/africa', popular: ['South African Splendour — 9N', 'Mystical Egypt — 8N'] },
+    { name: 'Asia', category: 'GROUP DEPARTURES', packages: '5', price: '₹1,39,999', next: '20 SEP', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/JAPAN%20AUTOMN%20DISCOVERY/JAPAN%20AUTOMN%20DISCOVERY-0.png', href: '/departures/asia', popular: ['Japan Autumn Discovery — 8N', 'Grand Türkiye — 10N', 'Vietnam Escapes — 8N'] },
   ]
 
   return (
@@ -341,33 +340,95 @@ function ProductStream() {
 
 // ── CUSTOMER JOURNEY ─────────────────────────────────────────────────────────
 function CustomerJourney() {
-  const journeyRef = useRef<HTMLDivElement | null>(null)
   const clips = [
-    { title: 'Kyoto at Dawn', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=700&q=85', quote: '“A quiet morning our clients still talk about.”', partner: 'Japan · GTF guest story', duration: '10 sec' },
-    { title: 'Swiss Alps', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=700&q=85', quote: '“Every view felt like part of the itinerary.”', partner: 'Switzerland · GTF guest story', duration: '10 sec' },
-    { title: 'Tanzania Safari', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=700&q=85', quote: '“The wild moments became our favourite memories.”', partner: 'Tanzania · GTF guest story', duration: '10 sec' },
-    { title: 'Paris by Night', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=700&q=85', quote: '“Paris felt effortless from the first evening.”', partner: 'France · GTF guest story', duration: '10 sec' },
-    { title: 'Australian Coast', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=700&q=85', quote: '“The coast, the pace, and the people were perfect.”', partner: 'Australia · GTF guest story', duration: '10 sec' },
-    { title: 'Iceland in Motion', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1520637836862-4d197d17c90a?w=700&q=85', quote: '“A cinematic trip our whole group remembers.”', partner: 'Iceland · GTF guest story', duration: '10 sec' },
-    { title: 'Rome After Dark', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1529260830199-42c24126f198?w=700&q=85', quote: '“History, food, and the right pace in one journey.”', partner: 'Italy · GTF guest story', duration: '10 sec' },
-    { title: 'African Great Migration', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1549366021-9f761d450615?w=700&q=85', quote: '“The kind of experience that changes how you travel.”', partner: 'Kenya · GTF guest story', duration: '10 sec' },
-    { title: 'Eastern Europe', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1519671282429-b44660ead0a7?w=700&q=85', quote: '“Unexpected cities, beautiful details, brilliant stories.”', partner: 'Prague & Budapest · GTF guest story', duration: '10 sec' },
-    { title: 'European Winter Markets', label: 'CUSTOMER TRAVEL FILM', image: 'https://images.unsplash.com/photo-1482192505345-5655af888cc4?w=700&q=85', quote: '“A winter escape our clients want to repeat.”', partner: 'Central Europe · GTF guest story', duration: '10 sec' },
+    { title: 'Kyoto at Dawn', country: 'JAPAN', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=900&q=85', quote: '"A quiet morning our clients still talk about."', partner: 'Japan · GTF Guest Story' },
+    { title: 'Swiss Alps', country: 'SWITZERLAND', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=900&q=85', quote: '"Every view felt like part of the itinerary."', partner: 'Switzerland · GTF Guest Story' },
+    { title: 'Tanzania Safari', country: 'AFRICA', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=900&q=85', quote: '"The wild moments became our favourite memories."', partner: 'Africa · GTF Guest Story' },
+    { title: 'Paris by Night', country: 'FRANCE', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=900&q=85', quote: '"Paris felt effortless from the first evening."', partner: 'France · GTF Guest Story' },
+    { title: 'Australian Coast', country: 'AUSTRALIA', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=900&q=85', quote: '"The coast, the pace, and the people were perfect."', partner: 'Australia · GTF Guest Story' },
+    { title: 'South Africa', country: 'SOUTH AFRICA', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/SOUTH%20AFRICAN%20SPLENDOUR/SOUTH%20AFRICAN%20SPLENDOUR-3.jpg', quote: '"An experience that redefines what travel means."', partner: 'South Africa · GTF Guest Story' },
+    { title: 'Mystical Egypt', country: 'EGYPT', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/MYSTICAL%20EGYPT/MYSTICAL%20EGYPT-0.jpg', quote: '"History came alive in the most unexpected ways."', partner: 'Egypt · GTF Guest Story' },
+    { title: 'Japan in Autumn', country: 'JAPAN', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/JAPAN%20AUTOMN%20DISCOVERY/JAPAN%20AUTOMN%20DISCOVERY-2.jpg', quote: '"The colours, the culture, the calm — unforgettable."', partner: 'Japan · GTF Guest Story' },
+    { title: 'Grand Turkiye', country: 'TURKEY', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/GRAND%20TURKIYE/GRAND%20TURKIYE-1.jpg', quote: '"Every city surprised us more than the last."', partner: 'Turkey · GTF Guest Story' },
+    { title: 'Mauritian Paradise', country: 'MAURITIUS', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/MAURITIAN%20PARADISE/MAURITIAN%20PARADISE-1.jpg', quote: '"Pure paradise — clients are already planning their return."', partner: 'Mauritius · GTF Guest Story' },
   ]
-  const scrollJourney = (direction: number) => journeyRef.current?.scrollBy({ left: direction * 300, behavior: 'smooth' })
+  const [active, setActive] = useState(2)
+  const [paused, setPaused] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const startAuto = (currentActive: number) => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    if (progressRef.current) clearInterval(progressRef.current)
+    setProgress(0)
+    progressRef.current = setInterval(() => setProgress(p => Math.min(p + 2, 100)), 100)
+    intervalRef.current = setInterval(() => {
+      setActive(a => (a + 1) % clips.length)
+      setProgress(0)
+    }, 5000)
+  }
+
+  useEffect(() => {
+    if (!paused) startAuto(active)
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      if (progressRef.current) clearInterval(progressRef.current)
+    }
+  }, [paused, active])
+
+  const goTo = (idx: number) => {
+    setActive(idx)
+    setProgress(0)
+    setPaused(true)
+    setTimeout(() => setPaused(false), 8000)
+  }
+  const prev = () => goTo((active - 1 + clips.length) % clips.length)
+  const next = () => goTo((active + 1) % clips.length)
+
   return (
-    <section id="customer-journey" className="customer-journey" aria-labelledby="customer-journey-title">
-      <div className="customer-journey-intro"><div className="eyebrow">CUSTOMER JOURNEY · REAL TRAVEL STORIES</div><h2 id="customer-journey-title">See the world through our partners’ eyes</h2><p>Real journeys. Real places. Real stories from travellers around the globe.</p></div>
-      <div className="customer-journey-carousel">
-        <button type="button" aria-label="Previous journey step" onClick={() => scrollJourney(-1)}>←</button>
-        <div className="customer-journey-track" ref={journeyRef}>
-          {clips.map((clip, index) => <button type="button" className="customer-journey-card" key={clip.title} aria-label={`Play testimonial: ${clip.title}`} style={{ animationDelay: `${index * 100}ms` }}><div className="customer-journey-image" style={{ backgroundImage: `url('${clip.image}')` }} /><div className="customer-journey-shade" /><span className="customer-journey-play" aria-hidden="true">▶</span><div className="customer-journey-card-copy"><span>{clip.label}</span><strong>{clip.title}</strong><p>{clip.quote}</p><small>{clip.partner} · {clip.duration}</small></div></button>)}
+    <section className="cj2" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      <div className="cj2-inner">
+        <div className="cj2-header">
+          <div className="eyebrow">CUSTOMER JOURNEY · REAL TRAVEL STORIES</div>
+          <h2 className="cj2-title">See the world through <em>our partners&apos; eyes</em></h2>
+          <p className="cj2-sub">Real journeys. Real places. Real stories from travellers around the globe.</p>
         </div>
-        <button type="button" aria-label="Next journey step" onClick={() => scrollJourney(1)}>→</button>
+        <div className="cj2-stage">
+          <button type="button" className="cj2-arrow" onClick={prev} aria-label="Previous">&#8249;</button>
+          <div className="cj2-track">
+            {clips.map((clip, i) => {
+              const isActive = i === active
+              const dist = Math.min(Math.abs(i - active), Math.abs(i - active + clips.length), Math.abs(i - active - clips.length))
+              if (dist > 2) return null
+              return (
+                <button key={clip.title} type="button" onClick={() => goTo(i)}
+                  className={`cj2-card${isActive ? ' cj2-card-active' : ''}`}
+                  style={{ opacity: dist === 0 ? 1 : dist === 1 ? 0.7 : 0.4, transform: `scale(${isActive ? 1 : 0.88})` }}
+                  aria-pressed={isActive}>
+                  <div className="cj2-img" style={{ backgroundImage: `url(${clip.image})` }} />
+                  <div className="cj2-shade" />
+                  <span className="cj2-play">&#9654;</span>
+                  <span className="cj2-chip">{clip.country}</span>
+                  <div className="cj2-content">
+                    <strong className="cj2-name">{clip.title}</strong>
+                    {isActive && <div className="cj2-quote-wrap"><p className="cj2-quote">{clip.quote}</p><small className="cj2-partner">{clip.partner}</small></div>}
+                  </div>
+                  {isActive && <div className="cj2-progress-bar"><div className="cj2-progress-fill" style={{ width: `${progress}%` }} /></div>}
+                </button>
+              )
+            })}
+          </div>
+          <button type="button" className="cj2-arrow" onClick={next} aria-label="Next">&#8250;</button>
+        </div>
+        <div className="cj2-dots">
+          {clips.map((_, i) => <button key={i} type="button" className={`cj2-dot${i === active ? ' cj2-dot-active' : ''}`} onClick={() => goTo(i)} aria-label={`Go to slide ${i + 1}`} />)}
+        </div>
       </div>
     </section>
   )
 }
+
 
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
@@ -979,7 +1040,6 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
-      <GlobeSection />
       <DestinationMarquee />
       <ProductStream />
       <CustomerJourney />
