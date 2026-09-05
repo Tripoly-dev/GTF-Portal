@@ -43,12 +43,12 @@ export async function POST(req: NextRequest) {
     }).select('*, quote_number').single()
 
     if (error) {
-      console.error('Quote create error:', error)
-      // Log to quotes table error_log if possible
+      console.error('Quote create error:', JSON.stringify(error))
       return NextResponse.json({ 
         error: 'Failed to save quote', 
-        detail: error.message,
-        code: error.code 
+        detail: error.message || error.details || '',
+        code: error.code || '',
+        hint: error.hint || '',
       }, { status: 500 })
     }
 

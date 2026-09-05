@@ -1015,10 +1015,11 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
       if (res.ok && resData.quote?.id) {
         router.push(`/dashboard/quotes/${resData.quote.id}`)
       } else {
-        // Log error visibly and to console
         const errMsg = resData.error || `HTTP ${res.status}`
-        console.error('Quote save failed:', errMsg, resData)
-        alert(`Failed to save proposal: ${errMsg}\n\nPlease try again or contact support.`)
+        const errDetail = resData.detail || ''
+        const errCode = resData.code || ''
+        console.error('Quote save failed:', errMsg, errDetail, errCode, resData)
+        alert(`Failed to save proposal.\n\nError: ${errMsg}\nDetail: ${errDetail}\nCode: ${errCode}\n\nPlease screenshot this and share with support.`)
       }
     } catch (e) {
       console.error('Quote save exception:', e)
