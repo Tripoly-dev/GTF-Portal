@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 type Quote = {
   id: string
+  quote_number: number
   package_id: string
   package_name: string
   region: string
@@ -15,7 +16,7 @@ type Quote = {
   client_type: string
   trip_name: string
   flights_booked: boolean
-  status: 'draft' | 'sent' | 'confirmed'
+  status: 'draft' | 'created' | 'sent' | 'cancelled'
   markup_amount: number
   add_ons: any[]
   created_at: string
@@ -26,16 +27,17 @@ type Quote = {
 const fmt = (n: number) => '₹' + Math.round(n).toLocaleString('en-IN')
 const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 
-const STATUS_COLORS = {
-  draft: { bg: '#FEF3C7', color: '#92400E' },
-  sent: { bg: '#DBEAFE', color: '#1E40AF' },
-  confirmed: { bg: '#D1FAE5', color: '#065F46' },
+const STATUS_COLORS: Record<string, { bg: string; color: string; borderRadius: number }> = {
+  draft:     { bg: '#F3F4F6', color: '#6B7280', borderRadius: 4 },
+  created:   { bg: '#E6F4F1', color: '#06316D', borderRadius: 4 },
+  sent:      { bg: '#FEF3C7', color: '#92400E', borderRadius: 4 },
+  cancelled: { bg: '#FEE2E2', color: '#991B1B', borderRadius: 4 },
 }
 
 export default function QuotesPage() {
   const [quotes, setQuotes] = useState<Quote[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<'all' | 'draft' | 'sent' | 'confirmed'>('all')
+  const [filter, setFilter] = useState<'all' | 'draft' | 'created' | 'sent' | 'cancelled'>('all')
   const [expanded, setExpanded] = useState<string | null>(null)
 
   useEffect(() => {
@@ -50,8 +52,9 @@ export default function QuotesPage() {
   const counts = {
     all: quotes.length,
     draft: quotes.filter(q => q.status === 'draft').length,
+    created: quotes.filter(q => q.status === 'created').length,
     sent: quotes.filter(q => q.status === 'sent').length,
-    confirmed: quotes.filter(q => q.status === 'confirmed').length,
+    cancelled: quotes.filter(q => q.status === 'cancelled').length,
   }
 
   return (
@@ -72,9 +75,9 @@ export default function QuotesPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 28 }}>
         {[
           { label: 'Total Quotes', n: counts.all, color: 'var(--teal)' },
-          { label: 'Draft', n: counts.draft, color: '#92400E' },
-          { label: 'Sent', n: counts.sent, color: '#1E40AF' },
-          { label: 'Confirmed', n: counts.confirmed, color: '#065F46' },
+          { label: 'Created', n: counts.created, color: '#06316D' },
+          { label: 'Sent', n: counts.sent, color: '#92400E' },
+          { label: 'Cancelled', n: counts.cancelled, color: '#991B1B' },
         ].map((s, i) => (
           <div key={i} style={{ background: 'white', border: '1px solid var(--rule)', padding: '18px 20px' }}>
             <div className="font-tight" style={{ fontSize: 32, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{s.n}</div>
@@ -85,7 +88,7 @@ export default function QuotesPage() {
 
       {/* Filter */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
-        {(['all', 'draft', 'sent', 'confirmed'] as const).map(f => (
+        {(['all', 'created', 'sent', 'cancelled'] as const).map(f => (
           <button key={f} onClick={() => setFilter(f)} style={{
             padding: '8px 18px', border: '1.5px solid var(--rule)',
             background: filter === f ? 'var(--ink)' : 'white',
@@ -122,6 +125,9 @@ export default function QuotesPage() {
 
                 {/* Package + client */}
                 <div>
+                  <div style={{ fontSize: 11, color: 'var(--ink-light)', marginBottom: 2 }}>
+                    Proposal No: <strong style={{ color: 'var(--teal)' }}>{q.quote_number || '—'}</strong>
+                  </div>
                   <div className="font-tight" style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 3, letterSpacing: '-0.01em' }}>{q.trip_name}</div>
                   <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>Client: <strong style={{ color: 'var(--ink-mid)' }}>{q.client_name}</strong> · {q.client_type}</div>
                   <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>{q.package_name} · {q.region.toUpperCase()}</div>
@@ -148,7 +154,7 @@ export default function QuotesPage() {
 
                 {/* Status */}
                 <div>
-                  <span style={{ ...STATUS_COLORS[q.status], padding: '4px 10px', fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', borderRadius: 4 }}>
+                  <span style={{ ...(STATUS_COLORS[q.status] || STATUS_COLORS.created), padding: '4px 10px', fontSize: 10, fontWeight: 700, letterSpacing: '0.06em' }}>
                     {q.status.toUpperCase()}
                   </span>
                 </div>
@@ -187,13 +193,17 @@ export default function QuotesPage() {
                     </div>
                   )}
                   <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+                    <Link href={`/dashboard/quotes/${q.id}`}
+                      style={{ padding: '8px 18px', background: '#06316D', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
+                      VIEW PROPOSAL →
+                    </Link>
                     <Link href={`/dashboard/packages/${q.package_id}`}
-                      style={{ padding: '8px 18px', background: 'var(--teal)', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
+                      style={{ padding: '8px 18px', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
                       DUPLICATE QUOTE
                     </Link>
-                    <a href={`mailto:sales@gtfholidays.com?subject=Quote Ref: ${q.trip_name} (${q.client_name})&body=Hi GTF Team,%0D%0A%0D%0APlease find details for the following quote:%0D%0A%0D%0AClient: ${q.client_name}%0D%0APackage: ${q.package_name}%0D%0ADeparture: ${fmtDate(q.departure_date)}%0D%0APax: ${q.adults} adults (${q.room_type})%0D%0ATotal: ${fmt(q.total_price)}%0D%0A%0D%0ARegards`}
-                      style={{ padding: '8px 18px', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
-                      EMAIL TO GTF
+                    <a href={`/api/quotes/pdf?id=${q.id}`} target="_blank" rel="noopener noreferrer"
+                      style={{ padding: '8px 18px', border: '1.5px solid var(--teal)', color: 'var(--teal)', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
+                      DOWNLOAD PDF
                     </a>
                   </div>
                 </div>

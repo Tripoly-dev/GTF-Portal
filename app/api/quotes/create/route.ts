@@ -44,7 +44,12 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error('Quote create error:', error)
-      return NextResponse.json({ error: 'Failed to save quote' }, { status: 500 })
+      // Log to quotes table error_log if possible
+      return NextResponse.json({ 
+        error: 'Failed to save quote', 
+        detail: error.message,
+        code: error.code 
+      }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, quote: data })

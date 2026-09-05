@@ -980,27 +980,50 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
 
   const handleSave = async (data: any) => {
     try {
+      const payload = {
+        package_id: pkg.id, package_name: pkg.name, region: pkg.region,
+        departure_date: data.departureDate,
+        adults: data.adults,
+        children_with_bed: data.childrenWithBed || 0,
+        children_without_bed: data.childrenWithoutBed || 0,
+        room_type: data.roomType,
+        base_price: pkg.basePrice,
+        currency: pkg.currency || 'INR',
+        markup_type: data.markup_type === 'percentage' ? 'percent' : (data.markup_type || 'fixed'),
+        markup_value: Number(data.markup_value) || 0,
+        markup_amount: Number(data.markup_amount) || 0,
+        add_ons: data.selectedAddOns || [],
+        add_ons_total: data.addOnsTotal || 0,
+        total_price: data.final_total || data.totalPrice || 0,
+        client_name: data.client_name || '',
+        client_type: data.client_type || 'repeat',
+        trip_name: data.trip_name || pkg.name,
+        estimated_booking_date: data.estimated_booking_date || null,
+        flights_booked: data.flights_booked || false,
+        notes: data.notes || null,
+        status: 'created',
+      }
+
       const res = await fetch('/api/quotes/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          package_id: pkg.id, package_name: pkg.name, region: pkg.region,
-          departure_date: data.departureDate, adults: data.adults,
-          children_with_bed: data.childrenWithBed, children_without_bed: data.childrenWithoutBed,
-          room_type: data.roomType, base_price: pkg.basePrice, currency: pkg.currency,
-          markup_type: data.markup_type, markup_value: data.markup_value,
-          markup_amount: data.markup_amount, add_ons: data.selectedAddOns || [],
-          add_ons_total: data.addOnsTotal || 0, total_price: data.final_total,
-          client_name: data.client_name, client_type: data.client_type,
-          trip_name: data.trip_name, estimated_booking_date: data.estimated_booking_date,
-          flights_booked: data.flights_booked, notes: data.notes,
-        }),
+        body: JSON.stringify(payload),
       })
-      if (res.ok) {
-        const resData = await res.json()
-        router.push(`/dashboard/quotes/${resData.quote?.id}`)
+
+      const resData = await res.json()
+
+      if (res.ok && resData.quote?.id) {
+        router.push(`/dashboard/quotes/${resData.quote.id}`)
+      } else {
+        // Log error visibly and to console
+        const errMsg = resData.error || `HTTP ${res.status}`
+        console.error('Quote save failed:', errMsg, resData)
+        alert(`Failed to save proposal: ${errMsg}\n\nPlease try again or contact support.`)
       }
-    } catch (e) { console.error(e) }
+    } catch (e) {
+      console.error('Quote save exception:', e)
+      alert('A network error occurred. Please check your connection and try again.')
+    }
   }
 
   if (saved) return (
