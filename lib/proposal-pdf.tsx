@@ -5,8 +5,26 @@ import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/
 Font.register({
   family: 'NotoSans',
   fonts: [
-    { src: 'https://fonts.gstatic.com/s/notosans/v36/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A99d41P6zHtY.woff', fontWeight: 400 },
-    { src: 'https://fonts.gstatic.com/s/notosans/v36/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A-Rd41P6zHtY.woff', fontWeight: 700 },
+    {
+      src: 'https://gtf-portal-six.vercel.app/fonts/noto-sans-latin-400-normal.woff',
+      fontWeight: 400,
+      fontStyle: 'normal',
+    },
+    {
+      src: 'https://gtf-portal-six.vercel.app/fonts/noto-sans-latin-400-italic.woff',
+      fontWeight: 400,
+      fontStyle: 'italic',
+    },
+    {
+      src: 'https://gtf-portal-six.vercel.app/fonts/noto-sans-latin-700-normal.woff',
+      fontWeight: 700,
+      fontStyle: 'normal',
+    },
+    {
+      src: 'https://gtf-portal-six.vercel.app/fonts/noto-sans-latin-700-italic.woff',
+      fontWeight: 700,
+      fontStyle: 'italic',
+    },
   ]
 })
 
