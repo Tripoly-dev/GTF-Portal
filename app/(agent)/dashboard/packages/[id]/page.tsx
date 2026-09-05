@@ -986,6 +986,8 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
         adults: data.adults,
         children_with_bed: data.childrenWithBed || 0,
         children_without_bed: data.childrenWithoutBed || 0,
+        child_with_bed_price: pkg.childWithBedPrice || 0,
+        child_without_bed_price: pkg.childWithoutBedPrice || 0,
         room_type: data.roomType,
         base_price: pkg.basePrice,
         currency: pkg.currency || 'INR',

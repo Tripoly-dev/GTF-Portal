@@ -478,16 +478,22 @@ export function ProposalPDF({ quote, agent, pkg }: { quote: any; agent: any; pkg
               <Text style={s.pricingLabel}>{quote.adults} Adult{quote.adults > 1 ? 's' : ''} x {fmtPrice(quote.base_price, cur)} ({quote.room_type} room)</Text>
               <Text style={s.pricingValue}>{fmtPrice((quote.base_price || 0) * (quote.adults || 1), cur)}</Text>
             </View>
+            {(quote.children_with_bed || 0) > 0 && (quote.child_with_bed_price || 0) > 0 && (
+              <View style={s.pricingRow}>
+                <Text style={s.pricingLabel}>{quote.children_with_bed} Child{quote.children_with_bed > 1 ? 'ren' : ''} (with bed) x {fmtPrice(quote.child_with_bed_price, cur)}</Text>
+                <Text style={s.pricingValue}>{fmtPrice((quote.child_with_bed_price || 0) * (quote.children_with_bed || 0), cur)}</Text>
+              </View>
+            )}
+            {(quote.children_without_bed || 0) > 0 && (quote.child_without_bed_price || 0) > 0 && (
+              <View style={s.pricingRow}>
+                <Text style={s.pricingLabel}>{quote.children_without_bed} Child{quote.children_without_bed > 1 ? 'ren' : ''} (without bed) x {fmtPrice(quote.child_without_bed_price, cur)}</Text>
+                <Text style={s.pricingValue}>{fmtPrice((quote.child_without_bed_price || 0) * (quote.children_without_bed || 0), cur)}</Text>
+              </View>
+            )}
             {(quote.add_ons_total || 0) > 0 && (
               <View style={s.pricingRow}>
                 <Text style={s.pricingLabel}>Optional Add-ons</Text>
                 <Text style={s.pricingValue}>+ {fmtPrice(quote.add_ons_total, cur)}</Text>
-              </View>
-            )}
-            {(quote.markup_amount || 0) > 0 && (
-              <View style={s.pricingRow}>
-                <Text style={s.pricingLabel}>Service Charges</Text>
-                <Text style={s.pricingValue}>+ {fmtPrice(quote.markup_amount, cur)}</Text>
               </View>
             )}
             <View style={s.pricingTotal}>
