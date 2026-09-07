@@ -462,14 +462,35 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   // Pax string
   const paxStr = `${quote.adults} Adult${quote.adults > 1 ? 's' : ''}${totalChildren > 0 ? ` + ${totalChildren} Child${totalChildren > 1 ? 'ren' : ''}` : ''}`
 
-  // WhatsApp message
+  // WhatsApp message — enriched trip summary
   const whatsappMsg = () => {
-    const msg = `Hi! Please find the travel proposal for *${quote.trip_name}*.\n\n` +
-      `Destination: ${pkg?.name || quote.package_name}\n` +
-      `Departure: ${fmtDate(quote.departure_date)}\n` +
-      `Passengers: ${paxStr}\n` +
-      `Total: ${f(quote.total_price, cur)}\n\n` +
-      `I will share the PDF proposal separately.\nLooking forward to your confirmation!`
+    const highlights = pkg?.highlights?.slice(0, 5).map((h: string) => `• ${h}`).join('\n') || ''
+    const itinerary = pkg?.itinerary?.map((d: any) => `Day ${d.day} — ${d.title}`).join('\n') || ''
+    const hotels = pkg?.hotels?.map((h: any) => `• ${h.city} — ${h.name.replace(/\s*\/?\s*or similar$/i, '')} (${h.stars}★) · ${h.nights}N`).join('\n') || ''
+
+    const msg =
+      `Hi ${quote.client_name}! 👋\n\n` +
+      `🌍 *${quote.trip_name} — Travel Proposal*\n` +
+      `📋 Proposal No: ${quote.quote_number}\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `👤 *Client:* ${quote.client_name}\n` +
+      `📅 *Departure:* ${fmtDate(quote.departure_date)}\n` +
+      `👥 *Passengers:* ${paxStr}\n` +
+      `⏱ *Duration:* ${pkg ? `${pkg.nights} Nights / ${pkg.days} Days` : ''}\n` +
+      `💰 *Total:* ${f(quote.total_price, cur)}\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `✨ *HIGHLIGHTS*\n` +
+      `${highlights}\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `🗓 *ITINERARY*\n` +
+      `${itinerary}\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `🏨 *HOTELS*\n` +
+      `${hotels}\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `📄 I will share the detailed PDF proposal separately.\n` +
+      `Looking forward to your confirmation! 🙏`
+
     return `https://wa.me/?text=${encodeURIComponent(msg)}`
   }
 
