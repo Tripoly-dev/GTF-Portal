@@ -487,55 +487,51 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
 
-      {/* Breadcrumb */}
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '16px 32px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--ink-light)' }}>
-        <Link href="/dashboard" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Dashboard</Link>
-        <span>→</span>
-        <Link href="/dashboard/quotes" style={{ color: 'var(--teal)', textDecoration: 'none' }}>My Quotes</Link>
-        <span>→</span>
-        <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{quote.trip_name}</span>
-      </div>
+      {/* ── HERO BANNER — full width ── */}
+      <div style={{ position: 'relative', height: 420, overflow: 'hidden' }}>
+        {heroImg && <img src={heroImg} alt={pkg?.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.25) 50%, transparent 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)' }} />
 
-      {/* ── HERO BANNER ── */}
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px 24px' }}>
-        <div style={{ position: 'relative', height: 420, borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(7,26,23,0.15)' }}>
-          {heroImg && <img src={heroImg} alt={pkg?.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.88) 0%, rgba(7,26,23,0.2) 50%, transparent 100%)' }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)' }} />
+        {/* Breadcrumb inside hero */}
+        <div style={{ position: 'absolute', top: 20, left: 32, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
+          <Link href="/dashboard" style={{ color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>Dashboard</Link>
+          <span>→</span>
+          <Link href="/dashboard/quotes" style={{ color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>My Quotes</Link>
+          <span>→</span>
+          <span style={{ color: 'rgba(255,255,255,0.8)' }}>{quote.trip_name}</span>
+        </div>
 
-          {/* Top row */}
-          <div style={{ position: 'absolute', top: 24, left: 28, right: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', padding: '5px 12px', background: 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 4, backdropFilter: 'blur(8px)' }}>PROPOSAL NO: {quote.quote_number}</span>
-            </div>
-            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', background: statusStyle.bg, color: statusStyle.color, borderRadius: 4 }}>{statusStyle.label.toUpperCase()}</span>
-          </div>
+        {/* Proposal No + Status top right */}
+        <div style={{ position: 'absolute', top: 20, right: 32, display: 'flex', gap: 8, alignItems: 'center' }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', padding: '5px 12px', background: 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 4, backdropFilter: 'blur(8px)' }}>PROPOSAL NO: {quote.quote_number}</span>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', background: statusStyle.bg, color: statusStyle.color, borderRadius: 4 }}>{statusStyle.label.toUpperCase()}</span>
+        </div>
 
-          {/* Bottom content */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '28px 28px 24px' }}>
-            <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}>{(quote.region || '').toUpperCase()}</div>
-            <h1 style={{ fontSize: 40, fontWeight: 700, color: '#fff', margin: '0 0 16px', lineHeight: 1.1, fontFamily: "'Playfair Display', Georgia, serif", letterSpacing: '-0.02em' }}>
-              {quote.trip_name}
-            </h1>
-            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-              {[
-                { l: 'CLIENT', v: quote.client_name },
-                { l: 'DEPARTURE', v: fmtDate(quote.departure_date) },
-                { l: 'PASSENGERS', v: paxStr },
-                { l: 'DURATION', v: pkg ? `${pkg.nights}N/${pkg.days}D` : '' },
-              ].filter(x => x.v).map(({ l, v }) => (
-                <div key={l}>
-                  <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{l}</div>
-                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{v}</div>
-                </div>
-              ))}
-            </div>
+        {/* Bottom content */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '28px 32px 28px' }}>
+          <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)', marginBottom: 8 }}>{(quote.region || '').toUpperCase()}</div>
+          <h1 style={{ fontSize: 42, fontWeight: 700, color: '#fff', margin: '0 0 18px', lineHeight: 1.05, fontFamily: "'Playfair Display', Georgia, serif", letterSpacing: '-0.02em' }}>
+            {quote.trip_name}
+          </h1>
+          <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
+            {[
+              { l: 'CLIENT', v: quote.client_name },
+              { l: 'DEPARTURE', v: fmtDate(quote.departure_date) },
+              { l: 'PASSENGERS', v: paxStr },
+              { l: 'DURATION', v: pkg ? `${pkg.nights}N/${pkg.days}D` : '' },
+            ].filter(x => x.v).map(({ l, v }) => (
+              <div key={l}>
+                <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.42)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{l}</div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{v}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px 64px', display: 'grid', gridTemplateColumns: '220px 1fr 300px', gap: 24, alignItems: 'start' }}>
+      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '24px 32px 64px', display: 'grid', gridTemplateColumns: '220px 1fr 300px', gap: 24, alignItems: 'start' }}>
 
         {/* ── LEFT: Vertical tab nav ── */}
         <div style={{ position: 'sticky', top: 20 }}>
@@ -554,23 +550,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                   {tab.id === 'overview' ? '📋' : tab.id === 'itinerary' ? '🗺️' : tab.id === 'hotels' ? '🏨' : tab.id === 'inclusions' ? '✅' : '❌'}
                 </span>
                 {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Quick actions below tabs */}
-          <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: 16, marginTop: 16 }}>
-            <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 12 }}>QUICK ACTIONS</div>
-            {[
-              { label: 'Edit Proposal', icon: '✏️', action: () => setShowEdit(true) },
-              { label: 'Update Markup', icon: '💰', action: () => setShowMarkup(true) },
-              { label: 'Help Request', icon: '❓', action: () => setShowHelp(true) },
-              { label: 'Get Callback', icon: '📞', action: () => setShowCallback(true) },
-            ].map(({ label, icon, action }) => (
-              <button key={label} onClick={action} style={{ width: '100%', padding: '10px 12px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 500, color: 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, transition: 'all 0.15s', fontFamily: "'DM Sans', sans-serif" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-mid)' }}>
-                {icon} {label}
               </button>
             ))}
           </div>
