@@ -617,22 +617,6 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
         </div>
       </div>
 
-      {/* ── CREATING LOADER ── */}
-      {creating && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.85)', zIndex: 99999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, backdropFilter: 'blur(6px)' }}>
-          {/* Spinner */}
-          <div style={{ position: 'relative', width: 72, height: 72 }}>
-            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.1)' }} />
-            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid transparent', borderTopColor: 'var(--teal)', animation: 'spin 0.8s linear infinite' }} />
-            <div style={{ position: 'absolute', inset: '12px', borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'rgba(255,255,255,0.4)', animation: 'spin 1.2s linear infinite reverse' }} />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 8, fontFamily: "'Playfair Display', Georgia, serif" }}>Creating your proposal...</div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', fontFamily: "'DM Sans', sans-serif" }}>Please wait while we save your quote</div>
-          </div>
-        </div>
-      )}
-
       {showModal && (
         <SaveProposalModal
           pkg={pkg}
@@ -1353,11 +1337,25 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
               <div
                 key={i}
                 onClick={e => { e.stopPropagation(); setLightboxIdx(i) }}
-                style={{ width: 60, height: 44, flexShrink: 0, overflow: 'hidden', cursor: 'pointer', border: `2px solid ${lightboxIdx === i ? '#fff' : 'rgba(255,255,255,0.25)'}`, opacity: lightboxIdx === i ? 1 : 0.5, transition: 'all 0.2s' }}
-              >
+                style={{ width: 60, height: 44, flexShrink: 0, overflow: 'hidden', cursor: 'pointer', border: `2px solid ${lightboxIdx === i ? '#fff' : 'rgba(255,255,255,0.25)'}`, opacity: lightboxIdx === i ? 1 : 0.5, transition: 'all 0.2s' }}>
                 <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── CREATING LOADER ── */}
+      {creating && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.85)', zIndex: 99999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, backdropFilter: 'blur(6px)' }}>
+          <div style={{ position: 'relative', width: 72, height: 72 }}>
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.1)' }} />
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid transparent', borderTopColor: 'var(--teal)', animation: 'spin 0.8s linear infinite' }} />
+            <div style={{ position: 'absolute', inset: '12px', borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'rgba(255,255,255,0.4)', animation: 'spin 1.2s linear infinite reverse' }} />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 8, fontFamily: "'Playfair Display', Georgia, serif" }}>Creating your proposal...</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', fontFamily: "'DM Sans', sans-serif" }}>Please wait while we save your quote</div>
           </div>
         </div>
       )}
