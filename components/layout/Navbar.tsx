@@ -1,13 +1,20 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 export default function Navbar() {
   const [depsOpen, setDepsOpen] = useState(false)
+  const [adminOpen, setAdminOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
-  // The homepage hero is a light surface, so the navbar must remain readable
-  // before the first scroll as well as after it.
   const overPhoto = false
+
+  useEffect(() => {
+    // Check if current user is admin
+    fetch('/api/auth/me').then(r => r.json()).then(d => {
+      if (d.agent?.role === 'admin') setIsAdmin(true)
+    }).catch(() => {})
+  }, [])
 
   const regions = [
     { name: 'Europe', href: '/departures/europe' },
@@ -15,6 +22,12 @@ export default function Navbar() {
     { name: 'Oceania', href: '/departures/oceania' },
     { name: 'Asia', href: '/departures/asia' },
     { name: 'Americas', href: '/departures/americas' },
+  ]
+
+  const adminLinks = [
+    { name: 'All Agents', href: '/admin' },
+    { name: 'All Bookings', href: '/admin/bookings' },
+    { name: 'Departures', href: '/admin/departures' },
   ]
 
   return (
@@ -86,6 +99,40 @@ export default function Navbar() {
               textDecoration: 'none',
             }}>{l.label}</Link>
           ))}
+
+          {/* Admin dropdown — visible only to admin */}
+          {isAdmin && (
+            <div style={{ position: 'relative' }}
+              onMouseEnter={() => setAdminOpen(true)}
+              onMouseLeave={() => setAdminOpen(false)}>
+              <span className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', color: 'var(--teal)', fontWeight: 700 }}>
+                Admin
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </span>
+              {adminOpen && (
+                <div className="animate-slide-down" style={{
+                  position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+                  marginTop: 8, background: 'white', border: '1px solid var(--rule)',
+                  boxShadow: '0 16px 48px rgba(7,26,23,0.12)', minWidth: 180, zIndex: 300,
+                }}>
+                  {adminLinks.map(l => (
+                    <Link key={l.href} href={l.href} style={{
+                      display: 'block', padding: '11px 20px',
+                      fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
+                      textDecoration: 'none', borderBottom: '1px solid var(--rule)',
+                      transition: 'all 0.15s',
+                    }}
+                    onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
+                    onMouseLeave={e => { (e.target as HTMLElement).style.background = 'white'; (e.target as HTMLElement).style.color = 'var(--ink-mid)' }}>
+                      {l.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* CTAs */}

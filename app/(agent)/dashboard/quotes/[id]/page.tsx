@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES } from '@/data/packages'
+import BookingModal from '@/components/BookingModal'
 
 const f = (n: number, cur = 'INR') => {
   if (!n) return '₹0'
@@ -417,6 +418,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [showHelp, setShowHelp] = useState(false)
   const [showCallback, setShowCallback] = useState(false)
   const [showMarkup, setShowMarkup] = useState(false)
+  const [showBooking, setShowBooking] = useState(false)
   const [markingAsSent, setMarkingAsSent] = useState(false)
 
   const pkg = quote ? PACKAGES.find(p => p.id === quote.package_id) || null : null
@@ -720,6 +722,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               </button>
             )}
 
+            {quote.status === 'sent' && (
+              <button onClick={() => setShowBooking(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#7c3aed', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.02em' }}>
+                🎫 Convert to Booking
+              </button>
+            )}
+
             <div style={{ borderTop: '1px solid var(--rule)', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
               {[
                 { label: '✏️ Edit Proposal', action: () => setShowEdit(true) },
@@ -744,6 +752,17 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       {showHelp && <HelpModal quoteId={quote.id} onClose={() => setShowHelp(false)} />}
       {showCallback && <CallbackModal quoteId={quote.id} onClose={() => setShowCallback(false)} />}
       {showMarkup && pkg && <MarkupModal quote={quote} pkg={pkg} onClose={() => setShowMarkup(false)} onSaved={q => setQuote(q)} />}
+      {showBooking && pkg && (
+        <BookingModal
+          quote={quote}
+          pkg={pkg}
+          onClose={() => setShowBooking(false)}
+          onSuccess={() => {
+            setShowBooking(false)
+            setQuote((q: any) => ({ ...q, status: 'booking' }))
+          }}
+        />
+      )}
     </div>
   )
 }
