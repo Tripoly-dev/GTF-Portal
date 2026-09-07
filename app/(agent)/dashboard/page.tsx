@@ -59,14 +59,18 @@ const pillStyle = (status: string): React.CSSProperties => {
   if (status === 'fast-filling') return { background: '#78350f', color: '#fef3c7' }
   if (status === 'sold-out')     return { background: '#7f1d1d', color: '#fee2e2' }
   if (status === 'draft')        return { background: C.ruleDk, color: C.ink }
+  if (status === 'created')      return { background: '#E0F0ED', color: '#065A4F' }
   if (status === 'sent')         return { background: '#1e3a5f', color: '#bfdbfe' }
+  if (status === 'cancelled')    return { background: '#7f1d1d', color: '#fee2e2' }
   return { background: '#14532d', color: '#bbf7d0' }
 }
 const pillLabel = (status: string) => {
   if (status === 'fast-filling') return 'FAST FILLING'
   if (status === 'sold-out') return 'SOLD OUT'
   if (status === 'draft') return 'DRAFT'
+  if (status === 'created') return 'CREATED'
   if (status === 'sent') return 'SENT'
+  if (status === 'cancelled') return 'CANCELLED'
   return 'AVAILABLE'
 }
 
@@ -318,8 +322,8 @@ export default function DashboardPage() {
                     No quotes yet. <Link href="/dashboard/packages" style={{ color: C.accent, fontWeight: 600, textDecoration: 'none' }}>Browse packages to get started.</Link>
                   </div>
                 ) : tabFiltered.slice(0, 5).map(q => (
-                  <Link key={q.id} href="/dashboard/quotes" style={{
-                    display: 'grid', gridTemplateColumns: 'minmax(150px,1.4fr) minmax(170px,1.5fr) auto auto',
+                  <Link key={q.id} href={`/dashboard/quotes/${q.id}`} style={{
+                    display: 'grid', gridTemplateColumns: 'minmax(150px,1.4fr) minmax(170px,1.5fr) 140px 80px',
                     alignItems: 'center', gap: 24, padding: '18px 8px',
                     borderBottom: `1px solid ${C.rule}`, cursor: 'pointer',
                     background: 'transparent', textDecoration: 'none',
