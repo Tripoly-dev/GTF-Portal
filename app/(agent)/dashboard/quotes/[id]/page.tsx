@@ -531,7 +531,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '24px 32px 64px', display: 'grid', gridTemplateColumns: '220px 1fr 300px', gap: 24, alignItems: 'start' }}>
+      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '24px 24px 64px', display: 'grid', gridTemplateColumns: '220px 1fr 340px', gap: 20, alignItems: 'start' }}>
 
         {/* ── LEFT: Vertical tab nav ── */}
         <div style={{ position: 'sticky', top: 20 }}>
@@ -664,18 +664,18 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 {tacEarnings > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>TAC (agent commission)</span>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#16a34a' }}>+{f(tacEarnings, cur)}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#9e2233' }}>+{f(tacEarnings, cur)}</span>
                   </div>
                 )}
                 {(quote.markup_amount || 0) > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>Additional markup</span>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#16a34a' }}>+{f(quote.markup_amount, cur)}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#9e2233' }}>+{f(quote.markup_amount, cur)}</span>
                   </div>
                 )}
                 <div style={{ borderTop: '1px solid var(--rule)', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>Your total earnings</span>
-                  <span style={{ fontSize: 15, fontWeight: 800, color: '#16a34a' }}>+{f(totalEarnings, cur)}</span>
+                  <span style={{ fontSize: 15, fontWeight: 800, color: '#9e2233' }}>+{f(totalEarnings, cur)}</span>
                 </div>
               </div>
             </div>
