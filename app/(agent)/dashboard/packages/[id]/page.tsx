@@ -632,6 +632,8 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
           </div>
         </div>
       )}
+
+      {showModal && (
         <SaveProposalModal
           pkg={pkg}
           summary={{ totalPrice, adults, childrenWithBed, childrenWithoutBed, roomType, departureDate, addOnsTotal, selectedAddOnLabels: pkg.addOns.filter(a => selectedAddOns.includes(a.id)).map(a => a.label), currency: pkg.currency }}
