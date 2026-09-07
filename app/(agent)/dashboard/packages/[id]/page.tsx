@@ -617,7 +617,21 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
         </div>
       </div>
 
-      {showModal && (
+      {/* ── CREATING LOADER ── */}
+      {creating && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.85)', zIndex: 99999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, backdropFilter: 'blur(6px)' }}>
+          {/* Spinner */}
+          <div style={{ position: 'relative', width: 72, height: 72 }}>
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.1)' }} />
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid transparent', borderTopColor: 'var(--teal)', animation: 'spin 0.8s linear infinite' }} />
+            <div style={{ position: 'absolute', inset: '12px', borderRadius: '50%', border: '2px solid transparent', borderTopColor: 'rgba(255,255,255,0.4)', animation: 'spin 1.2s linear infinite reverse' }} />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 8, fontFamily: "'Playfair Display', Georgia, serif" }}>Creating your proposal...</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', fontFamily: "'DM Sans', sans-serif" }}>Please wait while we save your quote</div>
+          </div>
+        </div>
+      )}
         <SaveProposalModal
           pkg={pkg}
           summary={{ totalPrice, adults, childrenWithBed, childrenWithoutBed, roomType, departureDate, addOnsTotal, selectedAddOnLabels: pkg.addOns.filter(a => selectedAddOns.includes(a.id)).map(a => a.label), currency: pkg.currency }}
@@ -960,6 +974,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIdx, setLightboxIdx] = useState(0)
   const [saved, setSaved] = useState(false)
+  const [creating, setCreating] = useState(false)
   const [savedQuoteId, setSavedQuoteId] = useState<string | null>(null)
   const [savedQuoteMeta, setSavedQuoteMeta] = useState<{ tripName: string; departureDate: string; adults: number; totalPrice: string } | null>(null)
   const [activeTab, setActiveTab] = useState<string>('overview')
@@ -979,6 +994,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   }).slice(0, 3)
 
   const handleSave = async (data: any) => {
+    setCreating(true)
     try {
       const payload = {
         package_id: pkg.id, package_name: pkg.name, region: pkg.region,
@@ -1021,10 +1037,12 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
         const errDetail = resData.detail || ''
         const errCode = resData.code || ''
         console.error('Quote save failed:', errMsg, errDetail, errCode, resData)
+        setCreating(false)
         alert(`Failed to save proposal.\n\nError: ${errMsg}\nDetail: ${errDetail}\nCode: ${errCode}\n\nPlease screenshot this and share with support.`)
       }
     } catch (e) {
       console.error('Quote save exception:', e)
+      setCreating(false)
       alert('A network error occurred. Please check your connection and try again.')
     }
   }
