@@ -1348,6 +1348,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
       {/* ── CREATING LOADER ── */}
       {creating && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.85)', zIndex: 99999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, backdropFilter: 'blur(6px)' }}>
+          <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 48, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)', marginBottom: 8 }} />
           <div style={{ position: 'relative', width: 72, height: 72 }}>
             <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.1)' }} />
             <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '3px solid transparent', borderTopColor: 'var(--teal)', animation: 'spin 0.8s linear infinite' }} />
