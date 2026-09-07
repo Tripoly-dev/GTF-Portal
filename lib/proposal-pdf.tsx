@@ -309,7 +309,7 @@ const s = StyleSheet.create({
   dayIncluded: { fontFamily: 'NotoSans', fontSize: 9, color: C.green },
 
   // ── HOTELS ──
-  hotelCityBar:  { backgroundColor: C.navy, padding: '10px 20px', marginBottom: 0 },
+  hotelCityBar:  { backgroundColor: C.blue, padding: '10px 20px', marginBottom: 0 },
   hotelCityText: { fontFamily: 'Archivo', fontSize: 16, fontWeight: 800, color: C.white },
   hotelCityMeta: { fontFamily: 'NotoSans', fontSize: 8, color: 'rgba(255,255,255,0.6)', marginTop: 2 },
   hotelCard:     { display: 'flex', flexDirection: 'row', border: `1px solid ${C.lightGrey}`, marginBottom: 16 },
@@ -608,55 +608,83 @@ export function ProposalPDF({ quote, agent, pkg }: { quote: any; agent: any; pkg
       ))}
 
       {/* ════ HOTELS ════ */}
-      {pkg?.hotels?.length > 0 && pkg.hotels.map((h: any, hi: number) => {
-        const images = getHotelImages(h.name, heroImage)
-        const stars = Math.min(h.stars || 4, 5)
-        return (
-          <Page key={hi} size="A4" style={s.page}>
-            {/* City header bar */}
-            <View style={s.hotelCityBar}>
-              <Text style={s.hotelCityText}>{h.city}</Text>
-              <Text style={s.hotelCityMeta}>{h.nights} night{h.nights > 1 ? 's' : ''}</Text>
-            </View>
-            <View style={[s.pageBody, { paddingTop: 24 }]}>
-              <View style={s.hotelCard}>
-                {/* Stacked images left */}
-                <View style={s.hotelImgCol}>
-                  {images.length > 0 ? images.map((url: string, ii: number) => (
-                    <Image key={ii} src={url} style={[s.hotelImg, { height: Math.min(140, 420 / images.length) }]} />
-                  )) : null}
-                </View>
-                {/* Hotel info right */}
-                <View style={s.hotelInfo}>
-                  <Text style={s.hotelName}>{h.name}</Text>
-                  <View style={s.hotelStars}>
-                    {Array(stars).fill(null).map((_, si) => <IconStar key={si} />)}
-                  </View>
-                  <View style={s.hotelMetaRow}>
-                    {[
-                      { l: 'NIGHTS', v: `${h.nights}N` },
-                      { l: 'ROOM TYPE', v: h.roomType || 'Standard' },
-                    ].map(({ l, v }) => (
-                      <View key={l}>
-                        <Text style={s.hotelMetaLabel}>{l}</Text>
-                        <Text style={s.hotelMetaValue}>{v}</Text>
-                      </View>
-                    ))}
-                  </View>
-                  <View style={s.hotelMealBadge}>
-                    <IconFork color={C.white} />
-                    <Text style={s.hotelMealText}>{h.meal}</Text>
-                  </View>
-                </View>
+      {pkg?.hotels?.length > 0 && (() => {
+        let cumNights = 0
+        return pkg.hotels.map((h: any, hi: number) => {
+          const checkIn = quote.departure_date
+            ? new Date(new Date(quote.departure_date).getTime() + cumNights * 86400000)
+            : null
+          const checkOut = checkIn
+            ? new Date(checkIn.getTime() + h.nights * 86400000)
+            : null
+          cumNights += h.nights
+
+          const fd = (d: Date | null) => d
+            ? d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
+            : ''
+
+          const images = getHotelImages(h.name, heroImage)
+          const stars = Math.min(h.stars || 4, 5)
+
+          return (
+            <Page key={hi} size="A4" style={s.page}>
+              <View style={s.hotelCityBar}>
+                <Text style={s.hotelCityText}>{h.city}</Text>
+                <Text style={s.hotelCityMeta}>{h.nights} night{h.nights > 1 ? 's' : ''}</Text>
               </View>
-              <Text style={{ fontFamily: 'NotoSans', fontSize: 8, color: C.grey, fontStyle: 'italic' }}>
-                * Hotels or equivalent. Subject to availability at time of booking.
-              </Text>
-            </View>
-            <Footer quote={quote} agent={agent} />
-          </Page>
-        )
-      })}
+              <View style={[s.pageBody, { paddingTop: 24 }]}>
+                <View style={s.hotelCard}>
+                  {/* Stacked images left */}
+                  <View style={s.hotelImgCol}>
+                    {images.length > 0 ? images.map((url: string, ii: number) => (
+                      <Image key={ii} src={url} style={[s.hotelImg, { height: Math.min(140, 420 / images.length), marginBottom: ii < images.length - 1 ? 6 : 0 }]} />
+                    )) : null}
+                  </View>
+                  {/* Hotel info right */}
+                  <View style={s.hotelInfo}>
+                    <Text style={s.hotelName}>{h.name}</Text>
+                    <View style={s.hotelStars}>
+                      {Array(stars).fill(null).map((_: any, si: number) => <IconStar key={si} />)}
+                    </View>
+
+                    {/* Check-in / Check-out with N nights bridge */}
+                    {checkIn && (
+                      <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', marginBottom: 14, gap: 8 }}>
+                        <View style={{ flex: 1 }}>
+                          <Text style={s.hotelMetaLabel}>CHECK-IN</Text>
+                          <Text style={s.hotelMetaValue}>{fd(checkIn)}</Text>
+                        </View>
+                        <View style={{ alignItems: 'center', paddingTop: 14 }}>
+                          <Text style={{ fontFamily: 'NotoSans', fontSize: 8, color: C.grey }}>{h.nights}N</Text>
+                          <View style={{ width: 28, borderTop: `1px solid ${C.lightGrey}`, marginTop: 3 }} />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <Text style={s.hotelMetaLabel}>CHECK-OUT</Text>
+                          <Text style={s.hotelMetaValue}>{fd(checkOut)}</Text>
+                        </View>
+                      </View>
+                    )}
+
+                    <View style={{ marginBottom: 12 }}>
+                      <Text style={s.hotelMetaLabel}>ROOM TYPE</Text>
+                      <Text style={s.hotelMetaValue}>{h.roomType || 'Standard Room'}</Text>
+                    </View>
+
+                    <View style={s.hotelMealBadge}>
+                      <IconFork color={C.white} />
+                      <Text style={s.hotelMealText}>{h.meal}</Text>
+                    </View>
+                  </View>
+                </View>
+                <Text style={{ fontFamily: 'NotoSans', fontSize: 8, color: C.grey, fontStyle: 'italic' }}>
+                  * Hotels or equivalent. Subject to availability at time of booking.
+                </Text>
+              </View>
+              <Footer quote={quote} agent={agent} />
+            </Page>
+          )
+        })
+      })()}
 
       {/* ════ INCLUSIONS & EXCLUSIONS ════ */}
       <Page size="A4" style={s.page}>
