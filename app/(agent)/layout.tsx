@@ -49,9 +49,9 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
         .agent-nav-link:hover::after { transform: scaleX(1); }
         .agent-nav-link[data-active="true"]::after { transform: scaleX(1); }
         .agent-signout {
-          transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(.22,1,.36,1);
+          transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(.22,1,.36,1);
         }
-        .agent-signout:hover { border-color: rgba(255,255,255,0.45); color: #fff; transform: translateY(-1px); }
+        .agent-signout:hover { background: #d4522e; box-shadow: 0 6px 18px rgba(232,97,58,0.5); transform: translateY(-1px); }
       `}</style>
 
       {/* Top navbar */}
@@ -60,25 +60,25 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
         position: 'sticky', top: 0, zIndex: 200,
         boxShadow: '0 1px 0 rgba(255,255,255,0.06), 0 12px 28px rgba(0,0,0,0.28)',
       }}>
-        <div style={{ padding: '0 32px', display: 'flex', alignItems: 'center', height: 62, gap: 0 }}>
+        <div style={{ padding: '0 32px', display: 'flex', alignItems: 'center', height: 76, gap: 0 }}>
 
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginRight: 36, flexShrink: 0 }}>
-            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 40, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 17, fontWeight: 700, color: '#fff' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', marginRight: 40, flexShrink: 0 }}>
+            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 56, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 21, fontWeight: 700, color: '#fff' }}>
               GTF <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>Connect</span>
             </span>
           </Link>
 
           {/* Nav links */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1 }}>
             {NAV.map(item => {
               const active = isActive(item.href)
               return (
                 <Link key={item.label} href={item.href} className="agent-nav-link" data-active={active} style={{
-                  padding: '0 14px', height: 62, display: 'flex', alignItems: 'center',
-                  textDecoration: 'none', fontSize: 13, fontWeight: active ? 600 : 400,
-                  color: active ? '#fff' : 'rgba(255,255,255,0.5)',
+                  padding: '0 16px', height: 76, display: 'flex', alignItems: 'center',
+                  textDecoration: 'none', fontSize: 15, fontWeight: active ? 700 : 500,
+                  color: active ? '#fff' : 'rgba(255,255,255,0.55)',
                   transition: 'color 0.15s', whiteSpace: 'nowrap',
                 }}>
                   {item.label}
@@ -90,27 +90,27 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
           {/* Right side — agent info + logout */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
             {agent && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{
-                  width: 30, height: 30, borderRadius: '50%',
+                  width: 38, height: 38, borderRadius: '50%',
                   background: 'linear-gradient(135deg, var(--teal), var(--teal-dark))',
-                  boxShadow: '0 0 0 2px rgba(255,255,255,0.12), 0 4px 10px rgba(0,0,0,0.3)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12.5, fontWeight: 700, color: '#fff',
+                  boxShadow: '0 0 0 2px rgba(255,255,255,0.14), 0 4px 10px rgba(0,0,0,0.3)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, color: '#fff',
                 }}>
                   {agent.name.charAt(0)}
                 </div>
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: '#fff', lineHeight: 1 }}>{agent.name}</div>
-                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 1 }}>{agent.agency}</div>
+                  <div style={{ fontSize: 13.5, fontWeight: 600, color: '#fff', lineHeight: 1 }}>{agent.name}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{agent.agency}</div>
                 </div>
               </div>
             )}
-            <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.1)' }} />
+            <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.12)' }} />
             <button onClick={handleLogout} className="agent-signout" style={{
-              background: 'none', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 999,
-              color: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: 600,
-              padding: '6px 14px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-              letterSpacing: '0.04em',
+              background: 'var(--orange)', border: 'none', borderRadius: 999,
+              color: '#fff', fontSize: 12, fontWeight: 700,
+              padding: '9px 20px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              letterSpacing: '0.05em', boxShadow: '0 4px 12px rgba(232,97,58,0.35)',
             }}>
               SIGN OUT
             </button>
