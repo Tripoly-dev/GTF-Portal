@@ -34,9 +34,10 @@ export default function Navbar() {
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
       height: 68,
-      background: 'rgba(244,248,247,0.96)',
-      borderBottom: '1px solid var(--rule)',
-      backdropFilter: 'blur(16px)',
+      background: 'rgba(244,248,247,0.92)',
+      backdropFilter: 'blur(20px) saturate(160%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+      boxShadow: '0 1px 0 rgba(200,222,218,0.7), 0 12px 32px rgba(7,26,23,0.05)',
       transition: 'all 0.4s ease',
     }}>
       <div style={{ width: '100%', height: '100%', padding: '0 64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -48,7 +49,10 @@ export default function Navbar() {
             fontFamily: 'Inter Tight, sans-serif', fontSize: 20, fontWeight: 800,
             color: overPhoto ? '#fff' : 'var(--ink)', letterSpacing: '-0.01em',
           }}>
-            GTF <span style={{ fontWeight: 300, color: overPhoto ? 'rgba(255,255,255,0.75)' : 'var(--teal)', letterSpacing: '-0.04em' }}>Connect</span>
+            GTF <span style={{
+              fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontWeight: 500,
+              color: overPhoto ? 'rgba(255,255,255,0.85)' : 'var(--teal)', letterSpacing: 0,
+            }}>Connect</span>
           </span>
         </Link>
 
@@ -70,14 +74,15 @@ export default function Navbar() {
             {depsOpen && (
               <div className="animate-slide-down" style={{
                 position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-                marginTop: 8, background: 'white', border: '1px solid var(--rule)',
-                boxShadow: '0 16px 48px rgba(7,26,23,0.12)', minWidth: 180, zIndex: 300,
+                marginTop: 12, background: 'white', borderRadius: 12, overflow: 'hidden',
+                border: '1px solid var(--rule)', borderTopWidth: 2, borderTopColor: 'var(--teal)',
+                boxShadow: '0 20px 48px rgba(7,26,23,0.14)', minWidth: 190, zIndex: 300,
               }}>
-                {regions.map(r => (
+                {regions.map((r, i) => (
                   <Link key={r.href} href={r.href} style={{
                     display: 'block', padding: '11px 20px',
                     fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
-                    textDecoration: 'none', borderBottom: '1px solid var(--rule)',
+                    textDecoration: 'none', borderBottom: i < regions.length - 1 ? '1px solid var(--rule)' : 'none',
                     transition: 'all 0.15s',
                   }}
                   onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
@@ -114,14 +119,15 @@ export default function Navbar() {
               {adminOpen && (
                 <div className="animate-slide-down" style={{
                   position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-                  marginTop: 8, background: 'white', border: '1px solid var(--rule)',
-                  boxShadow: '0 16px 48px rgba(7,26,23,0.12)', minWidth: 180, zIndex: 300,
+                  marginTop: 12, background: 'white', borderRadius: 12, overflow: 'hidden',
+                  border: '1px solid var(--rule)', borderTopWidth: 2, borderTopColor: 'var(--teal)',
+                  boxShadow: '0 20px 48px rgba(7,26,23,0.14)', minWidth: 190, zIndex: 300,
                 }}>
-                  {adminLinks.map(l => (
+                  {adminLinks.map((l, i) => (
                     <Link key={l.href} href={l.href} style={{
                       display: 'block', padding: '11px 20px',
                       fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
-                      textDecoration: 'none', borderBottom: '1px solid var(--rule)',
+                      textDecoration: 'none', borderBottom: i < adminLinks.length - 1 ? '1px solid var(--rule)' : 'none',
                       transition: 'all 0.15s',
                     }}
                     onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
@@ -138,19 +144,36 @@ export default function Navbar() {
         {/* CTAs */}
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Link href="/login" style={{
-            padding: '8px 18px',
+            padding: '9px 20px', borderRadius: 999,
             border: `1.5px solid ${overPhoto ? 'rgba(255,255,255,0.45)' : 'var(--rule)'}`,
             color: overPhoto ? '#fff' : 'var(--ink-mid)',
             fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
             textDecoration: 'none', display: 'inline-flex', alignItems: 'center',
-            transition: 'all 0.2s',
+            transition: 'transform 0.25s cubic-bezier(.22,1,.36,1), border-color 0.25s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
+            ;(e.currentTarget as HTMLElement).style.borderColor = overPhoto ? 'rgba(255,255,255,0.8)' : 'var(--teal)'
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
+            ;(e.currentTarget as HTMLElement).style.borderColor = overPhoto ? 'rgba(255,255,255,0.45)' : 'var(--rule)'
           }}>AGENT LOGIN</Link>
           <Link href="/register" style={{
-            padding: '8px 18px',
+            padding: '9px 22px', borderRadius: 999,
             background: overPhoto ? 'rgba(10,123,108,0.75)' : 'var(--teal)',
+            boxShadow: '0 6px 18px rgba(10,123,108,0.32)',
             color: '#fff', fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
             textDecoration: 'none', display: 'inline-flex', alignItems: 'center',
-            transition: 'all 0.2s',
+            transition: 'transform 0.25s cubic-bezier(.22,1,.36,1), box-shadow 0.25s ease, background 0.25s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px) scale(1.02)'
+            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 10px 24px rgba(10,123,108,0.42)'
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)'
+            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 6px 18px rgba(10,123,108,0.32)'
           }}>JOIN AS PARTNER</Link>
         </div>
 
