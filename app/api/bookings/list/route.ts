@@ -16,7 +16,16 @@ export async function GET(req: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ bookings: data || [] })
+
+    const quoteIds = [...new Set((data || []).map(b => b.quote_id).filter(Boolean))]
+    let clientNames: Record<string, string> = {}
+    if (quoteIds.length) {
+      const { data: quotesData } = await supabase.from('quotes').select('id, client_name').in('id', quoteIds)
+      clientNames = Object.fromEntries((quotesData || []).map(q => [q.id, q.client_name]))
+    }
+    const bookings = (data || []).map(b => ({ ...b, client_name: clientNames[b.quote_id] || null }))
+
+    return NextResponse.json({ bookings })
   } catch (err) {
     console.error(err)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })

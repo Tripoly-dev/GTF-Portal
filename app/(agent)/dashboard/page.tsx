@@ -75,12 +75,16 @@ const pillLabel = (status: string) => {
 }
 
 // ── COMMISSION CALC — FY / Quarter / Month ────────────────────────────────────
-type CommPeriod = 'fy' | 'quarter' | 'month'
+type CommPeriod = 'month' | 'lastMonth' | 'quarter' | 'fy'
 function calcCommissionForPeriod(quotes: Quote[], period: CommPeriod) {
   const now = new Date()
   let start: Date
+  let end: Date | null = null
   if (period === 'month') {
     start = new Date(now.getFullYear(), now.getMonth(), 1)
+  } else if (period === 'lastMonth') {
+    start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+    end = new Date(now.getFullYear(), now.getMonth(), 1)
   } else if (period === 'quarter') {
     const q = Math.floor(now.getMonth() / 3)
     start = new Date(now.getFullYear(), q * 3, 1)
@@ -89,7 +93,10 @@ function calcCommissionForPeriod(quotes: Quote[], period: CommPeriod) {
     const fyStart = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1
     start = new Date(fyStart, 3, 1) // April 1
   }
-  const filtered = quotes.filter(q => new Date(q.created_at) >= start)
+  const filtered = quotes.filter(q => {
+    const d = new Date(q.created_at)
+    return d >= start && (!end || d < end)
+  })
   return { total: filtered.reduce((s, q) => s + (q.markup_amount || 0), 0), count: filtered.length }
 }
 
@@ -203,7 +210,7 @@ function RegionCard({ region, quotes }: { region: { name: string; count: number;
 }
 
 type Booking = {
-  id: string; package_name: string; departure_date: string
+  id: string; client_name: string | null; package_name: string; departure_date: string
   total_price: number; status: string; created_at: string
   adults: number; children_with_bed: number; children_without_bed: number
   deposit_amount: number; payment_mode: string
@@ -266,9 +273,10 @@ export default function DashboardPage() {
   }
 
   const commTabs: { id: CommPeriod; label: string }[] = [
-    { id: 'fy', label: `FY${String(new Date().getFullYear()).slice(-2)}` },
-    { id: 'quarter', label: `Q${Math.floor(new Date().getMonth() / 3) + 1}` },
     { id: 'month', label: 'This Month' },
+    { id: 'lastMonth', label: 'Last Month' },
+    { id: 'quarter', label: `Q${Math.floor(new Date().getMonth() / 3) + 1}` },
+    { id: 'fy', label: `FY${String(new Date().getFullYear()).slice(-2)}` },
   ]
 
   return (
@@ -349,8 +357,8 @@ export default function DashboardPage() {
                         background: 'transparent', textDecoration: 'none', color: 'inherit', transition: 'background 0.15s',
                       }}>
                         <div>
-                          <div style={{ fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink }}>{b.package_name}</div>
-                          <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>{pax} pax · Ref: {b.id.slice(0, 8).toUpperCase()}</div>
+                          <div style={{ fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink }}>{b.client_name || '—'}</div>
+                          <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>{b.package_name} · {pax} pax</div>
                         </div>
                         <div>
                           <div style={{ fontSize: 13.5, fontWeight: 600, color: C.ink }}>Departs {fmtDate(b.departure_date)}</div>
@@ -435,7 +443,7 @@ export default function DashboardPage() {
                   {comm.total > 0 ? `₹${Math.round(comm.total).toLocaleString('en-IN')}` : '₹0'}
                 </div>
                 <div style={{ fontSize: 12.5, color: 'rgba(239,236,229,0.55)', marginBottom: 20 }}>
-                  {comm.count} quote{comm.count !== 1 ? 's' : ''} · {commPeriod === 'fy' ? `FY${String(new Date().getFullYear()).slice(-2)}` : commPeriod === 'quarter' ? `Q${Math.floor(new Date().getMonth() / 3) + 1}` : 'This Month'}
+                  {comm.count} quote{comm.count !== 1 ? 's' : ''} · {commPeriod === 'fy' ? `FY${String(new Date().getFullYear()).slice(-2)}` : commPeriod === 'quarter' ? `Q${Math.floor(new Date().getMonth() / 3) + 1}` : commPeriod === 'lastMonth' ? 'Last Month' : 'This Month'}
                 </div>
                 {/* Breakdown grid — gap:0 + border-right to avoid vertical line artifact */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}>
@@ -447,33 +455,6 @@ export default function DashboardPage() {
                     <div key={b.label} style={{ background: 'rgba(255,255,255,0.05)', padding: '11px 12px 8px', borderRight: i < 2 ? '1px solid rgba(239,236,229,0.12)' : 'none' }}>
                       <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(239,236,229,0.5)' }}>{b.label}</div>
                       <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', marginTop: 5, color: C.navFg }}>{b.value}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 30-day departures */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
-                  <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: font }}>Departures</div>
-                  <div style={{ fontSize: 11.5, color: C.inkLight, letterSpacing: '0.04em' }}>30-DAY WINDOW</div>
-                </div>
-                <div style={{ borderTop: `1px solid ${C.rule}` }}>
-                  {departures.length === 0 ? (
-                    <div style={{ padding: '16px 0', color: C.inkLight, fontSize: 13 }}>No departures in the next 30 days.</div>
-                  ) : departures.map((d, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 0', borderBottom: `1px solid ${C.rule}` }}>
-                      <div style={{ width: 52, flexShrink: 0 }}>
-                        <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1, color: C.ink }}>{d.day}</div>
-                        <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', color: C.inkLight }}>{d.mon}</div>
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13.5, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: C.ink }}>{d.pkg}</div>
-                        <div style={{ fontSize: 11.5, color: C.inkLight, marginTop: 2 }}>{d.region} · {d.nights}</div>
-                      </div>
-                      <div style={{ ...pillStyle(d.status), fontSize: 9.5, fontWeight: 800, letterSpacing: '0.08em', padding: '3px 7px', flexShrink: 0, whiteSpace: 'nowrap', textTransform: 'uppercase' }}>
-                        {pillLabel(d.status)}
-                      </div>
                     </div>
                   ))}
                 </div>
