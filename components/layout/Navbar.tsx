@@ -95,6 +95,8 @@ export default function Navbar() {
           </div>
 
           {[
+            { label: 'Adhoc & White Label', href: '/adhoc-and-white-label-solutions' },
+            { label: 'Bespoke Holidays', href: '/bespoke-holidays' },
             { label: 'About', href: '/about' },
             { label: 'FAQ', href: '/faq' },
             { label: 'Contact', href: '/contact' },
