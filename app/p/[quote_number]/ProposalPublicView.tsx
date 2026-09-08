@@ -1,16 +1,31 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Package } from '@/data/packages'
 import { hotelImages, normalizeHotelName } from '@/data/hotel-images'
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 
 function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) {
   const [idx, setIdx] = useState(0)
-  useEffect(() => {
+  const intRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const pauseRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const startAuto = () => {
     if (images.length < 2) return
-    const t = setInterval(() => setIdx(i => (i + 1) % images.length), 3500)
-    return () => clearInterval(t)
+    if (intRef.current) clearInterval(intRef.current)
+    intRef.current = setInterval(() => setIdx(i => (i + 1) % images.length), 3500)
+  }
+  useEffect(() => {
+    startAuto()
+    return () => { if (intRef.current) clearInterval(intRef.current); if (pauseRef.current) clearTimeout(pauseRef.current) }
   }, [images.length])
+
+  const go = (dir: number) => {
+    setIdx(i => (i + dir + images.length) % images.length)
+    if (intRef.current) clearInterval(intRef.current)
+    if (pauseRef.current) clearTimeout(pauseRef.current)
+    pauseRef.current = setTimeout(startAuto, 6000)
+  }
+
   if (!images.length) return null
   return (
     <div style={{ position: 'relative', width: 160, height: 120, flexShrink: 0, overflow: 'hidden' }}>
@@ -20,6 +35,15 @@ function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) 
           opacity: i === idx ? 1 : 0, transition: 'opacity 0.6s ease',
         }} />
       ))}
+      {images.length > 1 && <>
+        <button type="button" onClick={() => go(-1)} aria-label="Previous image" style={{ position: 'absolute', left: 4, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff', width: 22, height: 22, borderRadius: '50%', cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>‹</button>
+        <button type="button" onClick={() => go(1)} aria-label="Next image" style={{ position: 'absolute', right: 4, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff', width: 22, height: 22, borderRadius: '50%', cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>›</button>
+        <div style={{ position: 'absolute', bottom: 6, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 4 }}>
+          {images.map((_, i) => (
+            <span key={i} style={{ width: i === idx ? 12 : 5, height: 5, borderRadius: 3, background: i === idx ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'all 0.2s' }} />
+          ))}
+        </div>
+      </>}
     </div>
   )
 }
