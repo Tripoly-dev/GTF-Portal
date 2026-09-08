@@ -202,10 +202,18 @@ function RegionCard({ region, quotes }: { region: { name: string; count: number;
   )
 }
 
+type Booking = {
+  id: string; package_name: string; departure_date: string
+  total_price: number; status: string; created_at: string
+  adults: number; children_with_bed: number; children_without_bed: number
+  deposit_amount: number; payment_mode: string
+}
+
 export default function DashboardPage() {
   const [agent, setAgent] = useState<{ name: string; agency: string } | null>(null)
   const [quotes, setQuotes] = useState<Quote[]>([])
-  const [activeTab, setActiveTab] = useState<'all' | 'draft' | 'sent' | 'expired'>('all')
+  const [bookings, setBookings] = useState<Booking[]>([])
+  const [activeTab, setActiveTab] = useState<'all' | 'draft' | 'sent' | 'bookings' | 'expired'>('all')
   const [commPeriod, setCommPeriod] = useState<CommPeriod>('month')
   const [loading, setLoading] = useState(true)
 
@@ -220,6 +228,10 @@ export default function DashboardPage() {
       .then(r => r.json())
       .then(d => { setQuotes(d.quotes || []); setLoading(false) })
       .catch(() => setLoading(false))
+    fetch('/api/bookings/list', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => setBookings(d.bookings || []))
+      .catch(() => {})
   }, [])
 
   const regions = [
@@ -233,18 +245,25 @@ export default function DashboardPage() {
 
   const tabFiltered = quotes.filter(q => {
     if (activeTab === 'all') return true
-    if (activeTab === 'draft') return q.status === 'draft'
-    if (activeTab === 'sent')  return q.status === 'sent'
+    if (activeTab === 'draft') return q.status === 'draft' || q.status === 'created'
+    if (activeTab === 'sent') return q.status === 'sent'
     if (activeTab === 'expired') return new Date(q.departure_date) < new Date()
     return true
   })
 
   const tabs = [
-    { id: 'all' as const, label: 'All' },
-    { id: 'draft' as const, label: 'Draft' },
-    { id: 'sent' as const, label: 'Sent' },
-    { id: 'expired' as const, label: 'Expired' },
+    { id: 'all' as const,      label: 'All',      count: quotes.length },
+    { id: 'draft' as const,    label: 'Draft',    count: quotes.filter(q => q.status === 'draft' || q.status === 'created').length },
+    { id: 'sent' as const,     label: 'Sent',     count: quotes.filter(q => q.status === 'sent').length },
+    { id: 'bookings' as const, label: 'Bookings', count: bookings.length },
+    { id: 'expired' as const,  label: 'Expired',  count: quotes.filter(q => new Date(q.departure_date) < new Date()).length },
   ]
+
+  const bookingStatusStyle = (s: string) => {
+    if (s === 'confirmed') return { bg: '#D1FAE5', color: '#065F46' }
+    if (s === 'cancelled') return { bg: '#FEE2E2', color: '#991B1B' }
+    return { bg: '#FEF3C7', color: '#92400E' }
+  }
 
   const commTabs: { id: CommPeriod; label: string }[] = [
     { id: 'fy', label: `FY${String(new Date().getFullYear()).slice(-2)}` },
@@ -300,55 +319,93 @@ export default function DashboardPage() {
                 <Link href="/dashboard/quotes" style={{ fontSize: 12.5, color: C.inkLight, letterSpacing: '0.02em', textDecoration: 'none' }}>View all →</Link>
               </div>
               <div style={{ display: 'flex', gap: 0, border: `1px solid ${C.ink}`, width: 'max-content', marginBottom: 16 }}>
-                {tabs.map(t => (
+                {tabs.map((t, ti) => (
                   <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
                     padding: '8px 15px', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
                     textTransform: 'uppercase', cursor: 'pointer', fontFamily: font,
                     background: activeTab === t.id ? C.ink : 'transparent',
                     color: activeTab === t.id ? C.navFg : C.ink,
-                    border: 'none', borderRight: `1px solid ${C.ink}`,
+                    border: 'none', borderRight: ti < tabs.length - 1 ? `1px solid ${C.ink}` : 'none',
                   }}>
-                    {t.label} <span style={{ opacity: 0.6 }}>
-                      {t.id === 'all' ? quotes.length : t.id === 'draft' ? quotes.filter(q => q.status === 'draft').length : t.id === 'sent' ? quotes.filter(q => q.status === 'sent').length : quotes.filter(q => new Date(q.departure_date) < new Date()).length}
-                    </span>
+                    {t.label} <span style={{ opacity: 0.6 }}>{t.count}</span>
                   </button>
                 ))}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 0, borderTop: `1px solid ${C.rule}` }}>
-                {loading ? (
-                  <div style={{ padding: '32px 0', color: C.inkLight, fontSize: 13 }}>Loading quotes...</div>
-                ) : tabFiltered.length === 0 ? (
-                  <div style={{ padding: '32px 8px', color: C.inkLight, fontSize: 13 }}>
-                    No quotes yet. <Link href="/dashboard/packages" style={{ color: C.accent, fontWeight: 600, textDecoration: 'none' }}>Browse packages to get started.</Link>
-                  </div>
-                ) : tabFiltered.slice(0, 5).map(q => (
-                  <Link key={q.id} href={`/dashboard/quotes/${q.id}`} style={{
-                    display: 'grid', gridTemplateColumns: 'minmax(150px,1.4fr) minmax(170px,1.5fr) 140px 80px',
-                    alignItems: 'center', gap: 24, padding: '18px 8px',
-                    borderBottom: `1px solid ${C.rule}`, cursor: 'pointer',
-                    background: 'transparent', textDecoration: 'none',
-                    transition: 'background 0.15s', color: 'inherit',
-                  }}>
-                    <div>
-                      <div style={{ fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink }}>{q.client_name}</div>
-                      <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>{q.adults} pax · {q.region?.toUpperCase() || ''}</div>
+
+              {activeTab === 'bookings' ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0, borderTop: `1px solid ${C.rule}` }}>
+                  {bookings.length === 0 ? (
+                    <div style={{ padding: '32px 8px', color: C.inkLight, fontSize: 13 }}>
+                      No bookings yet. Convert a sent proposal to get started.
                     </div>
-                    <div>
-                      <div style={{ fontSize: 13.5, fontWeight: 600, color: C.ink }}>{q.package_name}</div>
-                      <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>Departs {fmtDate(q.departure_date)}</div>
+                  ) : bookings.slice(0, 5).map(b => {
+                    const st = bookingStatusStyle(b.status)
+                    const pax = (b.adults || 0) + (b.children_with_bed || 0) + (b.children_without_bed || 0)
+                    return (
+                      <Link key={b.id} href={`/dashboard/bookings/${b.id}`} style={{
+                        display: 'grid', gridTemplateColumns: 'minmax(150px,1.4fr) minmax(170px,1.5fr) 140px 80px',
+                        alignItems: 'center', gap: 24, padding: '18px 8px',
+                        borderBottom: `1px solid ${C.rule}`, cursor: 'pointer',
+                        background: 'transparent', textDecoration: 'none', color: 'inherit', transition: 'background 0.15s',
+                      }}>
+                        <div>
+                          <div style={{ fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink }}>{b.package_name}</div>
+                          <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>{pax} pax · Ref: {b.id.slice(0, 8).toUpperCase()}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 13.5, fontWeight: 600, color: C.ink }}>Departs {fmtDate(b.departure_date)}</div>
+                          <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>Deposit: {b.deposit_amount ? `₹${Math.round(b.deposit_amount).toLocaleString('en-IN')}` : '—'}</div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: C.ink }}>₹{Math.round(b.total_price).toLocaleString('en-IN')}</div>
+                          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginTop: 4, padding: '2px 6px', textTransform: 'uppercase', display: 'inline-block', background: st.bg, color: st.color }}>
+                            {b.status.toUpperCase()}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: C.gold, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                          View <span style={{ fontSize: 15 }}>→</span>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0, borderTop: `1px solid ${C.rule}` }}>
+                  {loading ? (
+                    <div style={{ padding: '32px 0', color: C.inkLight, fontSize: 13 }}>Loading quotes...</div>
+                  ) : tabFiltered.length === 0 ? (
+                    <div style={{ padding: '32px 8px', color: C.inkLight, fontSize: 13 }}>
+                      No quotes yet. <Link href="/dashboard/packages" style={{ color: C.accent, fontWeight: 600, textDecoration: 'none' }}>Browse packages to get started.</Link>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: C.ink }}>{fmtPrice(q.total_price, q.currency)}</div>
-                      <div style={{ ...pillStyle(q.status), fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginTop: 4, padding: '2px 6px', textTransform: 'uppercase', display: 'inline-block' }}>
-                        {pillLabel(q.status)}
+                  ) : tabFiltered.slice(0, 5).map(q => (
+                    <Link key={q.id} href={`/dashboard/quotes/${q.id}`} style={{
+                      display: 'grid', gridTemplateColumns: 'minmax(150px,1.4fr) minmax(170px,1.5fr) 140px 80px',
+                      alignItems: 'center', gap: 24, padding: '18px 8px',
+                      borderBottom: `1px solid ${C.rule}`, cursor: 'pointer',
+                      background: 'transparent', textDecoration: 'none',
+                      transition: 'background 0.15s', color: 'inherit',
+                    }}>
+                      <div>
+                        <div style={{ fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink }}>{q.client_name}</div>
+                        <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>{q.adults} pax · {q.region?.toUpperCase() || ''}</div>
                       </div>
-                    </div>
-                    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: C.gold, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-                      Resume <span style={{ fontSize: 15 }}>→</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+                      <div>
+                        <div style={{ fontSize: 13.5, fontWeight: 600, color: C.ink }}>{q.package_name}</div>
+                        <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>Departs {fmtDate(q.departure_date)}</div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: C.ink }}>{fmtPrice(q.total_price, q.currency)}</div>
+                        <div style={{ ...pillStyle(q.status), fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginTop: 4, padding: '2px 6px', textTransform: 'uppercase', display: 'inline-block' }}>
+                          {pillLabel(q.status)}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: C.gold, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                        Resume <span style={{ fontSize: 15 }}>→</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Commission + Departures */}
