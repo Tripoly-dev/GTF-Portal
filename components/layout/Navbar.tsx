@@ -72,24 +72,28 @@ export default function Navbar() {
               </svg>
             </span>
             {depsOpen && (
-              <div className="animate-slide-down" style={{
+              <div style={{
                 position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-                marginTop: 12, background: 'white', borderRadius: 12, overflow: 'hidden',
-                border: '1px solid var(--rule)', borderTopWidth: 2, borderTopColor: 'var(--teal)',
-                boxShadow: '0 20px 48px rgba(7,26,23,0.14)', minWidth: 190, zIndex: 300,
+                paddingTop: 12, zIndex: 300,
               }}>
-                {regions.map((r, i) => (
-                  <Link key={r.href} href={r.href} style={{
-                    display: 'block', padding: '11px 20px',
-                    fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
-                    textDecoration: 'none', borderBottom: i < regions.length - 1 ? '1px solid var(--rule)' : 'none',
-                    transition: 'all 0.15s',
-                  }}
-                  onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
-                  onMouseLeave={e => { (e.target as HTMLElement).style.background = 'white'; (e.target as HTMLElement).style.color = 'var(--ink-mid)' }}>
-                    {r.name}
-                  </Link>
-                ))}
+                <div className="animate-slide-down" style={{
+                  background: 'white', borderRadius: 12, overflow: 'hidden',
+                  border: '1px solid var(--rule)', borderTopWidth: 2, borderTopColor: 'var(--teal)',
+                  boxShadow: '0 20px 48px rgba(7,26,23,0.14)', minWidth: 190,
+                }}>
+                  {regions.map((r, i) => (
+                    <Link key={r.href} href={r.href} style={{
+                      display: 'block', padding: '11px 20px',
+                      fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
+                      textDecoration: 'none', borderBottom: i < regions.length - 1 ? '1px solid var(--rule)' : 'none',
+                      transition: 'all 0.15s',
+                    }}
+                    onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
+                    onMouseLeave={e => { (e.target as HTMLElement).style.background = 'white'; (e.target as HTMLElement).style.color = 'var(--ink-mid)' }}>
+                      {r.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -119,24 +123,28 @@ export default function Navbar() {
                 </svg>
               </span>
               {adminOpen && (
-                <div className="animate-slide-down" style={{
+                <div style={{
                   position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-                  marginTop: 12, background: 'white', borderRadius: 12, overflow: 'hidden',
-                  border: '1px solid var(--rule)', borderTopWidth: 2, borderTopColor: 'var(--teal)',
-                  boxShadow: '0 20px 48px rgba(7,26,23,0.14)', minWidth: 190, zIndex: 300,
+                  paddingTop: 12, zIndex: 300,
                 }}>
-                  {adminLinks.map((l, i) => (
-                    <Link key={l.href} href={l.href} style={{
-                      display: 'block', padding: '11px 20px',
-                      fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
-                      textDecoration: 'none', borderBottom: i < adminLinks.length - 1 ? '1px solid var(--rule)' : 'none',
-                      transition: 'all 0.15s',
-                    }}
-                    onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
-                    onMouseLeave={e => { (e.target as HTMLElement).style.background = 'white'; (e.target as HTMLElement).style.color = 'var(--ink-mid)' }}>
-                      {l.name}
-                    </Link>
-                  ))}
+                  <div className="animate-slide-down" style={{
+                    background: 'white', borderRadius: 12, overflow: 'hidden',
+                    border: '1px solid var(--rule)', borderTopWidth: 2, borderTopColor: 'var(--teal)',
+                    boxShadow: '0 20px 48px rgba(7,26,23,0.14)', minWidth: 190,
+                  }}>
+                    {adminLinks.map((l, i) => (
+                      <Link key={l.href} href={l.href} style={{
+                        display: 'block', padding: '11px 20px',
+                        fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
+                        textDecoration: 'none', borderBottom: i < adminLinks.length - 1 ? '1px solid var(--rule)' : 'none',
+                        transition: 'all 0.15s',
+                      }}
+                      onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
+                      onMouseLeave={e => { (e.target as HTMLElement).style.background = 'white'; (e.target as HTMLElement).style.color = 'var(--ink-mid)' }}>
+                        {l.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

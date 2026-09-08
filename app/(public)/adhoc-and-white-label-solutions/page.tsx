@@ -32,9 +32,9 @@ export default function AdhocWhiteLabelPage() {
       {/* Hero */}
       <div style={{ position: 'relative', height: 440, overflow: 'hidden' }}>
         <img
-          src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1400&q=85"
-          alt="Travel professionals collaborating"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 42%' }}
+          src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&q=85"
+          alt="Travel partners in a strategic planning meeting"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,26,23,0.3) 0%, rgba(7,26,23,0.85) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px 56px' }}>
