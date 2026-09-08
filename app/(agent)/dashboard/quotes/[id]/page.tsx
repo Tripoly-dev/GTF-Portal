@@ -496,6 +496,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
     return `https://wa.me/?text=${encodeURIComponent(msg)}`
   }
 
+  // WhatsApp message — quote link only
+  const whatsappQuoteLinkMsg = () => {
+    const msg = `Hi, please find your personalised travel proposal here:\nquotedocket.com/p/${quote.quote_number}`
+    return `https://wa.me/?text=${encodeURIComponent(msg)}`
+  }
+
   // Hero image
   const heroImg = pkg?.gallery?.[0] || pkg?.img || ''
 
@@ -713,7 +719,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
             <a href={whatsappMsg()} target="_blank" rel="noopener noreferrer"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 600, textDecoration: 'none', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
-              💬 Share on WhatsApp
+              📝 WhatsApp / Text Summary
+            </a>
+
+            <a href={whatsappQuoteLinkMsg()} target="_blank" rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 600, textDecoration: 'none', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
+              💬 WhatsApp Quote Link
             </a>
 
             {quote.status !== 'sent' && (
