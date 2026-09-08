@@ -51,7 +51,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
         .agent-signout {
           transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(.22,1,.36,1);
         }
-        .agent-signout:hover { background: #d4522e; box-shadow: 0 6px 18px rgba(232,97,58,0.5); transform: translateY(-1px); }
+        .agent-signout:hover { background: #f0f0f0; box-shadow: 0 6px 18px rgba(0,0,0,0.3); transform: translateY(-1px); }
       `}</style>
 
       {/* Top navbar */}
@@ -107,10 +107,10 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
             )}
             <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.12)' }} />
             <button onClick={handleLogout} className="agent-signout" style={{
-              background: 'var(--orange)', border: 'none', borderRadius: 999,
-              color: '#fff', fontSize: 12, fontWeight: 700,
+              background: '#fff', border: 'none', borderRadius: 999,
+              color: 'var(--ink)', fontSize: 12, fontWeight: 700,
               padding: '9px 20px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-              letterSpacing: '0.05em', boxShadow: '0 4px 12px rgba(232,97,58,0.35)',
+              letterSpacing: '0.05em', boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
             }}>
               SIGN OUT
             </button>
