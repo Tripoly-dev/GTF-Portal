@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES } from '@/data/packages'
 import BookingModal from '@/components/BookingModal'
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
+import { HOTEL_IMAGES, HOTEL_GALLERY, normalizeHotelName } from '@/data/hotel-images'
 
 const f = (n: number, cur = 'INR') => {
   if (!n) return '₹0'
@@ -23,36 +25,6 @@ const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   cancelled: { label: 'Cancelled', bg: '#FEE2E2',         color: '#991B1B' },
   draft:     { label: 'Draft',     bg: 'var(--bg)',       color: 'var(--ink-light)' },
 }
-
-// ── HOTEL IMAGES ──────────────────────────────────────────────────────────────
-const HOTEL_IMAGES: Record<string, string> = {
-  'Cairo': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/CAIRO/NOVOTEL%206%20OCTOBER%20HOTEL/OUTSIDE%20VIEW.jpg',
-  'Nile Cruise': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/NILE%20CRUISE/SEMIRAMIS%20CRUISE/CRUISE%20VIEW.jpg',
-  'Hurghada': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/HURGHADA/PAHROAH%20AZUR%20HOTEL%20AND%20RESORT/OUTSIDE%20VIEW.jpg',
-  'Cape Town': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/OUTSIDE%20VIEW.jpg',
-  'Garden Route': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/GARDEN%20ROUTE/DIAZ%20HOTEL%20&%20RESORT/OUTSIDE.jpg',
-  'Johannesburg': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/JOHANNESBURG/THE%20CATALYST%20HOTEL/OUTSIDE%20VIEW.jpg',
-  'Mauritius': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/OUTSIDE%20HOTEL.jpg',
-  'Ankara': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/OUTSIDEVIEW.jpg',
-  'Cappadocia': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/CAPPADOCIA/ALLERIA%20HOTEL/HOTEL%20VIEW.jpg',
-  'Antalya': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANTALYA/RING%20HOTEL/OUTSIDE%20VIEW.jpg',
-  'Pamukkale': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/OUTSIDE%20VIEW.jpg',
-  'Kusadasi': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/OUTSIDE%20VIEW.jpg',
-  'Hanoi': 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/VIETNAM%20ESCAPES/HANOI/GLOUD%20HOTEL/OUTSIDE.jpg',
-}
-
-const HOTEL_GALLERY: Record<string, string[]> = {
-  'Novotel 6 October Hotel': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/CAIRO/NOVOTEL%206%20OCTOBER%20HOTEL/OUTSIDE%20VIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/CAIRO/NOVOTEL%206%20OCTOBER%20HOTEL/DINING.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MYSTICAL%20EGYPT/CAIRO/NOVOTEL%206%20OCTOBER%20HOTEL/STANDARD%20ROOM.jpg'],
-  'Cresta Grande Cape Town': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/OUTSIDE%20VIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/DINING.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/SOUTH%20AFRICAN%20SPLENDOUR/CAPE%20TOWN/CRESTA%20GRANDE%20CAPE%20TOWN/STANDARD%20DOUBLE%20ROOM.jpg'],
-  'Pearle Beach Resort & Spa': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/OUTSIDE%20HOTEL.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/OUTSIDE%20VIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/MAURITIAN%20PARADISE/PEARLE%20BEACH%20RESORT%20AND%20SPA/BUDGET%20ROOM.jpg'],
-  'Mercure Hotel Kızılay': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/LOBBY.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/OUTSIDE%20ENTRY.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/OUTSIDEVIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANKARA/MERCURE%20HOTEL%20KIZILAY/STANDARD%20ROOM.jpg'],
-  'Aleria Hotel': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/CAPPADOCIA/ALLERIA%20HOTEL/HOTEL%20VIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/CAPPADOCIA/ALLERIA%20HOTEL/RESTAURANT.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/CAPPADOCIA/ALLERIA%20HOTEL/STANDARD%20ROOM.jpg'],
-  'Ring Hotel': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANTALYA/RING%20HOTEL/OUTSIDE%20VIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/ANTALYA/RING%20HOTEL/DOUBLE%20ROOM.jpg'],
-  'Adempira Thermal Hotel': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/OUTSIDE%20VIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/LOBBY.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/PAMUKKALE/ADEMPIRA%20THERMAL%20HOTEL/DELUXE%20ROOM.jpg'],
-  'Odelia Resort Hotel': ['https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/OUTSIDE%20VIEW.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/LOBBY.jpg','https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/hotels/GRAND%20TURKIYE/KUSADASI/ODELIA%20RESORT/STANDARD%20ROOM.jpg'],
-}
-
-function normalizeHotelName(name: string) { return name.replace(/\s*\/?\s*or similar$/i, '').trim() }
 
 // ── HOTEL CARD WITH CAROUSEL ──────────────────────────────────────────────────
 function HotelCard({ h }: { h: any }) {
@@ -717,16 +689,6 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               📄 Download PDF
             </a>
 
-            <a href={whatsappMsg()} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 600, textDecoration: 'none', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
-              📝 WhatsApp / Text Summary
-            </a>
-
-            <a href={whatsappQuoteLinkMsg()} target="_blank" rel="noopener noreferrer"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 600, textDecoration: 'none', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
-              💬 WhatsApp Quote Link
-            </a>
-
             {quote.status !== 'sent' && (
               <button onClick={markAsSent} disabled={markingAsSent} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 20px', background: 'none', border: '1.5px solid var(--teal)', color: 'var(--teal)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
                 {markingAsSent ? 'Updating...' : '✓ Mark as Sent'}
@@ -734,12 +696,22 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             )}
 
             {quote.status === 'sent' && (
-              <button onClick={() => setShowBooking(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#7c3aed', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.02em' }}>
+              <button onClick={() => setShowBooking(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#9e2233', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.02em' }}>
                 🎫 Convert to Booking
               </button>
             )}
 
-            <div style={{ borderTop: '1px solid var(--rule)', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {[
+                { label: 'WhatsApp / Text Summary', icon: <WhatsAppIcon size={15} />, href: whatsappMsg() },
+                { label: 'WhatsApp Quote Link', icon: <WhatsAppIcon size={15} />, href: whatsappQuoteLinkMsg() },
+              ].map(({ label, icon, href }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 500, color: 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.15s', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-mid)' }}>
+                  {icon}{label}
+                </a>
+              ))}
               {[
                 { label: '✏️ Edit Proposal', action: () => setShowEdit(true) },
                 { label: '💰 Update Markup', action: () => setShowMarkup(true) },
