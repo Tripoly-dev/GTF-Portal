@@ -220,7 +220,7 @@ export default function DashboardPage() {
   const [agent, setAgent] = useState<{ name: string; agency: string } | null>(null)
   const [quotes, setQuotes] = useState<Quote[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
-  const [activeTab, setActiveTab] = useState<'all' | 'draft' | 'sent' | 'bookings' | 'expired'>('all')
+  const [activeTab, setActiveTab] = useState<'all' | 'draft' | 'sent' | 'bookings' | 'cancelled'>('all')
   const [commPeriod, setCommPeriod] = useState<CommPeriod>('month')
   const [loading, setLoading] = useState(true)
 
@@ -254,16 +254,16 @@ export default function DashboardPage() {
     if (activeTab === 'all') return true
     if (activeTab === 'draft') return q.status === 'draft' || q.status === 'created'
     if (activeTab === 'sent') return q.status === 'sent'
-    if (activeTab === 'expired') return new Date(q.departure_date) < new Date()
+    if (activeTab === 'cancelled') return q.status === 'cancelled'
     return true
   })
 
   const tabs = [
-    { id: 'all' as const,      label: 'All',      count: quotes.length },
-    { id: 'draft' as const,    label: 'Draft',    count: quotes.filter(q => q.status === 'draft' || q.status === 'created').length },
-    { id: 'sent' as const,     label: 'Sent',     count: quotes.filter(q => q.status === 'sent').length },
-    { id: 'bookings' as const, label: 'Bookings', count: bookings.length },
-    { id: 'expired' as const,  label: 'Expired',  count: quotes.filter(q => new Date(q.departure_date) < new Date()).length },
+    { id: 'all' as const,       label: 'All',       count: quotes.length },
+    { id: 'draft' as const,     label: 'Draft',     count: quotes.filter(q => q.status === 'draft' || q.status === 'created').length },
+    { id: 'sent' as const,      label: 'Sent',      count: quotes.filter(q => q.status === 'sent').length },
+    { id: 'bookings' as const,  label: 'Bookings',  count: bookings.length },
+    { id: 'cancelled' as const, label: 'Cancelled', count: quotes.filter(q => q.status === 'cancelled').length },
   ]
 
   const bookingStatusStyle = (s: string) => {

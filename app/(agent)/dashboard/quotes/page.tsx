@@ -24,20 +24,53 @@ type Quote = {
   notes: string
 }
 
+const NAVY = '#12213c'
+const TEAL = '#0f6d5c'
+const AMBER = '#c98a12'
+const RED = '#c0392b'
+const GREY = '#8a8a8a'
+
+const STATUS_COLORS: Record<string, string> = {
+  draft: GREY,
+  created: '#2f5fa8',
+  sent: AMBER,
+  cancelled: RED,
+}
+
 const fmt = (n: number) => '₹' + Math.round(n).toLocaleString('en-IN')
 const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 
-const STATUS_COLORS: Record<string, { bg: string; color: string; borderRadius: number }> = {
-  draft:     { bg: '#F3F4F6', color: '#6B7280', borderRadius: 4 },
-  created:   { bg: '#E6F4F1', color: '#06316D', borderRadius: 4 },
-  sent:      { bg: '#FEF3C7', color: '#92400E', borderRadius: 4 },
-  cancelled: { bg: '#FEE2E2', color: '#991B1B', borderRadius: 4 },
+const ICONS: Record<string, React.ReactNode> = {
+  total: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+    </svg>
+  ),
+  created: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+    </svg>
+  ),
+  sent: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <path d="M22 2 11 13" />
+      <path d="M22 2 15 22l-4-9-9-4z" />
+    </svg>
+  ),
+  cancelled: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M15 9l-6 6M9 9l6 6" />
+    </svg>
+  ),
 }
 
 export default function QuotesPage() {
   const [quotes, setQuotes] = useState<Quote[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<'all' | 'draft' | 'created' | 'sent' | 'cancelled'>('all')
+  const [filter, setFilter] = useState<'all' | 'created' | 'sent' | 'cancelled'>('all')
   const [expanded, setExpanded] = useState<string | null>(null)
 
   useEffect(() => {
@@ -51,167 +84,190 @@ export default function QuotesPage() {
 
   const counts = {
     all: quotes.length,
-    draft: quotes.filter(q => q.status === 'draft').length,
     created: quotes.filter(q => q.status === 'created').length,
     sent: quotes.filter(q => q.status === 'sent').length,
     cancelled: quotes.filter(q => q.status === 'cancelled').length,
   }
 
+  const stats = [
+    { key: 'all', label: 'TOTAL QUOTES', value: counts.all, color: NAVY, icon: ICONS.total },
+    { key: 'created', label: 'CREATED', value: counts.created, color: '#2f5fa8', icon: ICONS.created },
+    { key: 'sent', label: 'SENT', value: counts.sent, color: AMBER, icon: ICONS.sent },
+    { key: 'cancelled', label: 'CANCELLED', value: counts.cancelled, color: RED, icon: ICONS.cancelled },
+  ]
+
+  const tabs: { id: typeof filter; label: string }[] = [
+    { id: 'all', label: `All (${counts.all})` },
+    { id: 'created', label: `Created (${counts.created})` },
+    { id: 'sent', label: `Sent (${counts.sent})` },
+    { id: 'cancelled', label: `Cancelled (${counts.cancelled})` },
+  ]
+
   return (
-    <div style={{ padding: '32px 40px', background: 'var(--bg)', minHeight: '100vh' }}>
+    <div style={{ padding: '40px 32px 80px', background: '#f3f2f2', minHeight: '100vh', fontFamily: "'Archivo', sans-serif" }}>
+      <style>{`
+        .qrow { transition: background .15s ease, box-shadow .15s ease; }
+        .qrow:hover { background: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+        .chev { transition: transform .2s ease; }
+        .stat:hover .stat-bar { width: 100%; }
+        .stat-bar { transition: width .25s ease; }
+        .actbtn { transition: background .15s ease, border-color .15s ease, color .15s ease; }
+        .actbtn-primary:hover { background: #1a3357; }
+        .actbtn-outline:hover { border-color: ${NAVY}; color: ${NAVY}; }
+        .actbtn-teal:hover { background: ${TEAL}; color: #fff; }
+      `}</style>
 
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32 }}>
-        <div>
-          <h1 className="font-tight" style={{ fontSize: 24, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 6 }}>My Quotes</h1>
-          <p style={{ fontSize: 14, color: 'var(--ink-light)' }}>All your saved proposals and quote requests</p>
-        </div>
-        <Link href="/dashboard/packages" className="btn-teal" style={{ whiteSpace: 'nowrap' }}>
-          + NEW QUOTE
-        </Link>
-      </div>
+      <div style={{ maxWidth: 1360, margin: '0 auto' }}>
 
-      {/* Summary cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 28 }}>
-        {[
-          { label: 'Total Quotes', n: counts.all, color: 'var(--teal)' },
-          { label: 'Created', n: counts.created, color: '#06316D' },
-          { label: 'Sent', n: counts.sent, color: '#92400E' },
-          { label: 'Cancelled', n: counts.cancelled, color: '#991B1B' },
-        ].map((s, i) => (
-          <div key={i} style={{ background: 'white', border: '1px solid var(--rule)', padding: '18px 20px' }}>
-            <div className="font-tight" style={{ fontSize: 32, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{s.n}</div>
-            <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.06em' }}>{s.label.toUpperCase()}</div>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32, gap: 24, flexWrap: 'wrap' }}>
+          <div>
+            <h1 style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 34, color: NAVY, letterSpacing: '-0.01em' }}>My Quotes</h1>
+            <p style={{ margin: 0, color: '#666', fontSize: 14 }}>All your saved proposals and quote requests</p>
           </div>
-        ))}
-      </div>
-
-      {/* Filter */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
-        {(['all', 'created', 'sent', 'cancelled'] as const).map(f => (
-          <button key={f} onClick={() => setFilter(f)} style={{
-            padding: '8px 18px', border: '1.5px solid var(--rule)',
-            background: filter === f ? 'var(--ink)' : 'white',
-            color: filter === f ? '#fff' : 'var(--ink-mid)',
-            fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
-            cursor: 'pointer', fontFamily: 'Inter, sans-serif', textTransform: 'capitalize',
+          <Link href="/dashboard/packages" style={{
+            display: 'flex', alignItems: 'center', gap: 8, background: TEAL, color: '#fff',
+            border: 'none', padding: '14px 22px', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em',
+            textDecoration: 'none',
           }}>
-            {f} ({counts[f]})
-          </button>
-        ))}
-      </div>
-
-      {/* Quotes list */}
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--ink-light)' }}>Loading quotes...</div>
-      ) : filtered.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '80px 0', background: 'white', border: '1px solid var(--rule)' }}>
-          <div style={{ fontSize: 40, marginBottom: 16 }}>📋</div>
-          <h3 className="font-tight" style={{ fontSize: 20, fontWeight: 700, color: 'var(--ink)', marginBottom: 8 }}>No quotes yet</h3>
-          <p style={{ fontSize: 14, color: 'var(--ink-light)', marginBottom: 24 }}>Create your first quote by browsing available packages</p>
-          <Link href="/dashboard/packages" className="btn-teal">BROWSE PACKAGES</Link>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M12 5v14M5 12h14" /></svg>
+            NEW QUOTE
+          </Link>
         </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {filtered.map(q => (
-            <div key={q.id} style={{ background: 'white', border: '1px solid var(--rule)', overflow: 'hidden' }}>
 
-              {/* Quote row */}
-              <div style={{
-                padding: '18px 24px', display: 'grid',
-                gridTemplateColumns: '1fr 160px 120px 140px 120px 80px',
-                gap: 16, alignItems: 'center', cursor: 'pointer',
-              }} onClick={() => setExpanded(expanded === q.id ? null : q.id)}>
-
-                {/* Package + client */}
-                <div>
-                  <div style={{ fontSize: 11, color: 'var(--ink-light)', marginBottom: 2 }}>
-                    Proposal No: <strong style={{ color: 'var(--teal)' }}>{q.quote_number || '—'}</strong>
-                  </div>
-                  <div className="font-tight" style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 3, letterSpacing: '-0.01em' }}>{q.trip_name}</div>
-                  <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>Client: <strong style={{ color: 'var(--ink-mid)' }}>{q.client_name}</strong> · {q.client_type}</div>
-                  <div style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 2 }}>{q.package_name} · {q.region.toUpperCase()}</div>
-                </div>
-
-                {/* Departure */}
-                <div>
-                  <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.06em', marginBottom: 3 }}>DEPARTURE</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)' }}>{fmtDate(q.departure_date)}</div>
-                </div>
-
-                {/* Pax */}
-                <div>
-                  <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.06em', marginBottom: 3 }}>PAX</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)' }}>{q.adults} adults · {q.room_type}</div>
-                </div>
-
-                {/* Total */}
-                <div>
-                  <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.06em', marginBottom: 3 }}>QUOTE TOTAL</div>
-                  <div className="font-tight" style={{ fontSize: 16, fontWeight: 800, color: 'var(--teal)' }}>{fmt(q.total_price)}</div>
-                  {q.markup_amount > 0 && <div style={{ fontSize: 10, color: 'var(--ink-light)' }}>incl. {fmt(q.markup_amount)} markup</div>}
-                </div>
-
-                {/* Status */}
-                <div>
-                  <span style={{ ...(STATUS_COLORS[q.status] || STATUS_COLORS.created), padding: '4px 10px', fontSize: 10, fontWeight: 700, letterSpacing: '0.06em' }}>
-                    {q.status.toUpperCase()}
-                  </span>
-                </div>
-
-                {/* Expand */}
-                <div style={{ fontSize: 18, color: 'var(--ink-light)', textAlign: 'right', transition: 'transform 0.2s', transform: expanded === q.id ? 'rotate(180deg)' : 'none' }}>
-                  ↓
-                </div>
+        {/* Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: '#fff', border: '1px solid #e3e1df', marginBottom: 28, boxShadow: '0 1px 4px rgba(0,0,0,.05)' }}>
+          {stats.map((s, i) => (
+            <div key={s.key} className="stat" style={{ padding: '26px 28px', borderRight: i < stats.length - 1 ? '1px solid #e3e1df' : 'none', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 40, fontWeight: 800, color: s.color, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
+                <div style={{ width: 34, height: 34, background: `${s.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div>
               </div>
-
-              {/* Expanded detail */}
-              {expanded === q.id && (
-                <div style={{ padding: '0 24px 20px', borderTop: '1px solid var(--rule)', paddingTop: 20 }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-                    <div>
-                      <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.08em', marginBottom: 6 }}>CREATED</div>
-                      <div style={{ fontSize: 13, color: 'var(--ink-mid)' }}>{fmtDate(q.created_at)}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.08em', marginBottom: 6 }}>EST. BOOKING DATE</div>
-                      <div style={{ fontSize: 13, color: 'var(--ink-mid)' }}>{q.estimated_booking_date ? fmtDate(q.estimated_booking_date) : '—'}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.08em', marginBottom: 6 }}>FLIGHTS BOOKED</div>
-                      <div style={{ fontSize: 13, color: 'var(--ink-mid)' }}>{q.flights_booked ? 'Yes' : 'No'}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.08em', marginBottom: 6 }}>ADD-ONS</div>
-                      <div style={{ fontSize: 13, color: 'var(--ink-mid)' }}>{q.add_ons?.length > 0 ? q.add_ons.map((a: any) => a.label).join(', ') : 'None'}</div>
-                    </div>
-                  </div>
-                  {q.notes && (
-                    <div style={{ marginTop: 14, padding: '12px 16px', background: 'var(--paper)', border: '1px solid var(--rule)' }}>
-                      <div style={{ fontSize: 10, color: 'var(--ink-light)', letterSpacing: '0.08em', marginBottom: 4 }}>NOTES</div>
-                      <div style={{ fontSize: 13, color: 'var(--ink-mid)' }}>{q.notes}</div>
-                    </div>
-                  )}
-                  <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-                    <Link href={`/dashboard/quotes/${q.id}`}
-                      style={{ padding: '8px 18px', background: '#06316D', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
-                      VIEW PROPOSAL →
-                    </Link>
-                    <Link href={`/dashboard/packages/${q.package_id}`}
-                      style={{ padding: '8px 18px', border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
-                      DUPLICATE QUOTE
-                    </Link>
-                    <a href={`/api/quotes/pdf?id=${q.id}`} target="_blank" rel="noopener noreferrer"
-                      style={{ padding: '8px 18px', border: '1.5px solid var(--teal)', color: 'var(--teal)', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none' }}>
-                      DOWNLOAD PDF
-                    </a>
-                  </div>
-                </div>
-              )}
+              <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#8a8a8a' }}>{s.label}</div>
+              <div className="stat-bar" style={{ position: 'absolute', left: 0, bottom: 0, height: 3, width: 28, background: s.color }} />
             </div>
           ))}
         </div>
-      )}
+
+        {/* Filter tabs */}
+        <div style={{ display: 'flex', gap: 0, border: '1px solid #d8d6d3', width: 'fit-content', marginBottom: 24 }}>
+          {tabs.map((t, i) => (
+            <button key={t.id} onClick={() => setFilter(t.id)} style={{
+              border: 'none', borderRight: i < tabs.length - 1 ? '1px solid #d8d6d3' : 'none',
+              padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+              background: filter === t.id ? NAVY : '#fff', color: filter === t.id ? '#fff' : '#333',
+              fontFamily: "'Archivo', sans-serif",
+            }}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        {/* List */}
+        <div style={{ border: '1px solid #e3e1df', background: '#fbfbfa' }}>
+          {loading ? (
+            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#9a9a9a', fontSize: 14 }}>Loading quotes...</div>
+          ) : filtered.length === 0 ? (
+            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#9a9a9a' }}>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>No quotes in this category yet.</div>
+            </div>
+          ) : (
+            filtered.map(q => {
+              const statusColor = STATUS_COLORS[q.status] || STATUS_COLORS.created
+              const isOpen = expanded === q.id
+              return (
+                <div key={q.id} className="qrow" style={{ borderBottom: '1px solid #e3e1df', position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: statusColor }} />
+                  <div onClick={() => setExpanded(isOpen ? null : q.id)} style={{ display: 'flex', alignItems: 'center', padding: '22px 28px 22px 32px', gap: 24, cursor: 'pointer' }}>
+
+                    <div style={{ flex: 1.6, minWidth: 220 }}>
+                      <div style={{ fontSize: 11, color: '#9a9a9a', fontWeight: 600, letterSpacing: '0.04em' }}>PROPOSAL NO: <span style={{ color: '#333', fontWeight: 800 }}>{q.quote_number || '—'}</span></div>
+                      <div style={{ fontSize: 19, fontWeight: 800, color: NAVY, margin: '4px 0 4px' }}>{q.trip_name}</div>
+                      <div style={{ fontSize: 13, color: '#555' }}>Client: <strong>{q.client_name}</strong> · {q.client_type}</div>
+                      <div style={{ fontSize: 12, color: '#9a9a9a', marginTop: 2 }}>{q.package_name} · {q.region?.toUpperCase()}</div>
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 110 }}>
+                      <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>DEPARTURE</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: '#222', marginTop: 4 }}>{fmtDate(q.departure_date)}</div>
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 120 }}>
+                      <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>PAX</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: '#222', marginTop: 4 }}>{q.adults} adults · {q.room_type}</div>
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 130 }}>
+                      <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>QUOTE TOTAL</div>
+                      <div style={{ fontSize: 17, fontWeight: 800, color: TEAL, marginTop: 4 }}>{fmt(q.total_price)}</div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 120, justifyContent: 'flex-end' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ width: 7, height: 7, background: statusColor, display: 'inline-block' }} />
+                        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: statusColor }}>{q.status.toUpperCase()}</span>
+                      </div>
+                      <button onClick={e => { e.stopPropagation(); setExpanded(isOpen ? null : q.id) }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6 }}>
+                        <svg className="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth={2.5} style={{ transform: `rotate(${isOpen ? 180 : 0}deg)` }}><path d="M6 9l6 6 6-6" /></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  {isOpen && (
+                    <div style={{ margin: '0 32px 20px', paddingTop: 18, borderTop: '1px solid #e3e1df' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))', gap: 20, marginBottom: 18 }}>
+                        <div>
+                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>CREATED</div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{fmtDate(q.created_at)}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>EST. BOOKING DATE</div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.estimated_booking_date ? fmtDate(q.estimated_booking_date) : '—'}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>FLIGHTS BOOKED</div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.flights_booked ? 'Yes' : 'No'}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>ADD-ONS</div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.add_ons?.length > 0 ? q.add_ons.map((a: any) => a.label).join(', ') : 'None'}</div>
+                        </div>
+                      </div>
+                      {q.notes && (
+                        <div style={{ marginBottom: 18, padding: '12px 16px', background: '#f3f2f2', border: '1px solid #e3e1df' }}>
+                          <div style={{ fontSize: 10, color: '#9a9a9a', letterSpacing: '0.08em', marginBottom: 4 }}>NOTES</div>
+                          <div style={{ fontSize: 13, color: '#333' }}>{q.notes}</div>
+                        </div>
+                      )}
+                      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                        <Link href={`/dashboard/quotes/${q.id}`} className="actbtn actbtn-primary" style={{
+                          display: 'flex', alignItems: 'center', gap: 8, border: 'none', background: NAVY, color: '#fff',
+                          fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '10px 18px', textDecoration: 'none',
+                        }}>
+                          VIEW PROPOSAL
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                        </Link>
+                        <Link href={`/dashboard/packages/${q.package_id}`} className="actbtn actbtn-outline" style={{
+                          border: '1px solid #d3d1ce', background: '#fff', color: '#333',
+                          fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '10px 18px', textDecoration: 'none',
+                        }}>
+                          DUPLICATE QUOTE
+                        </Link>
+                        <a href={`/api/quotes/pdf?id=${q.id}`} target="_blank" rel="noopener noreferrer" className="actbtn actbtn-teal" style={{
+                          border: `1px solid ${TEAL}`, background: '#fff', color: TEAL,
+                          fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '10px 18px', textDecoration: 'none',
+                        }}>
+                          DOWNLOAD PDF
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })
+          )}
+        </div>
+      </div>
     </div>
   )
 }
