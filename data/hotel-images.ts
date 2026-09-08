@@ -32,8 +32,13 @@ export function normalizeHotelName(name: string) {
 }
 
 export function hotelImage(hotelName: string, city: string): string {
+  return hotelImages(hotelName, city)[0] || ''
+}
+
+export function hotelImages(hotelName: string, city: string): string[] {
   const norm = normalizeHotelName(hotelName)
   const gallery = HOTEL_GALLERY[norm]
-  if (gallery?.length) return gallery[0]
-  return HOTEL_IMAGES[city] || ''
+  if (gallery?.length) return gallery
+  const fallback = HOTEL_IMAGES[city]
+  return fallback ? [fallback] : []
 }

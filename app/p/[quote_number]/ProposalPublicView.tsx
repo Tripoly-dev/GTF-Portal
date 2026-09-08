@@ -1,8 +1,28 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Package } from '@/data/packages'
-import { hotelImage, normalizeHotelName } from '@/data/hotel-images'
+import { hotelImages, normalizeHotelName } from '@/data/hotel-images'
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
+
+function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) {
+  const [idx, setIdx] = useState(0)
+  useEffect(() => {
+    if (images.length < 2) return
+    const t = setInterval(() => setIdx(i => (i + 1) % images.length), 3500)
+    return () => clearInterval(t)
+  }, [images.length])
+  if (!images.length) return null
+  return (
+    <div style={{ position: 'relative', width: 160, height: 120, flexShrink: 0, overflow: 'hidden' }}>
+      {images.map((src, i) => (
+        <img key={src} src={src} alt={alt} style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
+          opacity: i === idx ? 1 : 0, transition: 'opacity 0.6s ease',
+        }} />
+      ))}
+    </div>
+  )
+}
 
 const fmtPrice = (n: number, cur = 'INR') => {
   if (!n) return cur === 'USD' ? '$0' : cur === 'EUR' ? '€0' : '₹0'
@@ -146,10 +166,10 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
             {activeTab === 'Hotels' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {pkg.hotels?.map((h, i) => {
-                  const img = hotelImage(h.name, h.city)
+                  const images = hotelImages(h.name, h.city)
                   return (
                     <div key={i} style={{ border: '1px solid var(--rule)', borderRadius: 8, overflow: 'hidden', display: 'flex', flexWrap: 'wrap' }}>
-                      {img && <img src={img} alt={h.name} style={{ width: 160, height: 120, objectFit: 'cover', flexShrink: 0 }} />}
+                      <RotatingHotelImage images={images} alt={h.name} />
                       <div style={{ flex: 1, minWidth: 200, padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                         <div>
                           <div className="font-tight" style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 4 }}>{normalizeHotelName(h.name)}</div>
@@ -222,9 +242,6 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
                     <WhatsAppIcon size={15} color="#fff" /> WhatsApp
                   </a>
                 )}
-                <a href={`mailto:${agent.email}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 16px', background: 'none', border: '1.5px solid var(--ink)', color: 'var(--ink)', fontSize: 13, fontWeight: 700, textDecoration: 'none', borderRadius: 6, fontFamily: "'DM Sans', sans-serif" }}>
-                  ✉️ Email
-                </a>
               </div>
             </div>
           </div>

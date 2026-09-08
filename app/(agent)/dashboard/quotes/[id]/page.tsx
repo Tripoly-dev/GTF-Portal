@@ -495,12 +495,12 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.4) 0%, transparent 60%)' }} />
 
         {/* Breadcrumb inside hero */}
-        <div style={{ position: 'absolute', top: 20, left: 32, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
-          <Link href="/dashboard" style={{ color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>Dashboard</Link>
-          <span>→</span>
-          <Link href="/dashboard/quotes" style={{ color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>My Quotes</Link>
-          <span>→</span>
-          <span style={{ color: 'rgba(255,255,255,0.8)' }}>{quote.trip_name}</span>
+        <div style={{ position: 'absolute', top: 20, left: 32, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.85)', padding: '8px 14px', background: 'rgba(7,26,23,0.55)', borderRadius: 6, backdropFilter: 'blur(8px)' }}>
+          <Link href="/dashboard" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none' }}>Dashboard</Link>
+          <span style={{ color: 'rgba(255,255,255,0.5)' }}>→</span>
+          <Link href="/dashboard/quotes" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none' }}>My Quotes</Link>
+          <span style={{ color: 'rgba(255,255,255,0.5)' }}>→</span>
+          <span style={{ color: '#fff' }}>{quote.trip_name}</span>
         </div>
 
         {/* Proposal No + Status top right */}
