@@ -2,6 +2,10 @@
 import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import PaymentSummaryStrip from '@/components/bookings/PaymentSummaryStrip'
+import PaymentHistoryTable from '@/components/bookings/PaymentHistoryTable'
+import RecordPaymentModal from '@/components/bookings/RecordPaymentModal'
+import type { Payment } from '@/components/bookings/types'
 
 const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
@@ -19,12 +23,25 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
   const [agent, setAgent] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
+  const [payments, setPayments] = useState<Payment[]>([])
+  const [showRecordModal, setShowRecordModal] = useState(false)
+  const [editingPayment, setEditingPayment] = useState<Payment | null>(null)
+  const [confirmingId, setConfirmingId] = useState<string | null>(null)
+  const [balanceDueDate, setBalanceDueDate] = useState('')
+  const [savingDueDate, setSavingDueDate] = useState(false)
+
+  const fetchPayments = () => {
+    fetch(`/api/bookings/${id}/payments`)
+      .then(r => r.json())
+      .then(d => setPayments(d.payments || []))
+  }
 
   useEffect(() => {
     fetch(`/api/bookings/${id}`)
       .then(r => { if (r.status === 403) { router.push('/login'); return r.json() } return r.json() })
-      .then(d => { setBooking(d.booking); setAgent(d.agent) })
+      .then(d => { setBooking(d.booking); setAgent(d.agent); setBalanceDueDate(d.booking?.balance_due_date?.slice(0, 10) || '') })
       .finally(() => setLoading(false))
+    fetchPayments()
   }, [id])
 
   const updateStatus = async (status: 'confirmed' | 'cancelled') => {
@@ -37,6 +54,33 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
     const data = await res.json()
     if (res.ok) setBooking(data.booking)
     setUpdating(false)
+  }
+
+  const handleDeletePayment = async (payment: Payment) => {
+    if (!confirm('Delete this payment record?')) return
+    const res = await fetch(`/api/bookings/${id}/payments/${payment.id}`, { method: 'DELETE' })
+    if (res.ok) setPayments(prev => prev.filter(p => p.id !== payment.id))
+  }
+
+  const handleConfirmPayment = async (payment: Payment) => {
+    setConfirmingId(payment.id)
+    const res = await fetch(`/api/bookings/${id}/payments/${payment.id}/confirm`, { method: 'PUT' })
+    const data = await res.json()
+    if (res.ok) setPayments(prev => prev.map(p => p.id === payment.id ? data.payment : p))
+    setConfirmingId(null)
+  }
+
+  const handleSaveDueDate = async () => {
+    setSavingDueDate(true)
+    const res = await fetch(`/api/bookings/${id}/balance-due-date`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ balance_due_date: balanceDueDate }),
+    })
+    const data = await res.json()
+    if (res.ok) setBooking(data.booking)
+    else alert(data.error || 'Failed to update balance due date')
+    setSavingDueDate(false)
   }
 
   if (loading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--ink-light)' }}>Loading...</div>
@@ -142,7 +186,6 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                   { l: 'Deposit', v: fmtPrice(booking.deposit_amount) },
                   { l: 'Deposit Due', v: fmtDate(booking.deposit_due_date) },
                   { l: 'Balance', v: fmtPrice(booking.balance_amount), color: '#9e2233' },
-                  { l: 'Balance Due', v: fmtDate(booking.balance_due_date) },
                   { l: 'Payment Mode', v: booking.payment_mode || '—' },
                 ].map(({ l, v, bold, color }) => (
                   <div key={l} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--rule)', paddingBottom: 8 }}>
@@ -150,6 +193,23 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                     <span style={{ fontSize: 13, fontWeight: bold ? 800 : 600, color: color || 'var(--ink)' }}>{v}</span>
                   </div>
                 ))}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 12, color: 'var(--ink-light)', flexShrink: 0 }}>Balance Due</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <input type="date" value={balanceDueDate} onChange={e => setBalanceDueDate(e.target.value)} style={{
+                      fontSize: 12.5, fontWeight: 600, color: 'var(--ink)', border: '1px solid var(--rule)', borderRadius: 6,
+                      padding: '5px 8px', fontFamily: "'DM Sans', sans-serif",
+                    }} />
+                    {balanceDueDate !== (booking.balance_due_date?.slice(0, 10) || '') && (
+                      <button onClick={handleSaveDueDate} disabled={savingDueDate} style={{
+                        padding: '5px 10px', borderRadius: 6, border: 'none', background: 'var(--teal)', color: '#fff',
+                        fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: savingDueDate ? 0.6 : 1,
+                      }}>
+                        {savingDueDate ? '...' : 'SAVE'}
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
             {booking.notes && (
@@ -160,7 +220,39 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
             )}
           </div>
         </div>
+
+        {/* Payments */}
+        <div style={{ marginTop: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
+            <div className="eyebrow">PAYMENTS</div>
+            <button onClick={() => { setEditingPayment(null); setShowRecordModal(true) }} className="btn-teal">
+              + RECORD PAYMENT
+            </button>
+          </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <PaymentSummaryStrip totalPrice={booking.total_price} payments={payments} />
+          </div>
+
+          <PaymentHistoryTable
+            payments={payments}
+            isAdmin={true}
+            confirmingId={confirmingId}
+            onEdit={p => { setEditingPayment(p); setShowRecordModal(true) }}
+            onDelete={handleDeletePayment}
+            onConfirm={handleConfirmPayment}
+          />
+        </div>
       </div>
+
+      {showRecordModal && (
+        <RecordPaymentModal
+          bookingId={id}
+          payment={editingPayment || undefined}
+          onClose={() => { setShowRecordModal(false); setEditingPayment(null) }}
+          onSaved={() => { setShowRecordModal(false); setEditingPayment(null); fetchPayments() }}
+        />
+      )}
     </div>
   )
 }

@@ -2,6 +2,10 @@
 import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { PACKAGES } from '@/data/packages'
+import PaymentSummaryStrip from '@/components/bookings/PaymentSummaryStrip'
+import PaymentHistoryTable from '@/components/bookings/PaymentHistoryTable'
+import RecordPaymentModal from '@/components/bookings/RecordPaymentModal'
+import type { Payment } from '@/components/bookings/types'
 
 const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
@@ -29,13 +33,31 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
   const [booking, setBooking] = useState<any>(null)
   const [agent, setAgent] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [payments, setPayments] = useState<Payment[]>([])
+  const [currentUserId, setCurrentUserId] = useState<string | undefined>(undefined)
+  const [showRecordModal, setShowRecordModal] = useState(false)
+  const [editingPayment, setEditingPayment] = useState<Payment | null>(null)
+
+  const fetchPayments = () => {
+    fetch(`/api/bookings/${id}/payments`)
+      .then(r => r.json())
+      .then(d => setPayments(d.payments || []))
+  }
 
   useEffect(() => {
     fetch(`/api/bookings/${id}`)
       .then(r => r.json())
       .then(d => { setBooking(d.booking); setAgent(d.agent) })
       .finally(() => setLoading(false))
+    fetchPayments()
+    fetch('/api/auth/me').then(r => r.json()).then(d => setCurrentUserId(d.agent?.id)).catch(() => {})
   }, [id])
+
+  const handleDeletePayment = async (payment: Payment) => {
+    if (!confirm('Delete this payment record?')) return
+    const res = await fetch(`/api/bookings/${id}/payments/${payment.id}`, { method: 'DELETE' })
+    if (res.ok) setPayments(prev => prev.filter(p => p.id !== payment.id))
+  }
 
   if (loading) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--ink-light)' }}>Loading booking...</div>
   if (!booking) return <div style={{ padding: 40, textAlign: 'center', color: 'var(--ink-light)' }}>Booking not found</div>
@@ -218,7 +240,42 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
             )}
           </div>
         </div>
+
+        {/* Payments */}
+        <div style={{ marginTop: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
+            <div className="eyebrow">PAYMENTS</div>
+            <button onClick={() => { setEditingPayment(null); setShowRecordModal(true) }} className="btn-teal">
+              + RECORD PAYMENT
+            </button>
+          </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <PaymentSummaryStrip totalPrice={booking.total_price} payments={payments} />
+          </div>
+
+          <div style={{ fontSize: 13, color: 'var(--ink-light)', marginBottom: 16 }}>
+            Balance Due: <span style={{ fontWeight: 700, color: 'var(--ink-mid)' }}>{fmtDate(booking.balance_due_date)}</span>
+          </div>
+
+          <PaymentHistoryTable
+            payments={payments}
+            isAdmin={false}
+            currentUserId={currentUserId}
+            onEdit={p => { setEditingPayment(p); setShowRecordModal(true) }}
+            onDelete={handleDeletePayment}
+          />
+        </div>
       </div>
+
+      {showRecordModal && (
+        <RecordPaymentModal
+          bookingId={id}
+          payment={editingPayment || undefined}
+          onClose={() => { setShowRecordModal(false); setEditingPayment(null) }}
+          onSaved={() => { setShowRecordModal(false); setEditingPayment(null); fetchPayments() }}
+        />
+      )}
     </div>
   )
 }
