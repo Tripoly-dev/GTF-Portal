@@ -76,7 +76,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.06)', overflow: 'hidden', marginBottom: 24, position: 'relative' }}>
           <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 5, background: st.bg, zIndex: 1 }} />
           {heroImg && (
-            <div style={{ height: 200, overflow: 'hidden' }}>
+            <div style={{ height: 340, overflow: 'hidden' }}>
               <img src={heroImg} alt={booking.package_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           )}
@@ -96,9 +96,9 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
               </span>
             </div>
 
-            <div style={{ display: 'flex', gap: 0, marginTop: 26, paddingTop: 22, borderTop: '1px solid var(--rule)', flexWrap: 'wrap' }}>
-              {meta.map(({ l, v, icon }, i) => (
-                <div key={l} style={{ flex: '1 1 140px', paddingRight: 20, borderRight: i < meta.length - 1 ? '1px solid var(--rule)' : 'none' }}>
+            <div style={{ display: 'flex', gap: 32, marginTop: 26, paddingTop: 22, borderTop: '1px solid var(--rule)', flexWrap: 'wrap' }}>
+              {meta.map(({ l, v, icon }) => (
+                <div key={l} style={{ flex: '1 1 140px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.1em' }}>
                     <span style={{ color: 'var(--teal)', display: 'flex' }}>{icon}</span>{l}
                   </div>
