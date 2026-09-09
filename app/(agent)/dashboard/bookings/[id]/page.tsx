@@ -1,14 +1,27 @@
 'use client'
 import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
+import { PACKAGES } from '@/data/packages'
 
 const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
-  pending:   { label: 'Awaiting Confirmation', bg: '#FEF3C7', color: '#92400E' },
-  confirmed: { label: 'Confirmed',             bg: '#D1FAE5', color: '#065F46' },
-  cancelled: { label: 'Cancelled',             bg: '#FEE2E2', color: '#991B1B' },
+  pending:   { label: 'Awaiting Confirmation', bg: '#92400E', color: '#fff' },
+  confirmed: { label: 'Confirmed',             bg: '#0A7B6C', color: '#fff' },
+  cancelled: { label: 'Cancelled',             bg: '#991B1B', color: '#fff' },
+}
+
+const ICONS = {
+  calendar: (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><rect x="3" y="4" width="18" height="18" rx="1" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+  ),
+  users: (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+  ),
+  send: (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4z" /></svg>
+  ),
 }
 
 export default function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -29,11 +42,26 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
 
   const st = STATUS[booking.status] || STATUS.pending
   const passengers = booking.passengers || []
-  const pax = (booking.adults || 0) + (booking.children_with_bed || 0) + (booking.children_without_bed || 0)
+  const pkg = PACKAGES.find(p => p.id === booking.package_id) || null
+  const heroImg = pkg?.gallery?.[0] || pkg?.img || ''
+
+  const paxParts = [`${booking.adults || 0} Adult${(booking.adults || 0) !== 1 ? 's' : ''}`]
+  if (booking.children_with_bed > 0) paxParts.push(`${booking.children_with_bed} Child w/ Bed`)
+  if (booking.children_without_bed > 0) paxParts.push(`${booking.children_without_bed} Child w/o Bed`)
+  const paxStr = paxParts.join(' + ')
+
+  const depositPct = booking.total_price ? Math.min(100, Math.round((booking.deposit_amount || 0) / booking.total_price * 100)) : 0
+
+  const meta = [
+    { l: 'DEPARTURE', v: fmtDate(booking.departure_date), icon: ICONS.calendar },
+    { l: 'PASSENGERS', v: paxStr, icon: ICONS.users },
+    { l: 'TOTAL', v: fmtPrice(booking.total_price), icon: <span style={{ fontSize: 11, fontWeight: 800 }}>₹</span> },
+    { l: 'SUBMITTED', v: fmtDate(booking.created_at), icon: ICONS.send },
+  ]
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh', padding: '32px' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1180, margin: '0 auto' }}>
 
         {/* Breadcrumb */}
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 12, color: 'var(--ink-light)', marginBottom: 24 }}>
@@ -44,89 +72,146 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
           <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{booking.package_name}</span>
         </div>
 
-        {/* Header */}
-        <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '28px 32px', marginBottom: 20 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div>
-              <div className="eyebrow" style={{ marginBottom: 8 }}>BOOKING REF: {booking.id.slice(0, 8).toUpperCase()}</div>
-              <h1 className="font-tight" style={{ fontSize: 28, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: '0 0 16px' }}>{booking.package_name}</h1>
-              <div style={{ display: 'flex', gap: 28 }}>
-                {[
-                  { l: 'DEPARTURE', v: fmtDate(booking.departure_date) },
-                  { l: 'PASSENGERS', v: `${pax} pax` },
-                  { l: 'TOTAL', v: fmtPrice(booking.total_price) },
-                  { l: 'SUBMITTED', v: fmtDate(booking.created_at) },
-                ].map(({ l, v }) => (
-                  <div key={l}>
-                    <div style={{ fontSize: 9, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{l}</div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}>{v}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <span style={{ fontSize: 11, fontWeight: 700, padding: '6px 14px', borderRadius: 6, background: st.bg, color: st.color, letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{st.label.toUpperCase()}</span>
-          </div>
-          {booking.confirmed_at && (
-            <div style={{ marginTop: 16, padding: '10px 14px', background: '#D1FAE5', borderRadius: 6, fontSize: 12, color: '#065F46', fontWeight: 600 }}>
-              ✓ Confirmed on {fmtDate(booking.confirmed_at)}
+        {/* Hero card */}
+        <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.06)', overflow: 'hidden', marginBottom: 24, position: 'relative' }}>
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 5, background: st.bg, zIndex: 1 }} />
+          {heroImg && (
+            <div style={{ height: 200, overflow: 'hidden' }}>
+              <img src={heroImg} alt={booking.package_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           )}
+          <div style={{ padding: '28px 32px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20, flexWrap: 'wrap' }}>
+              <div>
+                <div className="eyebrow" style={{ marginBottom: 8 }}>BOOKING REF: {booking.id.slice(0, 8).toUpperCase()}</div>
+                <h1 className="font-tight" style={{ fontSize: 30, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>{booking.package_name}</h1>
+              </div>
+              <span style={{
+                display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 800,
+                padding: '9px 18px', borderRadius: 20, background: st.bg, color: st.color,
+                letterSpacing: '0.08em', whiteSpace: 'nowrap', boxShadow: `0 3px 10px ${st.bg}55`,
+              }}>
+                {booking.status === 'confirmed' && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M20 6 9 17l-5-5" /></svg>}
+                {st.label.toUpperCase()}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: 0, marginTop: 26, paddingTop: 22, borderTop: '1px solid var(--rule)', flexWrap: 'wrap' }}>
+              {meta.map(({ l, v, icon }, i) => (
+                <div key={l} style={{ flex: '1 1 140px', paddingRight: 20, borderRight: i < meta.length - 1 ? '1px solid var(--rule)' : 'none' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.1em' }}>
+                    <span style={{ color: 'var(--teal)', display: 'flex' }}>{icon}</span>{l}
+                  </div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginTop: 6 }}>{v}</div>
+                </div>
+              ))}
+            </div>
+
+            {booking.confirmed_at && (
+              <div style={{ marginTop: 22, padding: '12px 18px', background: 'var(--teal-lt)', borderLeft: '3px solid var(--teal)', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal-dark)" strokeWidth={2.5}><path d="M20 6 9 17l-5-5" /></svg>
+                <span style={{ fontSize: 13, color: 'var(--teal-dark)', fontWeight: 700 }}>Confirmed on {fmtDate(booking.confirmed_at)}</span>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr', gap: 24, alignItems: 'start' }}>
           {/* Passengers */}
-          <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '24px 28px' }}>
-            <div className="eyebrow" style={{ marginBottom: 20 }}>PASSENGER DETAILS</div>
-            {passengers.map((p: any, i: number) => (
-              <div key={i} style={{ padding: '16px 0', borderBottom: '1px solid var(--rule)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 6 }}>{p.name}</div>
-                    <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-                      {[
-                        { l: 'Passport No', v: p.passport_number },
-                        { l: 'Date of Issue', v: fmtDate(p.doi) },
-                        { l: 'Date of Expiry', v: fmtDate(p.doe) },
-                      ].map(({ l, v }) => (
-                        <div key={l}>
-                          <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', marginBottom: 2 }}>{l.toUpperCase()}</div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{v}</div>
-                        </div>
-                      ))}
+          <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.05)', overflow: 'hidden' }}>
+            <div style={{ padding: '18px 28px', borderBottom: '1px solid var(--rule)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="eyebrow">PASSENGER DETAILS</span>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--ink-light)' }}>{paxStr}</span>
+            </div>
+            {passengers.map((p: any, i: number) => {
+              const initials = (p.name || '').trim().split(/\s+/).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
+              return (
+                <div key={i} style={{ padding: '20px 28px', borderBottom: i < passengers.length - 1 ? '1px solid var(--rule)' : 'none' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                    <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 6, background: 'var(--ink)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13 }}>{initials || '—'}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 14, flexWrap: 'wrap', marginBottom: 10 }}>
+                        <div className="font-tight" style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', textTransform: 'capitalize' }}>{p.name}</div>
+                        {p.passport_url && (
+                          <a href={p.passport_url} target="_blank" rel="noopener noreferrer" style={{
+                            display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5, fontWeight: 700, color: 'var(--ink-mid)',
+                            textDecoration: 'none', border: '1px solid var(--rule)', borderRadius: 8, padding: '8px 13px', whiteSpace: 'nowrap',
+                            transition: 'all 0.15s',
+                          }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)'; (e.currentTarget as HTMLElement).style.background = 'var(--teal-lt)' }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-mid)'; (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /></svg>
+                            VIEW PASSPORT
+                          </a>
+                        )}
+                      </div>
+                      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                        {[
+                          { l: 'Passport No', v: p.passport_number },
+                          { l: 'Date of Issue', v: fmtDate(p.doi) },
+                          { l: 'Date of Expiry', v: fmtDate(p.doe) },
+                        ].map(({ l, v }) => (
+                          <div key={l}>
+                            <div style={{ fontSize: 9.5, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.08em' }}>{l.toUpperCase()}</div>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-mid)', marginTop: 3 }}>{v}</div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                  {p.passport_url && (
-                    <a href={p.passport_url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, fontWeight: 600, color: 'var(--teal)', textDecoration: 'none', border: '1px solid var(--teal)', padding: '6px 12px', borderRadius: 6, whiteSpace: 'nowrap' }}>
-                      📄 View Passport
-                    </a>
-                  )}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           {/* Payment */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '24px' }}>
-              <div className="eyebrow" style={{ marginBottom: 16 }}>PAYMENT SCHEDULE</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {[
-                  { l: 'Total Amount', v: fmtPrice(booking.total_price), bold: true },
-                  { l: 'Deposit', v: fmtPrice(booking.deposit_amount) },
-                  { l: 'Deposit Due', v: fmtDate(booking.deposit_due_date) },
-                  { l: 'Balance', v: fmtPrice(booking.balance_amount), color: '#9e2233' },
-                  { l: 'Balance Due', v: fmtDate(booking.balance_due_date) },
-                  { l: 'Payment Mode', v: booking.payment_mode || '—' },
-                ].map(({ l, v, bold, color }) => (
-                  <div key={l} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--rule)', paddingBottom: 8 }}>
-                    <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>{l}</span>
-                    <span style={{ fontSize: 13, fontWeight: bold ? 800 : 600, color: color || 'var(--ink)' }}>{v}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'sticky', top: 20 }}>
+            <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.05)', overflow: 'hidden' }}>
+              <div style={{ padding: '18px 28px', borderBottom: '1px solid var(--rule)' }}>
+                <span className="eyebrow">PAYMENT SCHEDULE</span>
+              </div>
+              <div style={{ padding: '6px 28px 22px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0', borderBottom: '1px solid var(--rule)' }}>
+                  <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Total Amount</span>
+                  <span className="font-tight" style={{ fontSize: 16, fontWeight: 800, color: 'var(--ink)' }}>{fmtPrice(booking.total_price)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0', borderBottom: '1px solid var(--rule)' }}>
+                  <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Deposit Paid</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--teal)' }}>{fmtPrice(booking.deposit_amount)}</span>
+                </div>
+
+                <div style={{ margin: '16px 0' }}>
+                  <div style={{ height: 6, background: 'var(--rule)', borderRadius: 3, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${depositPct}%`, background: 'var(--teal)', borderRadius: 3, transition: 'width 0.4s ease' }} />
                   </div>
-                ))}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--ink-light)' }}>
+                    <span>DEPOSIT RECEIVED</span>
+                    <span>{depositPct}%</span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0', borderBottom: '1px solid var(--rule)' }}>
+                  <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Deposit Due</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-mid)' }}>{fmtDate(booking.deposit_due_date)}</span>
+                </div>
+                <div style={{ background: '#FEF2F0', margin: '0 -28px', padding: '14px 28px 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingBottom: 14, borderBottom: '1px solid #fbe0db' }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-mid)' }}>Balance Due</span>
+                    <span className="font-tight" style={{ fontSize: 16, fontWeight: 800, color: '#9e2233' }}>{fmtPrice(booking.balance_amount)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0' }}>
+                    <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Due Date</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#9e2233' }}>{fmtDate(booking.balance_due_date)}</span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0' }}>
+                  <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Payment Mode</span>
+                  <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.05em', background: 'var(--teal-lt)', color: 'var(--teal-dark)', borderRadius: 12, padding: '4px 12px' }}>{booking.payment_mode || '—'}</span>
+                </div>
               </div>
             </div>
             {booking.notes && (
-              <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '20px 24px' }}>
+              <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.05)', padding: '20px 24px' }}>
                 <div className="eyebrow" style={{ marginBottom: 10 }}>NOTES</div>
                 <p style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6, margin: 0 }}>{booking.notes}</p>
               </div>
