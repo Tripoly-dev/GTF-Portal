@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
           status: dep.status === 'sold-out' ? 'sold-out' : dep.status === 'fast-filling' ? 'fast-filling' : 'available',
           total_seats: 30,
           booked_seats: 0,
+          active: false,
         })
       }
     }

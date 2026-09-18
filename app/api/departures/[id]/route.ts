@@ -29,7 +29,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!payload || payload.role !== 'admin') return NextResponse.json({ error: 'Admin only' }, { status: 403 })
 
     const { id } = await params
-    const { status, total_seats, booked_seats } = await req.json()
+    const { status, total_seats, booked_seats, active } = await req.json()
 
     const update: any = { updated_at: new Date().toISOString() }
     if (status) update.status = status
@@ -40,6 +40,25 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         const ts = total_seats || 30
         update.status = booked_seats >= ts ? 'sold-out' : booked_seats >= 10 ? 'fast-filling' : 'available'
       }
+    }
+
+    if (active !== undefined) {
+      if (active === false) {
+        const { data: departure } = await supabase.from('departures').select('package_id, departure_date').eq('id', id).single()
+        if (!departure) return NextResponse.json({ error: 'Departure not found' }, { status: 404 })
+
+        const { count } = await supabase
+          .from('bookings')
+          .select('id', { count: 'exact', head: true })
+          .eq('package_id', departure.package_id)
+          .eq('departure_date', departure.departure_date)
+          .in('status', ['pending', 'confirmed'])
+
+        if (count && count > 0) {
+          return NextResponse.json({ error: `Cannot deactivate — ${count} active booking${count > 1 ? 's' : ''} exist for this date` }, { status: 400 })
+        }
+      }
+      update.active = active
     }
 
     const { data, error } = await supabase
