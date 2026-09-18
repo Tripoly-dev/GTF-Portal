@@ -70,7 +70,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
       if (res.ok) {
         setPayments(prev => prev.map(p => p.id === payment.id ? data.payment : p))
       } else {
-        alert(data.error || `Failed to confirm payment (status ${res.status})`)
+        alert([data.error, data.detail].filter(Boolean).join(': ') || `Failed to confirm payment (status ${res.status})`)
       }
     } catch (err) {
       alert('Network error while confirming payment')
