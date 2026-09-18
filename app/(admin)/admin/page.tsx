@@ -21,6 +21,7 @@ type Booking = {
 type Departure = {
   id: string; package_id: string; departure_date: string
   status: string; total_seats: number; booked_seats: number
+  active?: boolean
   package_name?: string; region?: string
 }
 
@@ -37,6 +38,28 @@ const DEP_STATUS: Record<string, { label: string; bg: string; color: string }> =
   available:      { label: 'Available',    bg: '#D1FAE5', color: '#065F46' },
   'fast-filling': { label: 'Fast Filling', bg: '#FEF3C7', color: '#92400E' },
   'sold-out':     { label: 'Sold Out',     bg: '#FEE2E2', color: '#991B1B' },
+}
+
+function Toggle({ checked, disabled, onChange }: { checked: boolean; disabled?: boolean; onChange: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onChange}
+      disabled={disabled}
+      aria-pressed={checked}
+      style={{
+        width: 38, height: 22, borderRadius: 11, border: 'none', padding: 2,
+        background: checked ? 'var(--teal)' : 'var(--rule)', cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.5 : 1, transition: 'background 0.15s', flexShrink: 0,
+      }}
+    >
+      <span style={{
+        display: 'block', width: 18, height: 18, borderRadius: '50%', background: '#fff',
+        transform: checked ? 'translateX(16px)' : 'translateX(0)', transition: 'transform 0.15s',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+      }} />
+    </button>
+  )
 }
 
 type Section = 'agents' | 'bookings' | 'departures'
@@ -62,6 +85,10 @@ export default function AdminPage() {
   const [updatingDep, setUpdatingDep] = useState<string | null>(null)
   const [seeding, setSeeding] = useState(false)
   const [seedMsg, setSeedMsg] = useState('')
+
+  // Package visibility (package_id -> active). Missing = inactive by default.
+  const [packageActive, setPackageActive] = useState<Record<string, boolean>>({})
+  const [updatingPkg, setUpdatingPkg] = useState<string | null>(null)
 
   const [loading, setLoading] = useState(true)
 
@@ -93,10 +120,22 @@ export default function AdminPage() {
     setDepartures(all.sort((a, b) => a.departure_date.localeCompare(b.departure_date)))
   }
 
+  // Fetch package visibility
+  const fetchPackageVisibility = async () => {
+    const res = await fetch('/api/packages/visibility')
+    if (res.ok) {
+      const data = await res.json()
+      const map: Record<string, boolean> = {}
+      for (const id of data.activePackageIds || []) map[id] = true
+      setPackageActive(map)
+    }
+  }
+
   useEffect(() => {
     fetchAgents()
     fetchBookings()
     fetchDepartures()
+    fetchPackageVisibility()
   }, [])
 
   const handleLogout = async () => {
@@ -135,6 +174,46 @@ export default function AdminPage() {
     })
     setDepartures(prev => prev.map(d => d.id === id ? { ...d, status } : d))
     setUpdatingDep(null)
+  }
+
+  const handleDepActive = async (id: string, active: boolean) => {
+    setUpdatingDep(id)
+    try {
+      const res = await fetch(`/api/departures/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setDepartures(prev => prev.map(d => d.id === id ? { ...d, active } : d))
+      } else {
+        alert(data.error || 'Failed to update')
+      }
+    } catch {
+      alert('Network error')
+    }
+    setUpdatingDep(null)
+  }
+
+  const handlePackageActive = async (packageId: string, active: boolean) => {
+    setUpdatingPkg(packageId)
+    try {
+      const res = await fetch(`/api/admin/packages/${packageId}/active`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setPackageActive(prev => ({ ...prev, [packageId]: active }))
+      } else {
+        alert(data.error || 'Failed to update')
+      }
+    } catch {
+      alert('Network error')
+    }
+    setUpdatingPkg(null)
   }
 
   const seedDepartures = async () => {
@@ -423,6 +502,27 @@ export default function AdminPage() {
               </div>
             </div>
             <div style={{ padding: '32px 40px' }}>
+
+              {/* Package visibility */}
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 4 }}>Package Visibility</div>
+                <div style={{ fontSize: 12, color: 'var(--ink-light)', marginBottom: 14 }}>Off = fully hidden from agents (browse, public site, quote builder). A package never toggled on defaults to off.</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 10 }}>
+                  {PACKAGES.map(pkg => {
+                    const active = !!packageActive[pkg.id]
+                    return (
+                      <div key={pkg.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 14px', background: 'white', border: `1px solid ${active ? 'var(--rule)' : '#FECACA'}`, borderRadius: 8 }}>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pkg.name}</div>
+                          <div style={{ fontSize: 10.5, color: active ? 'var(--ink-light)' : '#991B1B', textTransform: 'capitalize', fontWeight: active ? 400 : 700 }}>{pkg.region} · {active ? 'Active' : 'Inactive'}</div>
+                        </div>
+                        <Toggle checked={active} disabled={updatingPkg === pkg.id} onChange={() => handlePackageActive(pkg.id, !active)} />
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
               <div style={{ marginBottom: 20 }}>
                 <input value={depSearch} onChange={e => setDepSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--rule)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: "'DM Sans', sans-serif" }} />
               </div>
@@ -437,7 +537,7 @@ export default function AdminPage() {
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--rule)', background: 'var(--bg)' }}>
-                        {['Package', 'Region', 'Departure Date', 'Booked / Total', 'Status', 'Override'].map(h => (
+                        {['Package', 'Region', 'Departure Date', 'Booked / Total', 'Status', 'Override', 'Active'].map(h => (
                           <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.1em' }}>{h.toUpperCase()}</th>
                         ))}
                       </tr>
@@ -469,6 +569,9 @@ export default function AdminPage() {
                                 <option value="fast-filling">Fast Filling</option>
                                 <option value="sold-out">Sold Out</option>
                               </select>
+                            </td>
+                            <td style={{ padding: '14px 16px' }}>
+                              <Toggle checked={!!d.active} disabled={updatingDep === d.id} onChange={() => handleDepActive(d.id, !d.active)} />
                             </td>
                           </tr>
                         )
