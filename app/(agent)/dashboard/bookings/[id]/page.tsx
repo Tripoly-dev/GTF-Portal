@@ -41,7 +41,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
   const fetchPayments = () => {
     fetch(`/api/bookings/${id}/payments`)
       .then(r => r.json())
-      .then(d => setPayments(d.payments || []))
+      .then(d => { setPayments(d.payments || []); setCurrentUserId(d.currentUserId) })
   }
 
   useEffect(() => {
@@ -50,7 +50,6 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
       .then(d => { setBooking(d.booking); setAgent(d.agent) })
       .finally(() => setLoading(false))
     fetchPayments()
-    fetch('/api/auth/me').then(r => r.json()).then(d => setCurrentUserId(d.agent?.id)).catch(() => {})
   }, [id])
 
   const handleDeletePayment = async (payment: Payment) => {
