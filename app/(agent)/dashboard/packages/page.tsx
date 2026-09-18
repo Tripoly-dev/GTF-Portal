@@ -215,11 +215,19 @@ function PackagesInner() {
   const [travelerTypes, setTravelerTypes] = useState<string[]>([])
   const [themes, setThemes] = useState<string[]>([])
   const [stars, setStars] = useState<number[]>([])
+  const [activePackageIds, setActivePackageIds] = useState<string[] | null>(null)
 
   useEffect(() => {
     const r = searchParams.get('region')
     if (r && r !== 'all') setRegion(r)
   }, [searchParams])
+
+  useEffect(() => {
+    fetch('/api/packages/visibility')
+      .then(r => r.json())
+      .then(d => setActivePackageIds(d.activePackageIds || []))
+      .catch(() => setActivePackageIds([]))
+  }, [])
 
   const toggle = (arr: string[], set: (v: string[]) => void, val: string) =>
     set(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val])
@@ -234,8 +242,9 @@ function PackagesInner() {
   }
 
   // ── FILTER LOGIC ────────────────────────────────────────────────────────────
-  const filtered = PACKAGES.filter(p => {
+  const filtered = (activePackageIds === null ? [] : PACKAGES).filter(p => {
     if (p.tag === 'COMING SOON') return false
+    if (!activePackageIds!.includes(p.id)) return false
     if (region !== 'all' && p.region !== region) return false
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false
     if (travelerTypes.length > 0 && !travelerTypes.some(t => p.travelerTypes.includes(t))) return false
@@ -263,15 +272,15 @@ function PackagesInner() {
   })
 
   // Per-option counts (total packages that would match this filter if added)
-  const countFor = (filterFn: (p: Package) => boolean) =>
-    PACKAGES.filter(p => p.tag !== 'COMING SOON').filter(filterFn).length
+  const visiblePackages = PACKAGES.filter(p => p.tag !== 'COMING SOON' && (activePackageIds?.includes(p.id) ?? false))
+  const countFor = (filterFn: (p: Package) => boolean) => visiblePackages.filter(filterFn).length
 
   const regions = ['all', 'europe', 'africa', 'asia']
   const regionCounts: Record<string, number> = {
-    all:    PACKAGES.filter(p => p.tag !== 'COMING SOON').length,
-    europe: PACKAGES.filter(p => p.region === 'europe' && p.tag !== 'COMING SOON').length,
-    africa: PACKAGES.filter(p => p.region === 'africa' && p.tag !== 'COMING SOON').length,
-    asia:   PACKAGES.filter(p => p.region === 'asia'   && p.tag !== 'COMING SOON').length,
+    all:    visiblePackages.length,
+    europe: visiblePackages.filter(p => p.region === 'europe').length,
+    africa: visiblePackages.filter(p => p.region === 'africa').length,
+    asia:   visiblePackages.filter(p => p.region === 'asia').length,
   }
 
   return (
@@ -420,10 +429,14 @@ function PackagesInner() {
           )}
 
           {/* Package grid */}
-          {filtered.length === 0 ? (
+          {activePackageIds === null ? (
+            <div style={{ padding: '80px 0', textAlign: 'center', fontSize: 14, color: C.inkLight, fontFamily: font }}>
+              Loading packages...
+            </div>
+          ) : filtered.length === 0 ? (
             <div style={{ padding: '80px 0', textAlign: 'center' }}>
               <div style={{ fontSize: 14, color: C.inkLight, marginBottom: 16, fontFamily: font }}>
-                No packages match those filters. Loosen the price band or clear a filter to see the full catalogue of 17.
+                No packages match those filters. Loosen the price band or clear a filter to see the full catalogue.
               </div>
               <button onClick={clearAll} style={{
                 padding: '12px 24px', background: C.ink, color: C.navFg,

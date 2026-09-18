@@ -303,8 +303,9 @@ function FlightsTab({ pkg, selectedDepartureDate }: { pkg: Package; selectedDepa
 }
 
 // ── QUOTE BUILDER PANEL ───────────────────────────────────────────────────────
-function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: (data: any) => void; onDepartureChange: (date: string) => void }) {
-  const [departureDate, setDepartureDate] = useState(pkg.departures.find(d => d.status !== 'sold-out')?.date || '')
+function QuotePanel({ pkg, departures, onSave, onDepartureChange }: { pkg: Package; departures?: DepartureSlot[]; onSave: (data: any) => void; onDepartureChange: (date: string) => void }) {
+  const departureSlots = departures ?? pkg.departures
+  const [departureDate, setDepartureDate] = useState(departureSlots.find(d => d.status !== 'sold-out')?.date || '')
   const [adults, setAdults] = useState(2)
   const [roomType, setRoomType] = useState<'double' | 'single' | 'triple'>('double')
   const [childrenWithBed, setChildrenWithBed] = useState(0)
@@ -315,7 +316,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
   const cur = pkg.currency
   const f = (n: number) => fmtCurrency(n, cur)
 
-  const byMonth = pkg.departures.reduce<Record<string, DepartureSlot[]>>((acc, d) => {
+  const byMonth = departureSlots.reduce<Record<string, DepartureSlot[]>>((acc, d) => {
     const m = d.date.slice(0, 7)
     if (!acc[m]) acc[m] = []
     acc[m].push(d)
@@ -325,6 +326,12 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
   const [activeMonth, setActiveMonth] = useState('')
   useEffect(() => { if (monthKeys.length) setActiveMonth(monthKeys[0]) }, [pkg.id])
   useEffect(() => { onDepartureChange(departureDate) }, [departureDate])
+  // departures load async (live availability), so pick a default once they arrive
+  useEffect(() => {
+    if (departureSlots.length && !departureDate) {
+      setDepartureDate(departureSlots.find(d => d.status !== 'sold-out')?.date || departureSlots[0].date)
+    }
+  }, [departureSlots])
 
   const roomSupplement = roomType === 'single'
     ? (pkg.singlePrice ? pkg.singlePrice - pkg.basePrice : pkg.singleSupplement)
@@ -338,7 +345,7 @@ function QuotePanel({ pkg, onSave, onDepartureChange }: { pkg: Package; onSave: 
   const tacTotal = pkg.tacAdult * adults + pkg.tacChild * (childrenWithBed + childrenWithoutBed)
 
   const toggleAddOn = (id: string) => setSelectedAddOns(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id])
-  const selectedDep = pkg.departures.find(d => d.date === departureDate)
+  const selectedDep = departureSlots.find(d => d.date === departureDate)
   const hasChildren = pkg.hasPrice && (pkg.childWithBedPrice !== undefined || pkg.childWithoutBedPrice !== undefined)
   const totalPax = adults + childrenWithBed + childrenWithoutBed
 
@@ -965,10 +972,36 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
   const [savedQuoteMeta, setSavedQuoteMeta] = useState<{ tripName: string; departureDate: string; adults: number; totalPrice: string } | null>(null)
   const [activeTab, setActiveTab] = useState<string>('overview')
   const [selectedDepartureDate, setSelectedDepartureDate] = useState(pkg?.departures.find(d => d.status !== 'sold-out')?.date || '')
+  const [liveDepartures, setLiveDepartures] = useState<DepartureSlot[] | null>(null)
+  const [packageActive, setPackageActive] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    if (!pkg) return
+    fetch(`/api/departures/${pkg.id}`)
+      .then(r => r.json())
+      .then(d => {
+        const active = (d.departures || []).filter((dep: any) => dep.active)
+        setLiveDepartures(active.map((dep: any) => ({ date: dep.departure_date, status: dep.status })))
+      })
+      .catch(() => setLiveDepartures([]))
+    fetch('/api/packages/visibility')
+      .then(r => r.json())
+      .then(d => setPackageActive((d.activePackageIds || []).includes(pkg.id)))
+      .catch(() => setPackageActive(false))
+  }, [pkg?.id])
 
   if (!pkg) return (
     <div style={{ padding: 40, textAlign: 'center' }}>
       <p>Package not found. <Link href="/dashboard/packages" style={{ color: 'var(--teal)' }}>Back to packages</Link></p>
+    </div>
+  )
+
+  if (packageActive === false) return (
+    <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '40px 24px', textAlign: 'center' }}>
+      <div style={{ fontSize: 32 }}>🚫</div>
+      <h2 className="font-tight" style={{ fontSize: 20, fontWeight: 700, color: 'var(--ink)' }}>This package is currently unavailable</h2>
+      <p style={{ color: 'var(--ink-light)', fontSize: 14, maxWidth: 360 }}>It&apos;s been temporarily taken off sale. Check back later or browse other packages.</p>
+      <Link href="/dashboard/packages" className="btn-teal">BROWSE PACKAGES</Link>
     </div>
   )
 
@@ -1286,7 +1319,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
           </div>
 
           {/* Right — Quote panel */}
-          <QuotePanel pkg={pkg} onSave={handleSave} onDepartureChange={setSelectedDepartureDate} />
+          <QuotePanel pkg={pkg} departures={liveDepartures ?? []} onSave={handleSave} onDepartureChange={setSelectedDepartureDate} />
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Package } from '@/data/packages'
 
@@ -11,7 +12,17 @@ type Region = {
 }
 
 export default function DeparturePage({ region }: { region: Region }) {
-  const hasPackages = region.packages.length > 0
+  const [activePackageIds, setActivePackageIds] = useState<string[] | null>(null)
+
+  useEffect(() => {
+    fetch('/api/packages/visibility')
+      .then(r => r.json())
+      .then(d => setActivePackageIds(d.activePackageIds || []))
+      .catch(() => setActivePackageIds([]))
+  }, [])
+
+  const visiblePackages = activePackageIds === null ? [] : region.packages.filter(p => activePackageIds.includes(p.id))
+  const hasPackages = visiblePackages.length > 0
 
   return (
     <div style={{ background: 'var(--bg)' }}>
@@ -51,12 +62,14 @@ export default function DeparturePage({ region }: { region: Region }) {
       {/* Content */}
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '64px 56px' }}>
 
-        {hasPackages ? (
+        {activePackageIds === null ? (
+          <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--ink-light)', fontSize: 14 }}>Loading packages...</div>
+        ) : hasPackages ? (
           <>
             <div style={{ marginBottom: 40, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <h2 className="font-tight" style={{ fontSize: 28, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.02em' }}>
-                  {region.packages.length} Packages Available
+                  {visiblePackages.length} Packages Available
                 </h2>
                 <p style={{ fontSize: 14, color: 'var(--ink-light)', marginTop: 4 }}>
                   Click "View Itinerary" to download the full PDF brochure
@@ -69,7 +82,7 @@ export default function DeparturePage({ region }: { region: Region }) {
 
             {/* Package grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
-              {region.packages.map((pkg) => (
+              {visiblePackages.map((pkg) => (
                 <div key={pkg.id} className="pkg-card" style={{
                   background: 'white', border: '1px solid var(--rule)', overflow: 'hidden',
                 }}>

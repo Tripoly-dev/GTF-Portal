@@ -392,8 +392,17 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
   const [showMarkup, setShowMarkup] = useState(false)
   const [showBooking, setShowBooking] = useState(false)
   const [markingAsSent, setMarkingAsSent] = useState(false)
+  const [activePackageIds, setActivePackageIds] = useState<string[] | null>(null)
 
   const pkg = quote ? PACKAGES.find(p => p.id === quote.package_id) || null : null
+  const packageInactive = activePackageIds !== null && quote && !activePackageIds.includes(quote.package_id)
+
+  useEffect(() => {
+    fetch('/api/packages/visibility')
+      .then(r => r.json())
+      .then(d => setActivePackageIds(d.activePackageIds || []))
+      .catch(() => setActivePackageIds([]))
+  }, [])
 
   useEffect(() => {
     fetch(`/api/quotes/${id}`)
@@ -695,10 +704,16 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               </button>
             )}
 
-            {quote.status === 'sent' && (
+            {quote.status === 'sent' && !packageInactive && (
               <button onClick={() => setShowBooking(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#9e2233', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.02em' }}>
                 🎫 Convert to Booking
               </button>
+            )}
+
+            {quote.status === 'sent' && packageInactive && (
+              <div style={{ padding: '12px 16px', background: '#FEF2F0', border: '1px solid #fbe0db', borderRadius: 8, fontSize: 12, color: '#9e2233', fontWeight: 600, lineHeight: 1.5 }}>
+                This package is currently unavailable, so this proposal can&apos;t be converted to a booking right now.
+              </div>
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
