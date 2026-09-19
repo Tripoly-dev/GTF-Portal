@@ -1,3 +1,4 @@
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 export const metadata = { title: 'Adhoc & White Label Solutions — GTF Holidays' }
 
 const WHATSAPP = 'https://wa.me/918928872400'
@@ -116,7 +117,7 @@ export default function AdhocWhiteLabelPage() {
           <h2 className="font-tight" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 24 }}>
             Ready to build <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>together?</span>
           </h2>
-          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal">CHAT WITH OUR TEAM ON WHATSAPP →</a>
+          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal"><WhatsAppIcon size={16} color="#fff" /> CHAT WITH OUR TEAM ON WHATSAPP →</a>
         </div>
       </div>
     </div>

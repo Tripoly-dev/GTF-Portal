@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES, Package, DepartureSlot } from '@/data/packages'
 import { todayISO } from '@/lib/date'
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 
 // ── CURRENCY HELPERS ─────────────────────────────────────────────────────────
 const fmtCurrency = (n: number, currency: string) => {
@@ -1098,7 +1099,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
               window.open(`https://wa.me/?text=${msg}`, '_blank')
             }}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '14px 24px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', border: 'none', cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
-            💬 SHARE VIA WHATSAPP
+            <WhatsAppIcon size={18} color="#fff" /> SHARE VIA WHATSAPP
           </button>
           {/* Go to quotes */}
           <button

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 import { FAQS } from '@/data/packages'
 
 export default function FAQPage() {
@@ -84,7 +85,7 @@ export default function FAQPage() {
             <p style={{ fontSize: 14, color: 'var(--ink-light)', fontWeight: 300 }}>Our team is available to walk you through our products and help you get started.</p>
           </div>
           <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
-            <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" className="btn-teal" style={{ whiteSpace: 'nowrap' }}>WhatsApp Us</a>
+            <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" className="btn-teal" style={{ whiteSpace: 'nowrap' }}><WhatsAppIcon size={16} color="#fff" /> WhatsApp Us</a>
             <a href="mailto:sales@gtfholidays.com" className="btn-outline" style={{ whiteSpace: 'nowrap' }}>Email Us</a>
           </div>
         </div>

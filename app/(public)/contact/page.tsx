@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', agency: '', email: '', mobile: '', message: '' })
@@ -59,7 +60,7 @@ export default function ContactPage() {
               <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', marginBottom: 16 }}>Quick Actions</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, color: 'var(--teal)', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  📱 WhatsApp us directly
+                  <WhatsAppIcon size={18} /> WhatsApp us directly
                 </a>
                 <Link href="/register" style={{ fontSize: 14, color: 'var(--teal)', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
                   ✓ Register as B2B partner

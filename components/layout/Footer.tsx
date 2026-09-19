@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import FooterAffiliations from './FooterAffiliations'
+import SocialLinks from '@/components/icons/SocialLinks'
 
 export default function Footer() {
   return (
@@ -21,11 +22,7 @@ export default function Footer() {
               <div>sales@gtfholidays.com</div>
               <div>fit@gtfholidays.com</div>
             </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-              {['in', 'ig', 'wa'].map(s => (
-                <div key={s} style={{ width: 32, height: 32, border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, cursor: 'pointer' }}>{s}</div>
-              ))}
-            </div>
+            <div style={{ marginTop: 20 }}><SocialLinks size={38} /></div>
           </div>
 
           {/* Departures */}

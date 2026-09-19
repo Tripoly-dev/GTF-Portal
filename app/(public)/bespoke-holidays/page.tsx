@@ -1,3 +1,4 @@
+import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 export const metadata = { title: 'Bespoke Holidays — GTF Holidays' }
 
 const WHATSAPP = 'https://wa.me/918928872400'
@@ -136,7 +137,7 @@ export default function BespokeHolidaysPage() {
           <h2 className="font-tight" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 24 }}>
             Let&apos;s design something <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>unforgettable.</span>
           </h2>
-          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal">CHAT WITH OUR TEAM ON WHATSAPP →</a>
+          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal"><WhatsAppIcon size={16} color="#fff" /> CHAT WITH OUR TEAM ON WHATSAPP →</a>
         </div>
       </div>
     </div>

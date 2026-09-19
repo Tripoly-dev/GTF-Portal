@@ -1,4 +1,5 @@
 import LogoWall from '@/components/ui/LogoWall'
+import SocialLinks from '@/components/icons/SocialLinks'
 import { AFFILIATION_LOGOS, CERTIFICATION_LOGOS } from '@/data/logos'
 
 export const metadata = { title: 'About Us — GTF Holidays (Global Travel Fusion)' }
@@ -150,12 +151,7 @@ export default function AboutPage() {
                 <div key={c} style={{ fontSize: 14, color: 'var(--ink-mid)', fontWeight: c.includes('@') ? 400 : 500 }}>{c}</div>
               ))}
             </div>
-            <div style={{ marginTop: 20, display: 'flex', gap: 10 }}>
-              <a href="https://www.instagram.com/gtf_holidays/" target="_blank" rel="noopener noreferrer"
-                style={{ padding: '7px 14px', background: 'var(--ink)', color: '#fff', fontSize: 11, fontWeight: 700, textDecoration: 'none', letterSpacing: '0.06em' }}>INSTAGRAM</a>
-              <a href="https://linkedin.com/company/global-travel-fusion-gtf-holidays" target="_blank" rel="noopener noreferrer"
-                style={{ padding: '7px 14px', background: 'var(--teal)', color: '#fff', fontSize: 11, fontWeight: 700, textDecoration: 'none', letterSpacing: '0.06em' }}>LINKEDIN</a>
-            </div>
+            <div style={{ marginTop: 20 }}><SocialLinks size={44} /></div>
           </div>
         </div>
       </div>
