@@ -4,17 +4,17 @@ export default function LogoWall({ logos, caption = false, height = 44 }: { logo
   return (
     <>
       <style>{`
-        .logo-tile img { filter: grayscale(1); opacity: 0.85; transition: filter 0.25s ease, opacity 0.25s ease; }
-        .logo-tile:hover img { filter: none; opacity: 1; }
+        .logo-tile { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .logo-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
       `}</style>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
         {logos.map(l => (
           <div key={l.name} className="logo-tile" title={l.name} style={{
-            background: '#fff', borderRadius: 8, padding: '8px 12px', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 4, minWidth: 92,
+            background: '#fff', borderRadius: 10, padding: '14px 20px', display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 6, minWidth: 130,
           }}>
-            <img src={l.url} alt={l.name} loading="lazy" style={{ height, width: 'auto', maxWidth: 130, objectFit: 'contain', display: 'block' }} />
-            {caption && <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', color: '#4b5563', textTransform: 'uppercase' }}>{l.name}</span>}
+            <img src={l.url} alt={l.name} loading="lazy" style={{ height, width: 'auto', maxWidth: 200, objectFit: 'contain', display: 'block' }} />
+            {caption && <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: '#4b5563', textTransform: 'uppercase' }}>{l.name}</span>}
           </div>
         ))}
       </div>

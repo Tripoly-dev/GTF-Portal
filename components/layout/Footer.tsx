@@ -69,7 +69,7 @@ export default function Footer() {
         {/* Affiliations */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28, marginBottom: 28 }}>
           <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: 16, fontWeight: 600 }}>MEMBERSHIPS &amp; AFFILIATIONS</div>
-          <LogoWall logos={AFFILIATION_LOGOS} height={36} />
+          <LogoWall logos={AFFILIATION_LOGOS} height={64} />
         </div>
 
         {/* Bottom bar */}

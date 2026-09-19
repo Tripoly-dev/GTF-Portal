@@ -115,11 +115,11 @@ export default function AboutPage() {
         <div style={{ marginBottom: 80 }}>
           <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 24 }}>MEMBERSHIPS &amp; AFFILIATIONS</div>
           <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28, marginBottom: 40 }}>
-            <LogoWall logos={AFFILIATION_LOGOS} height={52} />
+            <LogoWall logos={AFFILIATION_LOGOS} height={84} />
           </div>
           <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 24 }}>DESTINATION CERTIFICATIONS</div>
           <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28 }}>
-            <LogoWall logos={CERTIFICATION_LOGOS} height={64} caption />
+            <LogoWall logos={CERTIFICATION_LOGOS} height={100} caption />
           </div>
         </div>
 
