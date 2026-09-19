@@ -17,7 +17,7 @@ import { createClient } from '@supabase/supabase-js'
 
 const SOURCE_ROOT = 'C:\\GTF Portal Internal\\Website Material\\Website Material\\EUROPE WINTER HOLIDAYS 2026'
 
-// Only the 6 packages with confirmed image sets and confirmed departure dates.
+// Packages with local image sets. Use --only="<BUCKET NAME>" to upload just one.
 const PACKAGES = [
   { localDir: 'EUROPE FOR ALL FAMILY/EUROPE FOR ALL', bucketName: 'EUROPE FOR ALL', hotelsDirName: 'HOTEL LIST' },
   { localDir: 'EUROPE FOR ALL FAMILY/EUROPEAN DHAMAKA', bucketName: 'EUROPEAN DHAMAKA', hotelsDirName: 'HOTEL LIST' },
@@ -25,6 +25,7 @@ const PACKAGES = [
   { localDir: 'GRAND EUROPE FAMILY/GRAND EUROPE', bucketName: 'GRAND EUROPE', hotelsDirName: 'HOTELS' },
   { localDir: 'GRAND EUROPE FAMILY/GEMS OF EUROPE', bucketName: 'GEMS OF EUROPE', hotelsDirName: 'HOTELS' },
   { localDir: 'GRAND EUROPE FAMILY/ESSENCE OF EUROPE', bucketName: 'ESSENCE OF EUROPE', hotelsDirName: 'HOTELS' },
+  { localDir: 'PARIS & AMSTERDAM ESCAPE YOUTH SPECIAL', bucketName: 'PARIS & AMSTERDAM ESCAPE', hotelsDirName: 'YOUTH SPECIAL' },
 ]
 
 const BUCKET = 'gtf-images'
@@ -35,6 +36,7 @@ const CONTENT_TYPES = {
 }
 
 const DO_UPLOAD = process.argv.includes('--upload')
+const ONLY = (process.argv.find(a => a.startsWith('--only=')) || '').slice(7)
 
 function listImageFiles(dir) {
   if (!fs.existsSync(dir)) return []
@@ -60,7 +62,7 @@ function walkImages(dir) {
 function buildManifest() {
   const manifest = []
 
-  for (const pkg of PACKAGES) {
+  for (const pkg of PACKAGES.filter(p => !ONLY || p.bucketName === ONLY)) {
     const pkgRoot = path.join(SOURCE_ROOT, pkg.localDir)
     if (!fs.existsSync(pkgRoot)) {
       console.warn(`Missing local folder for ${pkg.bucketName}: ${pkgRoot}`)

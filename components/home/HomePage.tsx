@@ -137,7 +137,7 @@ function Hero() {
         }}>
           {[
             { n: '3', l: 'CONTINENTS' },
-            { n: '17', l: 'ACTIVE PACKAGES' },
+            { n: '16', l: 'ACTIVE PACKAGES' },
             { n: '100%', l: 'B2B ONLY' },
             { n: 'Global', l: 'OPS SUPPORT' },
           ].map((s, i) => (
@@ -297,7 +297,7 @@ function DestinationMarquee() {
 function ProductStream() {
   const [active, setActive] = useState(0)
   const products = [
-    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '10', price: '₹78,000', next: '18 SEP', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['Grand Europe — 12N', 'East European Delights — 7N', 'Paris & Amsterdam Escape — 5N'] },
+    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '9', price: '', next: '02 OCT', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['Grand Europe — 12N', 'East European Delights — 7N', 'Paris & Amsterdam Escape — 5N'] },
     { name: 'Africa', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,99,999', next: '09 OCT', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/SOUTH%20AFRICAN%20SPLENDOUR/SOUTH%20AFRICAN%20SPLENDOUR-0.jpg', href: '/departures/africa', popular: ['South African Splendour — 9N', 'Mystical Egypt — 8N'] },
     { name: 'Asia', category: 'GROUP DEPARTURES', packages: '5', price: '₹1,39,999', next: '20 SEP', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/JAPAN%20AUTOMN%20DISCOVERY/JAPAN%20AUTOMN%20DISCOVERY-0.png', href: '/departures/asia', popular: ['Japan Autumn Discovery — 8N', 'Grand Türkiye — 10N', 'Vietnam Escapes — 8N'] },
   ]
@@ -320,7 +320,7 @@ function ProductStream() {
                 <span style={{ position: 'absolute', top: 16, left: 16, padding: '5px 9px', borderRadius: 999, background: 'rgba(3,10,16,.58)', border: '1px solid rgba(255,255,255,.22)', fontSize: 9, fontWeight: 700, letterSpacing: '.08em' }}>{p.category}</span>
                 <div>
                   <div className="font-tight" style={{ fontSize: 27, fontWeight: 800, marginBottom: 8 }}>{p.name}</div>
-                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 12, fontWeight: 700, color: 'rgba(255,253,248,.9)' }}><span>{p.packages} DEPARTURES</span><span style={{ color: '#79D8C5' }}>FROM {p.price}</span></div>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 12, fontWeight: 700, color: 'rgba(255,253,248,.9)' }}><span>{p.packages} DEPARTURES</span>{p.price && <span style={{ color: '#79D8C5' }}>FROM {p.price}</span>}</div>
                   <div style={{ marginTop: 7, fontSize: 11.5, color: 'rgba(255,255,255,.7)', fontWeight: 600 }}>NEXT: {p.next}</div>
                   {expanded && <div style={{ marginTop: 14, paddingTop: 13, borderTop: '1px solid rgba(255,255,255,.26)' }}><div style={{ fontSize: 10, letterSpacing: '.1em', fontWeight: 700, color: 'rgba(255,255,255,.62)', marginBottom: 8 }}>POPULAR DEPARTURES</div>{p.popular.map(item => <div key={item} style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>{item}</div>)}<div style={{ marginTop: 12, fontSize: 12, fontWeight: 700 }}>VIEW PRODUCTS →</div></div>}
                 </div>
