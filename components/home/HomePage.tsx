@@ -297,7 +297,7 @@ function DestinationMarquee() {
 function ProductStream() {
   const [active, setActive] = useState(0)
   const products = [
-    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '9', price: '', next: '02 OCT', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['Grand Europe — 12N', 'East European Delights — 7N', 'Paris & Amsterdam Escape — 5N'] },
+    { name: 'Europe', category: 'GROUP DEPARTURES', packages: '9', price: '€1,149', next: '02 OCT', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85', href: '/departures/europe', popular: ['Grand Europe — 12N', 'East European Delights — 7N', 'Paris & Amsterdam Escape — 5N'] },
     { name: 'Africa', category: 'GROUP DEPARTURES', packages: '2', price: '₹1,99,999', next: '09 OCT', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/SOUTH%20AFRICAN%20SPLENDOUR/SOUTH%20AFRICAN%20SPLENDOUR-0.jpg', href: '/departures/africa', popular: ['South African Splendour — 9N', 'Mystical Egypt — 8N'] },
     { name: 'Asia', category: 'GROUP DEPARTURES', packages: '5', price: '₹1,39,999', next: '20 SEP', image: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/JAPAN%20AUTOMN%20DISCOVERY/JAPAN%20AUTOMN%20DISCOVERY-0.png', href: '/departures/asia', popular: ['Japan Autumn Discovery — 8N', 'Grand Türkiye — 10N', 'Vietnam Escapes — 8N'] },
   ]
