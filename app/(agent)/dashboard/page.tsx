@@ -242,7 +242,7 @@ export default function DashboardPage() {
   }, [])
 
   const regions = [
-    { key: 'europe', name: 'Europe', count: 10, href: '/dashboard/packages?region=europe', img: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1200&q=90' },
+    { key: 'europe', name: 'Europe', count: 9,  href: '/dashboard/packages?region=europe', img: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1200&q=90' },
     { key: 'africa', name: 'Africa', count: 2,  href: '/dashboard/packages?region=africa', img: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/SOUTH%20AFRICAN%20SPLENDOUR/SOUTH%20AFRICAN%20SPLENDOUR-0.jpg' },
     { key: 'asia',   name: 'Asia',   count: 5,  href: '/dashboard/packages?region=asia',   img: 'https://mvmlwrstcpsupmekqbkm.supabase.co/storage/v1/object/public/gtf-images/packages/JAPAN%20AUTOMN%20DISCOVERY/JAPAN%20AUTOMN%20DISCOVERY-0.png' },
   ]

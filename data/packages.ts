@@ -112,8 +112,29 @@ const EU_H_GRAND = ['Ascend to the top level of the iconic Eiffel Tower for pano
 const EU_H_ALPS = ['Jungfraujoch — Top of Europe at 11,333 feet by Eiger Express & cogwheel train','Mt. Titlis at 3,020m via the world\'s first revolving Rotair cable car','Walk the Titlis Cliff Walk — Europe\'s highest suspension bridge','Gondola ride through Venice\'s enchanting canals','Witness the Leaning Tower of Pisa at the Square of Miracles','Panoramic views of Florence from Piazzale Michelangelo','Guided city tour of Rome — Colosseum, Trevi Fountain & Vatican','City Train Ride in Vaduz, capital of Liechtenstein','Swarovski Crystal Museum at Wattens']
 
 // ── INCLUSIONS / EXCLUSIONS CONSTANTS ────────────────────────────────────────
-const EU_INCL: string[] = []
-const EU_EXCL: string[] = []
+const EU_INCL: string[] = [
+  'Hotel accommodation in standard room categories on twin/double/triple sharing, with daily continental breakfast',
+  'Indian Jain, Vegetarian and Non-Vegetarian lunches and dinners as per the itinerary (international cuisine on a few occasions)',
+  'All transfers, sightseeing and excursions by deluxe air-conditioned coach as per the itinerary',
+  'Guided sightseeing and entrance fees to the attractions specified in the itinerary',
+  'Services of a professional Tour Manager travelling with the group, supported by local guides and drivers at key destinations',
+  'Complimentary group airport transfers: arrival at 2:00 PM and departure at 10:00 AM as per the group schedule',
+  'All applicable overseas service charges and local taxes (unless otherwise stated)',
+]
+const EU_EXCL: string[] = [
+  'Airfare, visa fees and overseas travel insurance',
+  'GST and TCS as applicable',
+  'Early check-in or late check-out at hotels',
+  'POE (Protector of Emigrants) charges, passport issuance and renewal fees',
+  'Any increase in taxes, fuel surcharges or foreign exchange rates at the time of final confirmation',
+  'Personal expenses such as laundry, telephone calls, minibar, beverages, room service, or meals not specified in the itinerary',
+  'Cost of optional or suggested excursions, additional entrance fees, or local guides not mentioned in the itinerary',
+  'Private transfers or deviations from the fixed group itinerary',
+  'Porterage at airports and hotels, and city taxes',
+  'Medical tests, including RT-PCR or similar requirements (if applicable)',
+  'Additional expenses arising due to flight delays, cancellations, weather conditions or other unforeseen circumstances',
+  'Anything not explicitly mentioned under Inclusions',
+]
 
 const AF_SA_INCL = [
   'Economy Class Return International Airfare Ex. Mumbai',

@@ -1123,7 +1123,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
     },
   ]
 
-  const hasInclusionsTab = pkg.region !== 'europe' && pkg.inclusions.length > 0
+  const hasInclusionsTab = pkg.inclusions.length > 0
   const TABS = [
     { id: 'overview', label: 'OVERVIEW' },
     { id: 'itinerary', label: 'ITINERARY' },
