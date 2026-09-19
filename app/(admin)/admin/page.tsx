@@ -9,6 +9,8 @@ type Agent = {
   mobile: string; email: string; iata_number: string | null
   how_did_you_hear: string | null; status: 'pending' | 'approved' | 'rejected' | 'suspended'
   created_at: string
+  agency_address?: string | null; whatsapp_number?: string | null
+  agency_website?: string | null; logo_url?: string | null
 }
 
 type Booking = {
@@ -64,6 +66,49 @@ function Toggle({ checked, disabled, onChange }: { checked: boolean; disabled?: 
 
 type Section = 'agents' | 'bookings' | 'departures'
 
+function AgentDetailModal({ agent, onClose }: { agent: Agent; onClose: () => void }) {
+  const site = agent.agency_website
+  const rows: [string, React.ReactNode][] = [
+    ['Full name', agent.full_name],
+    ['Agency', agent.agency_name],
+    ['Agency address', agent.agency_address || '—'],
+    ['City', agent.city],
+    ['Mobile', agent.mobile],
+    ['WhatsApp', agent.whatsapp_number || '—'],
+    ['Email', agent.email],
+    ['Website', site
+      ? <a href={/^https?:\/\//i.test(site) ? site : `https://${site}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>{site}</a>
+      : '—'],
+    ['IATA / TAFI no.', agent.iata_number || '—'],
+    ['Heard about us via', agent.how_did_you_hear || '—'],
+    ['Status', agent.status.toUpperCase()],
+    ['Applied on', fmtDate(agent.created_at)],
+  ]
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.6)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: 'white', width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', border: '1px solid var(--rule)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid var(--rule)' }}>
+          <div className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>Agent details</div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--ink-light)' }}>×</button>
+        </div>
+        <div style={{ padding: 24 }}>
+          {agent.logo_url && (
+            <div style={{ marginBottom: 20, padding: 16, border: '1px solid var(--rule)', background: 'var(--bg)', textAlign: 'center' }}>
+              <img src={agent.logo_url} alt={`${agent.agency_name} logo`} style={{ maxHeight: 70, maxWidth: '100%', objectFit: 'contain' }} />
+            </div>
+          )}
+          {rows.map(([k, v]) => (
+            <div key={k} style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: 12, padding: '9px 0', borderBottom: '1px solid var(--rule)', fontSize: 13 }}>
+              <div style={{ color: 'var(--ink-light)', fontWeight: 600, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', paddingTop: 2 }}>{k}</div>
+              <div style={{ color: 'var(--ink)', wordBreak: 'break-word' }}>{v}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AdminPage() {
   const router = useRouter()
   const [section, setSection] = useState<Section>('agents')
@@ -73,6 +118,7 @@ export default function AdminPage() {
   const [agentFilter, setAgentFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending')
   const [agentSearch, setAgentSearch] = useState('')
   const [updatingAgent, setUpdatingAgent] = useState<string | null>(null)
+  const [viewAgent, setViewAgent] = useState<Agent | null>(null)
 
   // Bookings
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -299,6 +345,8 @@ export default function AdminPage() {
       {/* Main content */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
 
+        {viewAgent && <AgentDetailModal agent={viewAgent} onClose={() => setViewAgent(null)} />}
+
         {/* ── AGENTS SECTION ── */}
         {section === 'agents' && (
           <>
@@ -358,9 +406,9 @@ export default function AdminPage() {
                   {filteredAgents.map((agent, i) => (
                     <div key={agent.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px 120px 140px 180px', padding: '16px 20px', borderBottom: i < filteredAgents.length - 1 ? '1px solid var(--rule)' : 'none', gap: 16, alignItems: 'center', background: agent.status === 'pending' ? '#FFFBF5' : 'white' }}>
                       <div>
-                        <div className="font-tight" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', marginBottom: 3 }}>{agent.full_name}</div>
+                        <button onClick={() => setViewAgent(agent)} className="font-tight" title="View full details" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', marginBottom: 3, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'var(--rule)', textUnderlineOffset: 3 }}>{agent.full_name}</button>
                         <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{agent.agency_name}</div>
-                        {agent.how_did_you_hear && <div style={{ fontSize: 10, color: 'var(--teal)', marginTop: 3 }}>via {agent.how_did_you_hear}</div>}
+                        <button onClick={() => setViewAgent(agent)} style={{ display: 'block', marginTop: 4, fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--teal)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>VIEW DETAILS →</button>
                       </div>
                       <div>
                         <div style={{ fontSize: 13, color: 'var(--ink-mid)', marginBottom: 2 }}>{agent.email}</div>

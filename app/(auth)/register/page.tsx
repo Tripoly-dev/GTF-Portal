@@ -34,6 +34,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    if (!logoFile) { setError('Please upload your agency logo'); return }
     if (form.password !== form.confirmPassword) { setError('Passwords do not match'); return }
     if (form.password.length < 8) { setError('Password must be at least 8 characters'); return }
     setLoading(true)
@@ -60,7 +61,7 @@ export default function RegisterPage() {
           password: form.password, iata_number: form.iata_number,
           how_did_you_hear: form.how_did_you_hear,
           agency_address: form.agency_address,
-          whatsapp_number: form.whatsapp_number || form.mobile,
+          whatsapp_number: form.whatsapp_number,
           agency_website: form.agency_website,
           logo_url,
         }),
@@ -160,8 +161,8 @@ export default function RegisterPage() {
                 <input className="input-field" required placeholder="Your travel agency name" value={form.agency_name} onChange={set('agency_name')} />
               </div>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>AGENCY ADDRESS</label>
-                <textarea className="input-field" rows={2} placeholder="Full office address" value={form.agency_address} onChange={set('agency_address')} style={{ resize: 'none' }} />
+                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>AGENCY ADDRESS *</label>
+                <textarea className="input-field" required rows={2} placeholder="Full office address" value={form.agency_address} onChange={set('agency_address')} style={{ resize: 'none' }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
@@ -175,8 +176,8 @@ export default function RegisterPage() {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>WHATSAPP NUMBER</label>
-                  <input className="input-field" placeholder="If different from mobile" value={form.whatsapp_number} onChange={set('whatsapp_number')} />
+                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>WHATSAPP NUMBER *</label>
+                  <input className="input-field" required placeholder="+91 98765 43210" value={form.whatsapp_number} onChange={set('whatsapp_number')} />
                 </div>
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>AGENCY WEBSITE</label>
@@ -188,8 +189,8 @@ export default function RegisterPage() {
                 <input className="input-field" placeholder="Your IATA or TAFI number if applicable" value={form.iata_number} onChange={set('iata_number')} />
               </div>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>HOW DID YOU HEAR ABOUT US?</label>
-                <select className="input-field" value={form.how_did_you_hear} onChange={set('how_did_you_hear')}>
+                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>HOW DID YOU HEAR ABOUT US? *</label>
+                <select className="input-field" required value={form.how_did_you_hear} onChange={set('how_did_you_hear')}>
                   <option value="">Select an option</option>
                   <option>Travel Exhibition (IITM / TTF / TAAI)</option>
                   <option>Referred by another agent</option>
@@ -203,7 +204,7 @@ export default function RegisterPage() {
               {/* Agency Logo Upload */}
               <div>
                 <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>
-                  AGENCY LOGO <span style={{ color: 'var(--ink-light)', fontWeight: 400 }}>(PNG/JPG, max 500KB — appears on client proposals)</span>
+                  AGENCY LOGO * <span style={{ color: 'var(--ink-light)', fontWeight: 400 }}>(PNG/JPG, max 500KB — appears on client proposals)</span>
                 </label>
                 <div style={{ border: '2px dashed var(--rule)', padding: '20px', textAlign: 'center', background: '#fff', cursor: 'pointer', position: 'relative' }}
                   onClick={() => document.getElementById('logo-input')?.click()}>

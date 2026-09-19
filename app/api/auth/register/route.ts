@@ -11,7 +11,8 @@ export async function POST(req: NextRequest) {
       agency_address, whatsapp_number, agency_website, logo_url,
     } = body
 
-    if (!full_name || !agency_name || !city || !mobile || !email || !password) {
+    if (!full_name || !agency_name || !city || !mobile || !email || !password ||
+      !agency_address?.trim() || !whatsapp_number?.trim() || !how_did_you_hear || !logo_url) {
       return NextResponse.json({ error: 'All required fields must be filled' }, { status: 400 })
     }
 
@@ -32,11 +33,11 @@ export async function POST(req: NextRequest) {
       email: email.toLowerCase().trim(),
       password_hash,
       iata_number: iata_number?.trim() || null,
-      how_did_you_hear: how_did_you_hear || null,
-      agency_address: agency_address?.trim() || null,
-      whatsapp_number: whatsapp_number?.trim() || mobile.trim(),
+      how_did_you_hear,
+      agency_address: agency_address.trim(),
+      whatsapp_number: whatsapp_number.trim(),
       agency_website: agency_website?.trim() || null,
-      logo_url: logo_url || null,
+      logo_url,
       status: 'pending',
     })
 

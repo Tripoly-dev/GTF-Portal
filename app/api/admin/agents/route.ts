@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
     const { data, error } = await supabase
       .from('agents')
-      .select('id, full_name, agency_name, city, mobile, email, iata_number, how_did_you_hear, status, created_at')
+      .select('id, full_name, agency_name, agency_address, city, mobile, whatsapp_number, email, agency_website, iata_number, how_did_you_hear, logo_url, status, created_at')
       .order('created_at', { ascending: false })
 
     if (error) return NextResponse.json({ error: 'Failed to fetch agents' }, { status: 500 })
