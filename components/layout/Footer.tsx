@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import LogoWall from '@/components/ui/LogoWall'
-import { AFFILIATION_LOGOS } from '@/data/logos'
+import FooterAffiliations from './FooterAffiliations'
 
 export default function Footer() {
   return (
@@ -66,11 +65,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Affiliations */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28, marginBottom: 28 }}>
-          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: 16, fontWeight: 600 }}>MEMBERSHIPS &amp; AFFILIATIONS</div>
-          <LogoWall logos={AFFILIATION_LOGOS} height={64} />
-        </div>
+        <FooterAffiliations />
 
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
