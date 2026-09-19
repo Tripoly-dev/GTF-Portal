@@ -66,16 +66,73 @@ function Toggle({ checked, disabled, onChange }: { checked: boolean; disabled?: 
 
 type Section = 'agents' | 'bookings' | 'departures'
 
-function AgentDetailModal({ agent, onClose }: { agent: Agent; onClose: () => void }) {
+const HEARD_OPTIONS = ['Travel Exhibition (IITM / TTF / TAAI)', 'Referred by another agent', 'Social Media', 'GTF Sales Team', 'Google Search', 'Other']
+
+function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: () => void; onSaved: (a: Agent) => void }) {
+  const [editing, setEditing] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
+  const [f, setF] = useState({
+    full_name: agent.full_name, agency_name: agent.agency_name,
+    agency_address: agent.agency_address || '', city: agent.city, mobile: agent.mobile,
+    whatsapp_number: agent.whatsapp_number || '', agency_website: agent.agency_website || '',
+    iata_number: agent.iata_number || '', how_did_you_hear: agent.how_did_you_hear || '',
+  })
+  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF(p => ({ ...p, [k]: e.target.value }))
+
+  const pickLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) { setError('Logo must be PNG, JPG or WEBP'); return }
+    if (file.size > 500 * 1024) { setError('Logo must be under 500KB'); return }
+    setError('')
+    setLogoFile(file)
+    setLogoPreview(URL.createObjectURL(file))
+  }
+
+  const save = async () => {
+    setError('')
+    setSaving(true)
+    try {
+      let logo_url: string | undefined
+      if (logoFile) {
+        const fd = new FormData()
+        fd.append('logo', logoFile)
+        fd.append('email', agent.email)
+        const up = await fetch('/api/auth/upload-logo', { method: 'POST', body: fd })
+        const upData = await up.json()
+        if (!up.ok) { setError(upData.error || 'Logo upload failed'); return }
+        logo_url = upData.url
+      }
+      const res = await fetch(`/api/admin/agents/${agent.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...f, logo_url }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Failed to save changes'); return }
+      onSaved(data.agent)
+      setEditing(false)
+      setLogoFile(null)
+      setLogoPreview(null)
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const site = agent.agency_website
-  const rows: [string, React.ReactNode][] = [
+  const view: [string, React.ReactNode][] = [
     ['Full name', agent.full_name],
     ['Agency', agent.agency_name],
     ['Agency address', agent.agency_address || '—'],
     ['City', agent.city],
     ['Mobile', agent.mobile],
     ['WhatsApp', agent.whatsapp_number || '—'],
-    ['Email', agent.email],
+    ['Email (login)', agent.email],
     ['Website', site
       ? <a href={/^https?:\/\//i.test(site) ? site : `https://${site}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>{site}</a>
       : '—'],
@@ -84,25 +141,69 @@ function AgentDetailModal({ agent, onClose }: { agent: Agent; onClose: () => voi
     ['Status', agent.status.toUpperCase()],
     ['Applied on', fmtDate(agent.created_at)],
   ]
+  const edit: [string, keyof typeof f, boolean][] = [
+    ['Full name *', 'full_name', false], ['Agency *', 'agency_name', false],
+    ['Agency address *', 'agency_address', true], ['City *', 'city', false],
+    ['Mobile *', 'mobile', false], ['WhatsApp *', 'whatsapp_number', false],
+    ['Website', 'agency_website', false], ['IATA / TAFI no.', 'iata_number', false],
+    ['Heard about us via *', 'how_did_you_hear', false],
+  ]
+  const shownLogo = logoPreview || agent.logo_url
+  const btn = { padding: '9px 18px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" } as const
+
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.6)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div onClick={e => e.stopPropagation()} style={{ background: 'white', width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', border: '1px solid var(--rule)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid var(--rule)' }}>
-          <div className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>Agent details</div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--ink-light)' }}>×</button>
+          <div className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>{editing ? 'Edit agent details' : 'Agent details'}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            {!editing && <button onClick={() => setEditing(true)} style={{ ...btn, padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none' }}>EDIT</button>}
+            <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--ink-light)' }}>×</button>
+          </div>
         </div>
         <div style={{ padding: 24 }}>
-          {agent.logo_url && (
+          {shownLogo && (
             <div style={{ marginBottom: 20, padding: 16, border: '1px solid var(--rule)', background: 'var(--bg)', textAlign: 'center' }}>
-              <img src={agent.logo_url} alt={`${agent.agency_name} logo`} style={{ maxHeight: 70, maxWidth: '100%', objectFit: 'contain' }} />
+              <img src={shownLogo} alt={`${agent.agency_name} logo`} style={{ maxHeight: 70, maxWidth: '100%', objectFit: 'contain' }} />
             </div>
           )}
-          {rows.map(([k, v]) => (
-            <div key={k} style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: 12, padding: '9px 0', borderBottom: '1px solid var(--rule)', fontSize: 13 }}>
-              <div style={{ color: 'var(--ink-light)', fontWeight: 600, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', paddingTop: 2 }}>{k}</div>
-              <div style={{ color: 'var(--ink)', wordBreak: 'break-word' }}>{v}</div>
-            </div>
-          ))}
+          {editing ? (
+            <>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 6 }}>{agent.logo_url ? 'REPLACE LOGO' : 'UPLOAD LOGO'} (PNG/JPG/WEBP, max 500KB)</label>
+                <input type="file" accept="image/png,image/jpeg,image/webp" onChange={pickLogo} style={{ fontSize: 12 }} />
+              </div>
+              {edit.map(([label, key, multi]) => (
+                <div key={key} style={{ marginBottom: 14 }}>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 6 }}>{label.toUpperCase()}</label>
+                  {multi
+                    ? <textarea className="input-field" rows={2} value={f[key]} onChange={set(key)} style={{ resize: 'none' }} />
+                    : key === 'how_did_you_hear'
+                      ? (
+                        <select className="input-field" value={f[key]} onChange={set(key)}>
+                          <option value="">Select an option</option>
+                          {HEARD_OPTIONS.map(o => <option key={o}>{o}</option>)}
+                          {f[key] && !HEARD_OPTIONS.includes(f[key]) && <option>{f[key]}</option>}
+                        </select>
+                      )
+                      : <input className="input-field" value={f[key]} onChange={set(key)} />}
+                </div>
+              ))}
+              <div style={{ fontSize: 11, color: 'var(--ink-light)', marginBottom: 14 }}>Email is the agent&apos;s login and can&apos;t be changed here.</div>
+              {error && <div style={{ padding: '10px 14px', background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B', fontSize: 12, marginBottom: 14 }}>{error}</div>}
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button onClick={save} disabled={saving} style={{ ...btn, background: 'var(--teal)', color: '#fff', border: 'none', opacity: saving ? 0.6 : 1 }}>{saving ? 'SAVING...' : 'SAVE CHANGES'}</button>
+                <button onClick={() => { setEditing(false); setError(''); setLogoFile(null); setLogoPreview(null) }} disabled={saving} style={{ ...btn, background: 'white', color: 'var(--ink-mid)', border: '1px solid var(--rule)' }}>CANCEL</button>
+              </div>
+            </>
+          ) : (
+            view.map(([k, v]) => (
+              <div key={k} style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: 12, padding: '9px 0', borderBottom: '1px solid var(--rule)', fontSize: 13 }}>
+                <div style={{ color: 'var(--ink-light)', fontWeight: 600, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', paddingTop: 2 }}>{k}</div>
+                <div style={{ color: 'var(--ink)', wordBreak: 'break-word' }}>{v}</div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
@@ -345,7 +446,7 @@ export default function AdminPage() {
       {/* Main content */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
 
-        {viewAgent && <AgentDetailModal agent={viewAgent} onClose={() => setViewAgent(null)} />}
+        {viewAgent && <AgentDetailModal key={viewAgent.id} agent={viewAgent} onClose={() => setViewAgent(null)} onSaved={a => { setAgents(prev => prev.map(x => x.id === a.id ? { ...x, ...a } : x)); setViewAgent(a) }} />}
 
         {/* ── AGENTS SECTION ── */}
         {section === 'agents' && (
