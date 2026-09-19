@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation'
 import { PACKAGES } from '@/data/packages'
 
 const STATUS_STYLES: Record<string, { label: string; bg: string; color: string }> = {
-  available:    { label: 'Available',    bg: '#D1FAE5', color: '#065F46' },
-  'fast-filling': { label: 'Fast Filling', bg: '#FEF3C7', color: '#92400E' },
-  'sold-out':   { label: 'Sold Out',    bg: '#FEE2E2', color: '#991B1B' },
+  available:    { label: 'Available',    bg: 'var(--ok-bg)', color: 'var(--ok)' },
+  'fast-filling': { label: 'Fast Filling', bg: 'var(--warn-lt)', color: 'var(--warn)' },
+  'sold-out':   { label: 'Sold Out',    bg: 'var(--danger-bg)', color: 'var(--danger)' },
 }
 
 export default function AdminDeparturesPage() {
@@ -70,11 +70,11 @@ export default function AdminDeparturesPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
           <div>
             <div className="eyebrow" style={{ marginBottom: 8 }}>ADMIN</div>
-            <h1 className="font-tight" style={{ fontSize: 32, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Departure Management</h1>
+            <h1 className="font-display" style={{ fontSize: 32, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Departure Management</h1>
           </div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            {seedMsg && <span style={{ fontSize: 12, color: seedMsg.startsWith('✓') ? '#16a34a' : '#ef4444', fontWeight: 600 }}>{seedMsg}</span>}
-            <button onClick={seedDepartures} disabled={seeding} style={{ padding: '10px 18px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', opacity: seeding ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+            {seedMsg && <span style={{ fontSize: 12, color: seedMsg.startsWith('✓') ? 'var(--ok)' : 'var(--danger)', fontWeight: 600 }}>{seedMsg}</span>}
+            <button onClick={seedDepartures} disabled={seeding} style={{ padding: '10px 18px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', opacity: seeding ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
               {seeding ? 'Seeding...' : '⚡ Seed All Departures'}
             </button>
             <Link href="/admin" style={{ fontSize: 13, color: 'var(--teal)', textDecoration: 'none', fontWeight: 600 }}>← Admin</Link>
@@ -83,7 +83,7 @@ export default function AdminDeparturesPage() {
 
         {/* Search */}
         <div style={{ marginBottom: 20 }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--rule)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: "'DM Sans', sans-serif" }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--rule)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: 'var(--font-sans)' }} />
         </div>
 
         {/* Table */}
@@ -101,7 +101,7 @@ export default function AdminDeparturesPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--rule)', background: 'var(--bg)' }}>
                   {['Package', 'Region', 'Departure Date', 'Seats (Booked/Total)', 'Status', 'Override Status'].map(h => (
-                    <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.1em' }}>{h.toUpperCase()}</th>
+                    <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.04em' }}>{h.toUpperCase()}</th>
                   ))}
                 </tr>
               </thead>
@@ -120,20 +120,20 @@ export default function AdminDeparturesPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{d.booked_seats || 0} / {d.total_seats || 30}</span>
                           <div style={{ flex: 1, height: 6, background: 'var(--rule)', borderRadius: 3, minWidth: 60 }}>
-                            <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? '#ef4444' : pct >= 33 ? '#f59e0b' : '#16a34a', transition: 'width 0.3s' }} />
+                            <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? 'var(--danger)' : pct >= 33 ? '#f59e0b' : 'var(--ok)', transition: 'width 0.3s' }} />
                           </div>
-                          <span style={{ fontSize: 11, color: 'var(--ink-light)' }}>{pct}%</span>
+                          <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>{pct}%</span>
                         </div>
                       </td>
                       <td style={{ padding: '14px 16px' }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.06em' }}>{st.label.toUpperCase()}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
                       </td>
                       <td style={{ padding: '14px 16px' }}>
                         <select
                           value={d.status}
                           disabled={updating === d.id}
                           onChange={e => updateStatus(d.id, e.target.value)}
-                          style={{ padding: '6px 10px', border: '1.5px solid var(--rule)', borderRadius: 6, fontSize: 12, fontFamily: "'DM Sans', sans-serif", cursor: 'pointer', background: 'white' }}>
+                          style={{ padding: '6px 10px', border: '1.5px solid var(--rule)', borderRadius: 6, fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer', background: 'white' }}>
                           <option value="available">Available</option>
                           <option value="fast-filling">Fast Filling</option>
                           <option value="sold-out">Sold Out</option>

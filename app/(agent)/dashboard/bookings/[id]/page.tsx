@@ -11,9 +11,9 @@ const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
-  pending:   { label: 'Awaiting Confirmation', bg: '#92400E', color: '#fff' },
-  confirmed: { label: 'Confirmed',             bg: '#0A7B6C', color: '#fff' },
-  cancelled: { label: 'Cancelled',             bg: '#991B1B', color: '#fff' },
+  pending:   { label: 'Awaiting Confirmation', bg: 'var(--warn)', color: '#fff' },
+  confirmed: { label: 'Confirmed',             bg: 'var(--teal)', color: '#fff' },
+  cancelled: { label: 'Cancelled',             bg: 'var(--danger)', color: '#fff' },
 }
 
 const ICONS = {
@@ -76,7 +76,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
   const meta = [
     { l: 'DEPARTURE', v: fmtDate(booking.departure_date), icon: ICONS.calendar },
     { l: 'PASSENGERS', v: paxStr, icon: ICONS.users },
-    { l: 'TOTAL', v: fmtPrice(booking.total_price), icon: <span style={{ fontSize: 11, fontWeight: 800 }}>₹</span> },
+    { l: 'TOTAL', v: fmtPrice(booking.total_price), icon: <span style={{ fontSize: 12, fontWeight: 800 }}>₹</span> },
     { l: 'SUBMITTED', v: fmtDate(booking.created_at), icon: ICONS.send },
   ]
 
@@ -105,12 +105,12 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20, flexWrap: 'wrap' }}>
               <div>
                 <div className="eyebrow" style={{ marginBottom: 8 }}>BOOKING REF: {booking.id.slice(0, 8).toUpperCase()}</div>
-                <h1 className="font-tight" style={{ fontSize: 30, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>{booking.package_name}</h1>
+                <h1 className="font-display" style={{ fontSize: 32, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>{booking.package_name}</h1>
               </div>
               <span style={{
                 display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 800,
                 padding: '9px 18px', borderRadius: 20, background: st.bg, color: st.color,
-                letterSpacing: '0.08em', whiteSpace: 'nowrap', boxShadow: `0 3px 10px ${st.bg}55`,
+                letterSpacing: '0.04em', whiteSpace: 'nowrap', boxShadow: `0 3px 10px color-mix(in srgb, ${st.bg} 33%, transparent)`,
               }}>
                 {booking.status === 'confirmed' && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M20 6 9 17l-5-5" /></svg>}
                 {st.label.toUpperCase()}
@@ -120,7 +120,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
             <div style={{ display: 'flex', gap: 32, marginTop: 26, paddingTop: 22, borderTop: '1px solid var(--rule)', flexWrap: 'wrap' }}>
               {meta.map(({ l, v, icon }) => (
                 <div key={l} style={{ flex: '1 1 140px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.1em' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>
                     <span style={{ color: 'var(--teal)', display: 'flex' }}>{icon}</span>{l}
                   </div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginTop: 6 }}>{v}</div>
@@ -142,7 +142,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
           <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.05)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 28px', borderBottom: '1px solid var(--rule)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span className="eyebrow">PASSENGER DETAILS</span>
-              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--ink-light)' }}>{paxStr}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-light)' }}>{paxStr}</span>
             </div>
             {passengers.map((p: any, i: number) => {
               const initials = (p.name || '').trim().split(/\s+/).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
@@ -155,7 +155,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                         <div className="font-tight" style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', textTransform: 'capitalize' }}>{p.name}</div>
                         {p.passport_url && (
                           <a href={p.passport_url} target="_blank" rel="noopener noreferrer" style={{
-                            display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5, fontWeight: 700, color: 'var(--ink-mid)',
+                            display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: 'var(--ink-mid)',
                             textDecoration: 'none', border: '1px solid var(--rule)', borderRadius: 8, padding: '8px 13px', whiteSpace: 'nowrap',
                             transition: 'all 0.15s',
                           }}
@@ -173,7 +173,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                           { l: 'Date of Expiry', v: fmtDate(p.doe) },
                         ].map(({ l, v }) => (
                           <div key={l}>
-                            <div style={{ fontSize: 9.5, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.08em' }}>{l.toUpperCase()}</div>
+                            <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>{l.toUpperCase()}</div>
                             <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-mid)', marginTop: 3 }}>{v}</div>
                           </div>
                         ))}
@@ -205,7 +205,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                   <div style={{ height: 6, background: 'var(--rule)', borderRadius: 3, overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${depositPct}%`, background: 'var(--teal)', borderRadius: 3, transition: 'width 0.4s ease' }} />
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--ink-light)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--ink-light)' }}>
                     <span>DEPOSIT RECEIVED</span>
                     <span>{depositPct}%</span>
                   </div>
@@ -215,19 +215,19 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                   <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Deposit Due</span>
                   <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-mid)' }}>{fmtDate(booking.deposit_due_date)}</span>
                 </div>
-                <div style={{ background: '#FEF2F0', margin: '0 -28px', padding: '14px 28px 0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingBottom: 14, borderBottom: '1px solid #fbe0db' }}>
+                <div style={{ background: 'var(--danger-bg)', margin: '0 -28px', padding: '14px 28px 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingBottom: 14, borderBottom: '1px solid var(--danger-bg)' }}>
                     <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-mid)' }}>Balance Due</span>
-                    <span className="font-tight" style={{ fontSize: 16, fontWeight: 800, color: '#9e2233' }}>{fmtPrice(booking.balance_amount)}</span>
+                    <span className="font-tight" style={{ fontSize: 16, fontWeight: 800, color: 'var(--brand)' }}>{fmtPrice(booking.balance_amount)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0' }}>
                     <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Due Date</span>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#9e2233' }}>{fmtDate(booking.balance_due_date)}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand)' }}>{fmtDate(booking.balance_due_date)}</span>
                   </div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0' }}>
                   <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Payment Mode</span>
-                  <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.05em', background: 'var(--teal-lt)', color: 'var(--teal-dark)', borderRadius: 12, padding: '4px 12px' }}>{booking.payment_mode || '—'}</span>
+                  <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', background: 'var(--teal-lt)', color: 'var(--teal-dark)', borderRadius: 12, padding: '4px 12px' }}>{booking.payment_mode || '—'}</span>
                 </div>
               </div>
             </div>

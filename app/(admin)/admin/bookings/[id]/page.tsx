@@ -12,9 +12,9 @@ const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
-  pending:   { label: 'Awaiting Confirmation', bg: '#FEF3C7', color: '#92400E' },
-  confirmed: { label: 'Confirmed',             bg: '#D1FAE5', color: '#065F46' },
-  cancelled: { label: 'Cancelled',             bg: '#FEE2E2', color: '#991B1B' },
+  pending:   { label: 'Awaiting Confirmation', bg: 'var(--warn-lt)', color: 'var(--warn)' },
+  confirmed: { label: 'Confirmed',             bg: 'var(--ok-bg)', color: 'var(--ok)' },
+  cancelled: { label: 'Cancelled',             bg: 'var(--danger-bg)', color: 'var(--danger)' },
 }
 
 export default function AdminBookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -118,7 +118,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div className="eyebrow" style={{ marginBottom: 8 }}>BOOKING REF: {booking.id.slice(0, 8).toUpperCase()}</div>
-              <h1 className="font-tight" style={{ fontSize: 28, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: '0 0 16px' }}>{booking.package_name}</h1>
+              <h1 className="font-display" style={{ fontSize: 28, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', margin: '0 0 16px' }}>{booking.package_name}</h1>
               <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
                 {[
                   { l: 'AGENT', v: agent?.full_name || '—' },
@@ -129,26 +129,26 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                   { l: 'TOTAL', v: fmtPrice(booking.total_price) },
                 ].map(({ l, v }) => (
                   <div key={l}>
-                    <div style={{ fontSize: 9, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{l}</div>
+                    <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 4 }}>{l}</div>
                     <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{v}</div>
                   </div>
                 ))}
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, padding: '6px 14px', borderRadius: 6, background: st.bg, color: st.color, letterSpacing: '0.06em' }}>{st.label.toUpperCase()}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, padding: '6px 14px', borderRadius: 6, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
               {booking.status === 'pending' && (
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <button onClick={() => updateStatus('confirmed')} disabled={updating} style={{ padding: '10px 20px', background: '#16a34a', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: updating ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+                  <button onClick={() => updateStatus('confirmed')} disabled={updating} style={{ padding: '10px 20px', background: 'var(--ok)', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: updating ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
                     {updating ? '...' : '✓ Confirm Booking'}
                   </button>
-                  <button onClick={() => updateStatus('cancelled')} disabled={updating} style={{ padding: '10px 20px', background: '#ef4444', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: updating ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+                  <button onClick={() => updateStatus('cancelled')} disabled={updating} style={{ padding: '10px 20px', background: 'var(--danger)', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: updating ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
                     Cancel
                   </button>
                 </div>
               )}
               {booking.confirmed_at && (
-                <div style={{ fontSize: 12, color: '#065F46', fontWeight: 600 }}>Confirmed: {fmtDate(booking.confirmed_at)}</div>
+                <div style={{ fontSize: 12, color: 'var(--ok)', fontWeight: 600 }}>Confirmed: {fmtDate(booking.confirmed_at)}</div>
               )}
             </div>
           </div>
@@ -170,7 +170,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                         { l: 'Date of Expiry', v: fmtDate(p.doe) },
                       ].map(({ l, v }) => (
                         <div key={l}>
-                          <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', marginBottom: 2 }}>{l.toUpperCase()}</div>
+                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 2 }}>{l.toUpperCase()}</div>
                           <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{v}</div>
                         </div>
                       ))}
@@ -195,7 +195,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                   { l: 'Total Amount', v: fmtPrice(booking.total_price), bold: true },
                   { l: 'Deposit', v: fmtPrice(booking.deposit_amount) },
                   { l: 'Deposit Due', v: fmtDate(booking.deposit_due_date) },
-                  { l: 'Balance', v: fmtPrice(booking.balance_amount), color: '#9e2233' },
+                  { l: 'Balance', v: fmtPrice(booking.balance_amount), color: 'var(--brand)' },
                   { l: 'Payment Mode', v: booking.payment_mode || '—' },
                 ].map(({ l, v, bold, color }) => (
                   <div key={l} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--rule)', paddingBottom: 8 }}>
@@ -207,13 +207,13 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                   <span style={{ fontSize: 12, color: 'var(--ink-light)', flexShrink: 0 }}>Balance Due</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <input type="date" min={todayISO()} value={balanceDueDate} onChange={e => setBalanceDueDate(e.target.value)} style={{
-                      fontSize: 12.5, fontWeight: 600, color: 'var(--ink)', border: '1px solid var(--rule)', borderRadius: 6,
-                      padding: '5px 8px', fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13, fontWeight: 600, color: 'var(--ink)', border: '1px solid var(--rule)', borderRadius: 6,
+                      padding: '5px 8px', fontFamily: 'var(--font-sans)',
                     }} />
                     {balanceDueDate !== (booking.balance_due_date?.slice(0, 10) || '') && (
                       <button onClick={handleSaveDueDate} disabled={savingDueDate} style={{
                         padding: '5px 10px', borderRadius: 6, border: 'none', background: 'var(--teal)', color: '#fff',
-                        fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: savingDueDate ? 0.6 : 1,
+                        fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: savingDueDate ? 0.6 : 1,
                       }}>
                         {savingDueDate ? '...' : 'SAVE'}
                       </button>

@@ -9,8 +9,8 @@ export default function PaymentSummaryStrip({ totalPrice, payments }: { totalPri
 
   const stats = [
     { label: 'TOTAL AMOUNT', value: fmt(totalPrice || 0), color: 'var(--ink)' },
-    { label: 'AMOUNT PAID', value: fmt(paid), color: '#28a078' },
-    { label: 'BALANCE REMAINING', value: fmt(balance), color: balance > 0 ? '#9e2233' : '#28a078' },
+    { label: 'AMOUNT PAID', value: fmt(paid), color: 'var(--ok)' },
+    { label: 'BALANCE REMAINING', value: fmt(balance), color: balance > 0 ? 'var(--brand)' : 'var(--ok)' },
   ]
 
   return (
@@ -18,7 +18,7 @@ export default function PaymentSummaryStrip({ totalPrice, payments }: { totalPri
       {stats.map(s => (
         <div key={s.label} style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '18px 22px' }}>
           <div className="font-tight" style={{ fontSize: 24, fontWeight: 800, color: s.color, letterSpacing: '-0.02em' }}>{s.value}</div>
-          <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.08em', marginTop: 6 }}>{s.label}</div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.04em', marginTop: 6 }}>{s.label}</div>
         </div>
       ))}
     </div>

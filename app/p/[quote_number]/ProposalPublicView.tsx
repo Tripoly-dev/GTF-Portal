@@ -88,7 +88,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
     : null
 
   return (
-    <div style={{ background: '#fff', minHeight: '100vh', fontFamily: "'DM Sans', Arial, sans-serif", color: 'var(--ink)' }}>
+    <div style={{ background: '#fff', minHeight: '100vh', fontFamily: 'var(--font-sans)', color: 'var(--ink)' }}>
       <style>{`
         .pp-grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
         .pp-panel { position: sticky; top: 84px; }
@@ -110,7 +110,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
         {heroImg && <img src={heroImg} alt={pkg.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.92) 0%, rgba(7,26,23,0.25) 55%, transparent 100%)' }} />
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '24px 24px' }}>
-          <h1 style={{ margin: '0 0 12px', fontFamily: "'Playfair Display', Georgia, serif", fontWeight: 700, fontSize: 'clamp(28px, 4vw, 44px)', color: '#fff', lineHeight: 1.05 }}>{quote.trip_name}</h1>
+          <h1 style={{ margin: '0 0 12px', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(28px, 4vw, 44px)', color: '#fff', lineHeight: 1.05 }}>{quote.trip_name}</h1>
           <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             {[
               { l: 'CLIENT', v: quote.client_name },
@@ -119,7 +119,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
               { l: 'DURATION', v: durationStr },
             ].filter(x => x.v).map(({ l, v }) => (
               <div key={l}>
-                <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 3 }}>{l}</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 3 }}>{l}</div>
                 <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.92)', fontWeight: 600 }}>{v}</div>
               </div>
             ))}
@@ -132,7 +132,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
         {TABS.map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
             padding: '16px 22px', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
-            fontSize: 13, fontWeight: 700, letterSpacing: '0.04em', fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13, fontWeight: 700, letterSpacing: '0.04em', fontFamily: 'var(--font-sans)',
             color: activeTab === tab ? '#fff' : 'rgba(255,255,255,0.5)',
             borderBottom: `2px solid ${activeTab === tab ? 'var(--teal)' : 'transparent'}`,
           }}>{tab.toUpperCase()}</button>
@@ -148,11 +148,10 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
             {activeTab === 'Overview' && (
               <div>
                 {pkg.tagline && (
-                  <p style={{ fontSize: 15, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 24, fontStyle: 'italic', borderLeft: '3px solid var(--teal)', paddingLeft: 16, fontFamily: "'Playfair Display', serif" }}>{pkg.tagline}</p>
+                  <p style={{ fontSize: 15, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 24, fontStyle: 'italic', borderLeft: '3px solid var(--teal)', paddingLeft: 16, fontFamily: 'var(--font-display)' }}>{pkg.tagline}</p>
                 )}
                 {pkg.highlights?.length > 0 && (
                   <div>
-                    <div className="eyebrow" style={{ marginBottom: 16 }}>★ HIGHLIGHTS</div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                       {pkg.highlights.map((h, i) => (
                         <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
@@ -174,11 +173,11 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
                       {String(day.day).padStart(2, '0')}
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: 700, fontSize: 18, color: 'var(--ink)', marginBottom: 6 }}>{day.title}</div>
+                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: 'var(--ink)', marginBottom: 6 }}>{day.title}</div>
                       <p style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.7, marginBottom: 10 }}>{day.description}</p>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                         {day.meals?.map((m, j) => (
-                          <span key={j} style={{ fontSize: 11.5, fontWeight: 700, color: '#065F46', background: '#d1fae5', padding: '4px 10px', borderRadius: 4 }}>✓ {m}</span>
+                          <span key={j} style={{ fontSize: 12, fontWeight: 700, color: 'var(--ok)', background: 'var(--ok-bg)', padding: '4px 10px', borderRadius: 4 }}>✓ {m}</span>
                         ))}
                       </div>
                     </div>
@@ -199,7 +198,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
                           <div className="font-tight" style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 4 }}>{normalizeHotelName(h.name)}</div>
                           <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{h.city} · {h.nights}N · {h.roomType || 'Standard'}</div>
                         </div>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--teal)', background: 'var(--teal-lt)', padding: '5px 12px', borderRadius: 4, whiteSpace: 'nowrap' }}>{h.meal}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--teal)', background: 'var(--teal-lt)', padding: '5px 12px', borderRadius: 4, whiteSpace: 'nowrap' }}>{h.meal}</span>
                       </div>
                     </div>
                   )
@@ -211,7 +210,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
               <div>
                 {pkg.inclusions?.map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
-                    <span style={{ color: '#065F46', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                    <span style={{ color: 'var(--ok)', fontWeight: 700, flexShrink: 0 }}>✓</span>
                     <span style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.6 }}>{item}</span>
                   </div>
                 ))}
@@ -222,7 +221,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
               <div>
                 {pkg.exclusions?.map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
-                    <span style={{ color: '#991B1B', fontWeight: 700, flexShrink: 0 }}>✕</span>
+                    <span style={{ color: 'var(--danger)', fontWeight: 700, flexShrink: 0 }}>✕</span>
                     <span style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.6 }}>{item}</span>
                   </div>
                 ))}
@@ -233,8 +232,8 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
           {/* Right panel */}
           <div className="pp-panel">
             <div style={{ border: '1px solid var(--rule)', borderRadius: 8, padding: 20 }}>
-              <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: 700, fontSize: 17, color: 'var(--ink)', marginBottom: 4 }}>{quote.trip_name}</div>
-              <div style={{ fontSize: 12.5, color: 'var(--ink-light)', marginBottom: 16 }}>{fmtDate(quote.departure_date)}</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 17, color: 'var(--ink)', marginBottom: 4 }}>{quote.trip_name}</div>
+              <div style={{ fontSize: 13, color: 'var(--ink-light)', marginBottom: 16 }}>{fmtDate(quote.departure_date)}</div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
@@ -262,7 +261,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {whatsappHref && (
-                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 16px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', borderRadius: 6, fontFamily: "'DM Sans', sans-serif" }}>
+                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 16px', background: '#25D366', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', borderRadius: 6, fontFamily: 'var(--font-sans)' }}>
                     <WhatsAppIcon size={15} color="#fff" /> WhatsApp
                   </a>
                 )}

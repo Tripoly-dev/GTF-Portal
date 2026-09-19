@@ -21,8 +21,8 @@ const fmtDate = (d: string) => {
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   created:   { label: 'Created',   bg: 'var(--teal-lt)',  color: 'var(--teal)' },
-  sent:      { label: 'Sent',      bg: '#FEF3C7',         color: '#92400E' },
-  cancelled: { label: 'Cancelled', bg: '#FEE2E2',         color: '#991B1B' },
+  sent:      { label: 'Sent',      bg: 'var(--warn-lt)',         color: 'var(--warn)' },
+  cancelled: { label: 'Cancelled', bg: 'var(--danger-bg)',         color: 'var(--danger)' },
   draft:     { label: 'Draft',     bg: 'var(--bg)',       color: 'var(--ink-light)' },
 }
 
@@ -57,7 +57,7 @@ function HotelCard({ h }: { h: any }) {
           {images.length > 1 && <>
             <button onClick={() => go(-1)} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', fontSize: 18 }}>‹</button>
             <button onClick={() => go(1)} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', fontSize: 18 }}>›</button>
-            <div style={{ position: 'absolute', bottom: 10, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 3 }}>{idx + 1}/{images.length}</div>
+            <div style={{ position: 'absolute', bottom: 10, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 12, fontWeight: 600, padding: '2px 8px', borderRadius: 3 }}>{idx + 1}/{images.length}</div>
           </>}
         </div>
       )}
@@ -67,12 +67,12 @@ function HotelCard({ h }: { h: any }) {
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', marginBottom: 4 }}>{h.name}</div>
             <div style={{ display: 'flex', gap: 1, marginBottom: 10 }}>{'★'.repeat(h.stars || 4).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 13 }}>★</span>)}</div>
           </div>
-          <span style={{ fontSize: 11, padding: '5px 12px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 700, borderRadius: 4, whiteSpace: 'nowrap' }}>{h.meal}</span>
+          <span style={{ fontSize: 12, padding: '5px 12px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 700, borderRadius: 4, whiteSpace: 'nowrap' }}>{h.meal}</span>
         </div>
         <div style={{ display: 'flex', gap: 28 }}>
           {[{ l: 'CITY', v: h.city }, { l: 'NIGHTS', v: `${h.nights}N` }, { l: 'ROOM', v: h.roomType || 'Standard' }].map(({ l, v }) => (
             <div key={l}>
-              <div style={{ fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', marginBottom: 3 }}>{l}</div>
+              <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 3 }}>{l}</div>
               <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}>{v}</div>
             </div>
           ))}
@@ -94,7 +94,7 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.55)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ background: 'white', width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto', borderRadius: 12, boxShadow: '0 24px 64px rgba(7,26,23,0.2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid var(--rule)' }}>
-          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', fontFamily: "'Playfair Display', serif" }}>{title}</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)' }}>{title}</div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)', lineHeight: 1 }}>✕</button>
         </div>
         <div style={{ padding: 24 }}>{children}</div>
@@ -131,7 +131,7 @@ function HelpModal({ quoteId, onClose }: { quoteId: string; onClose: () => void 
               <button key={c} onClick={() => toggle(c)} style={{ padding: '10px 12px', border: `1.5px solid ${selected.includes(c) ? 'var(--teal)' : 'var(--rule)'}`, background: selected.includes(c) ? 'var(--teal-lt)' : 'white', color: selected.includes(c) ? 'var(--teal)' : 'var(--ink-mid)', fontSize: 12, fontWeight: selected.includes(c) ? 700 : 400, cursor: 'pointer', textAlign: 'left', borderRadius: 6, transition: 'all 0.15s' }}>{c}</button>
             ))}
           </div>
-          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }} placeholder="Additional details..." />
+          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: 'var(--font-sans)' }} placeholder="Additional details..." />
           <button onClick={submit} disabled={!selected.length || saving} className="btn-teal" style={{ width: '100%', justifyContent: 'center', opacity: selected.length ? 1 : 0.5 }}>{saving ? 'Submitting...' : 'Submit Request'}</button>
         </>
       )}
@@ -159,7 +159,7 @@ function CallbackModal({ quoteId, onClose }: { quoteId: string; onClose: () => v
         </div>
       ) : (
         <>
-          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={4} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }} placeholder="Describe your query..." />
+          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={4} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: 'var(--font-sans)' }} placeholder="Describe your query..." />
           <button onClick={submit} disabled={saving} className="btn-teal" style={{ width: '100%', justifyContent: 'center' }}>{saving ? 'Submitting...' : 'Request Callback'}</button>
         </>
       )}
@@ -185,14 +185,14 @@ function MarkupModal({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; o
     <Modal title="Update Markup" onClose={onClose}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div>
-          <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>MARKUP TYPE</label>
+          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>MARKUP TYPE</label>
           <select value={type} onChange={e => setType(e.target.value)} className="input-field">
             <option value="fixed">Fixed Amount (₹)</option>
             <option value="percent">Percentage (%)</option>
           </select>
         </div>
         <div>
-          <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>MARKUP {type === 'percent' ? 'PERCENTAGE' : 'AMOUNT'}</label>
+          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>MARKUP {type === 'percent' ? 'PERCENTAGE' : 'AMOUNT'}</label>
           <input type="number" value={val} onChange={e => setVal(Number(e.target.value))} className="input-field" />
         </div>
         <div style={{ background: 'var(--bg)', padding: 16, borderRadius: 8, border: '1px solid var(--rule)' }}>
@@ -202,7 +202,7 @@ function MarkupModal({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; o
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--rule)', paddingTop: 8 }}>
             <span style={{ fontSize: 13, color: 'var(--ink)' }}>New client total</span>
-            <span style={{ fontSize: 18, fontWeight: 800, color: 'var(--ink)', fontFamily: "'DM Sans', sans-serif" }}>{f(total)}</span>
+            <span style={{ fontSize: 18, fontWeight: 800, color: 'var(--ink)', fontFamily: 'var(--font-sans)' }}>{f(total)}</span>
           </div>
         </div>
         <button onClick={save} disabled={saving} className="btn-teal" style={{ justifyContent: 'center' }}>{saving ? 'Updating...' : 'Update Markup'}</button>
@@ -248,13 +248,13 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
       <div style={{ background: 'white', width: '100%', maxWidth: 580, maxHeight: '90vh', overflowY: 'auto', borderRadius: 12, boxShadow: '0 24px 64px rgba(7,26,23,0.2)' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid var(--rule)' }}>
-          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', fontFamily: "'Playfair Display', serif" }}>Edit Proposal</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)' }}>Edit Proposal</div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)' }}>✕</button>
         </div>
         {/* Step tabs */}
         <div style={{ display: 'flex', borderBottom: '1px solid var(--rule)' }}>
           {STEPS.map((s, i) => (
-            <button key={s} onClick={() => setStep(i + 1)} style={{ flex: 1, padding: '12px 8px', background: 'none', border: 'none', borderBottom: `2px solid ${step === i + 1 ? 'var(--teal)' : 'transparent'}`, marginBottom: -1, cursor: 'pointer', fontSize: 11, fontWeight: 600, color: step === i + 1 ? 'var(--teal)' : 'var(--ink-light)', letterSpacing: '0.06em' }}>
+            <button key={s} onClick={() => setStep(i + 1)} style={{ flex: 1, padding: '12px 8px', background: 'none', border: 'none', borderBottom: `2px solid ${step === i + 1 ? 'var(--teal)' : 'transparent'}`, marginBottom: -1, cursor: 'pointer', fontSize: 12, fontWeight: 600, color: step === i + 1 ? 'var(--teal)' : 'var(--ink-light)', letterSpacing: '0.04em' }}>
               {i + 1}. {s.toUpperCase()}
             </button>
           ))}
@@ -262,11 +262,11 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
         <div style={{ padding: 28 }}>
           {step === 1 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div><label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>CLIENT NAME</label><input className="input-field" value={form.client_name} onChange={set('client_name')} /></div>
-              <div><label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>TRIP NAME</label><input className="input-field" value={form.trip_name} onChange={set('trip_name')} /></div>
+              <div><label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>CLIENT NAME</label><input className="input-field" value={form.client_name} onChange={set('client_name')} /></div>
+              <div><label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>TRIP NAME</label><input className="input-field" value={form.trip_name} onChange={set('trip_name')} /></div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>ADULTS</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>ADULTS</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
                     <button onClick={() => setForm(p => ({ ...p, adults: Math.max(1, p.adults - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>{form.adults}</span>
@@ -274,7 +274,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>ROOM TYPE</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>ROOM TYPE</label>
                   <select className="input-field" value={form.room_type} onChange={set('room_type')}>
                     <option value="double">Double / Twin</option>
                     <option value="single">Single Room</option>
@@ -284,7 +284,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>CHILD WITH BED</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>CHILD WITH BED</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
                     <button onClick={() => setForm(p => ({ ...p, children_with_bed: Math.max(0, p.children_with_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700 }}>{form.children_with_bed}</span>
@@ -292,7 +292,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>CHILD WITHOUT BED</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>CHILD WITHOUT BED</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
                     <button onClick={() => setForm(p => ({ ...p, children_without_bed: Math.max(0, p.children_without_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700 }}>{form.children_without_bed}</span>
@@ -304,7 +304,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
           )}
           {step === 2 && (
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>DEPARTURE DATE</label>
+              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>DEPARTURE DATE</label>
               <select className="input-field" value={form.departure_date} onChange={set('departure_date')}>
                 <option value="">Select departure</option>
                 {pkg?.departures?.filter((d: any) => d.status !== 'sold-out').map((d: any) => (
@@ -316,14 +316,14 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
           {step === 3 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>MARKUP TYPE</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>MARKUP TYPE</label>
                 <select className="input-field" value={form.markup_type} onChange={set('markup_type')}>
                   <option value="fixed">Fixed Amount (₹)</option>
                   <option value="percent">Percentage (%)</option>
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>MARKUP VALUE</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>MARKUP VALUE</label>
                 <input type="number" className="input-field" value={form.markup_value} onChange={set('markup_value')} />
               </div>
               <div style={{ background: 'var(--bg)', padding: 16, borderRadius: 8, border: '1px solid var(--rule)' }}>
@@ -341,7 +341,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>INTERNAL NOTES</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>INTERNAL NOTES</label>
                 <textarea className="input-field" rows={3} value={form.notes} onChange={set('notes')} style={{ resize: 'none' }} placeholder="Visible only to you" />
               </div>
             </div>
@@ -514,14 +514,14 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
 
         {/* Proposal No + Status top right */}
         <div style={{ position: 'absolute', top: 20, right: 32, display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', padding: '5px 12px', background: 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 4, backdropFilter: 'blur(8px)' }}>PROPOSAL NO: {quote.quote_number}</span>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', background: statusStyle.bg, color: statusStyle.color, borderRadius: 4 }}>{statusStyle.label.toUpperCase()}</span>
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '5px 12px', background: 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 4, backdropFilter: 'blur(8px)' }}>PROPOSAL NO: {quote.quote_number}</span>
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '5px 12px', background: statusStyle.bg, color: statusStyle.color, borderRadius: 4 }}>{statusStyle.label.toUpperCase()}</span>
         </div>
 
         {/* Bottom content */}
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '28px 32px 28px' }}>
           <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)', marginBottom: 8 }}>{(quote.region || '').toUpperCase()}</div>
-          <h1 style={{ fontSize: 42, fontWeight: 700, color: '#fff', margin: '0 0 18px', lineHeight: 1.05, fontFamily: "'Playfair Display', Georgia, serif", letterSpacing: '-0.02em' }}>
+          <h1 className="font-display" style={{ fontSize: 36, fontWeight: 500, color: '#fff', margin: '0 0 18px', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
             {quote.trip_name}
           </h1>
           <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
@@ -532,7 +532,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               { l: 'DURATION', v: pkg ? `${pkg.nights}N/${pkg.days}D` : '' },
             ].filter(x => x.v).map(({ l, v }) => (
               <div key={l}>
-                <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.62)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{l}</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 4 }}>{l}</div>
                 <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{v}</div>
               </div>
             ))}
@@ -553,7 +553,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 borderBottom: '1px solid var(--rule)', cursor: 'pointer',
                 fontSize: 13, fontWeight: activeTab === tab.id ? 700 : 400,
                 color: activeTab === tab.id ? 'var(--teal)' : 'var(--ink-mid)',
-                textAlign: 'left', transition: 'all 0.15s', fontFamily: "'DM Sans', sans-serif",
+                textAlign: 'left', transition: 'all 0.15s', fontFamily: 'var(--font-sans)',
                 display: 'flex', alignItems: 'center', gap: 10,
               }}>
                 <span style={{ fontSize: 16 }}>
@@ -572,7 +572,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           {activeTab === 'overview' && (
             <div>
               {pkg?.tagline && (
-                <p style={{ fontSize: 15, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 24, fontStyle: 'italic', borderLeft: '3px solid var(--teal)', paddingLeft: 16, fontFamily: "'Playfair Display', serif" }}>{pkg.tagline}</p>
+                <p style={{ fontSize: 15, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 24, fontStyle: 'italic', borderLeft: '3px solid var(--teal)', paddingLeft: 16, fontFamily: 'var(--font-display)' }}>{pkg.tagline}</p>
               )}
               {pkg?.highlights && pkg.highlights.length > 0 && (
                 <div>
@@ -601,11 +601,11 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                     {i < (pkg?.itinerary?.length || 0) - 1 && <div style={{ width: 1, flex: 1, background: 'var(--rule)', marginTop: 4 }} />}
                   </div>
                   <div style={{ flex: 1, paddingBottom: 16 }}>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', marginBottom: 8, fontFamily: "'Playfair Display', serif" }}>{item.title}</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', marginBottom: 8, fontFamily: 'var(--font-display)' }}>{item.title}</div>
                     <p style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.6, marginBottom: 10 }}>{item.description}</p>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                      {item.hotel && <span style={{ fontSize: 11, color: 'var(--teal)', background: 'var(--teal-lt)', padding: '3px 10px', borderRadius: 4 }}>🏨 {item.hotel}</span>}
-                      {item.meals?.map((m: string, j: number) => <span key={j} style={{ fontSize: 11, color: 'var(--ink-mid)', background: 'var(--bg)', padding: '3px 10px', borderRadius: 4 }}>🍽 {m}</span>)}
+                      {item.hotel && <span style={{ fontSize: 12, color: 'var(--teal)', background: 'var(--teal-lt)', padding: '3px 10px', borderRadius: 4 }}>🏨 {item.hotel}</span>}
+                      {item.meals?.map((m: string, j: number) => <span key={j} style={{ fontSize: 12, color: 'var(--ink-mid)', background: 'var(--bg)', padding: '3px 10px', borderRadius: 4 }}>🍽 {m}</span>)}
                     </div>
                   </div>
                 </div>
@@ -627,8 +627,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               <div className="eyebrow" style={{ marginBottom: 20 }}>WHAT'S INCLUDED</div>
               {pkg?.inclusions?.map((item: string, i: number) => (
                 <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
-                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#d1fae5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                    <span style={{ fontSize: 11, color: '#065f46' }}>✓</span>
+                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--ok-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                    <span style={{ fontSize: 12, color: 'var(--ok)' }}>✓</span>
                   </div>
                   <span style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{item}</span>
                 </div>
@@ -642,8 +642,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               <div className="eyebrow" style={{ color: 'var(--warn)', marginBottom: 20 }}>NOT INCLUDED</div>
               {pkg?.exclusions?.map((item: string, i: number) => (
                 <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
-                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                    <span style={{ fontSize: 11, color: '#991b1b' }}>✕</span>
+                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--danger-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                    <span style={{ fontSize: 12, color: 'var(--danger)' }}>✕</span>
                   </div>
                   <span style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.5 }}>{item}</span>
                 </div>
@@ -659,8 +659,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', overflow: 'hidden' }}>
             {/* Price header */}
             <div style={{ background: 'var(--teal)', padding: '20px 20px 16px' }}>
-              <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.16em', fontWeight: 600, marginBottom: 6 }}>TOTAL PRICE</div>
-              <div style={{ fontSize: 34, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{f(quote.total_price || 0, cur)}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 6 }}>TOTAL PRICE</div>
+              <div style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{f(quote.total_price || 0, cur)}</div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)' }}>{f(Math.round((quote.total_price || 0) / (quote.adults || 1)), cur)} per adult · {paxStr}</div>
             </div>
 
@@ -674,18 +674,18 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 {tacEarnings > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>TAC (agent commission)</span>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#9e2233' }}>+{f(tacEarnings, cur)}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--brand)' }}>+{f(tacEarnings, cur)}</span>
                   </div>
                 )}
                 {(quote.markup_amount || 0) > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>Additional markup</span>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#9e2233' }}>+{f(quote.markup_amount, cur)}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--brand)' }}>+{f(quote.markup_amount, cur)}</span>
                   </div>
                 )}
                 <div style={{ borderTop: '1px solid var(--rule)', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>Your total earnings</span>
-                  <span style={{ fontSize: 15, fontWeight: 800, color: '#9e2233' }}>+{f(totalEarnings, cur)}</span>
+                  <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--brand)' }}>+{f(totalEarnings, cur)}</span>
                 </div>
               </div>
             </div>
@@ -699,19 +699,19 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
             </a>
 
             {quote.status !== 'sent' && (
-              <button onClick={markAsSent} disabled={markingAsSent} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 20px', background: 'none', border: '1.5px solid var(--teal)', color: 'var(--teal)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif" }}>
+              <button onClick={markAsSent} disabled={markingAsSent} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px 20px', background: 'none', border: '1.5px solid var(--teal)', color: 'var(--teal)', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: 8, fontFamily: 'var(--font-sans)' }}>
                 {markingAsSent ? 'Updating...' : '✓ Mark as Sent'}
               </button>
             )}
 
             {quote.status === 'sent' && !packageInactive && (
-              <button onClick={() => setShowBooking(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: '#9e2233', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', borderRadius: 8, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.02em' }}>
+              <button onClick={() => setShowBooking(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 20px', background: 'var(--brand)', color: '#fff', border: 'none', fontSize: 13, fontWeight: 700, cursor: 'pointer', borderRadius: 8, fontFamily: 'var(--font-sans)', letterSpacing: '0.02em' }}>
                 🎫 Convert to Booking
               </button>
             )}
 
             {quote.status === 'sent' && packageInactive && (
-              <div style={{ padding: '12px 16px', background: '#FEF2F0', border: '1px solid #fbe0db', borderRadius: 8, fontSize: 12, color: '#9e2233', fontWeight: 600, lineHeight: 1.5 }}>
+              <div style={{ padding: '12px 16px', background: 'var(--danger-bg)', border: '1px solid var(--danger-bg)', borderRadius: 8, fontSize: 12, color: 'var(--danger)', fontWeight: 600, lineHeight: 1.5 }}>
                 This package is currently unavailable, so this proposal can&apos;t be converted to a booking right now.
               </div>
             )}
@@ -721,7 +721,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 { label: 'WhatsApp / Text Summary', icon: <WhatsAppIcon size={15} />, href: whatsappMsg() },
                 { label: 'WhatsApp Quote Link', icon: <WhatsAppIcon size={15} />, href: whatsappQuoteLinkMsg() },
               ].map(({ label, icon, href }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 500, color: 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.15s', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 500, color: 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.15s', fontFamily: 'var(--font-sans)', textDecoration: 'none' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-mid)' }}>
                   {icon}{label}
@@ -734,7 +734,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 { label: '📞 Get a Callback', action: () => setShowCallback(true) },
                 { label: '✉️ Mail (Coming Soon)', action: () => {}, disabled: true },
               ].map(({ label, action, disabled }) => (
-                <button key={label} onClick={action} disabled={disabled} style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: disabled ? 'not-allowed' : 'pointer', fontSize: 12, fontWeight: 500, color: disabled ? 'var(--ink-light)' : 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.15s', fontFamily: "'DM Sans', sans-serif", opacity: disabled ? 0.5 : 1 }}
+                <button key={label} onClick={action} disabled={disabled} style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: disabled ? 'not-allowed' : 'pointer', fontSize: 12, fontWeight: 500, color: disabled ? 'var(--ink-light)' : 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.15s', fontFamily: 'var(--font-sans)', opacity: disabled ? 0.5 : 1 }}
                   onMouseEnter={e => { if (!disabled) { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)' } }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = disabled ? 'var(--ink-light)' : 'var(--ink-mid)' }}>
                   {label}

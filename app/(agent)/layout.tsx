@@ -56,7 +56,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
 
       {/* Top navbar */}
       <div style={{
-        background: 'linear-gradient(180deg, #0d2622 0%, var(--ink) 65%)',
+        background: 'linear-gradient(180deg, var(--forest) 0%, var(--ink) 65%)',
         position: 'sticky', top: 0, zIndex: 200,
         boxShadow: '0 1px 0 rgba(255,255,255,0.06), 0 12px 28px rgba(0,0,0,0.28)',
       }}>
@@ -65,8 +65,8 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
           {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', marginRight: 40, flexShrink: 0 }}>
             <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 56, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: 21, fontWeight: 700, color: '#fff' }}>
-              GTF <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>Connect</span>
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 700, color: '#fff' }}>
+              GTF <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>Connect</span>
             </span>
           </Link>
 
@@ -100,8 +100,8 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
                   {agent.name.charAt(0)}
                 </div>
                 <div>
-                  <div style={{ fontSize: 13.5, fontWeight: 600, color: '#fff', lineHeight: 1 }}>{agent.name}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.62)', marginTop: 2 }}>{agent.agency}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#fff', lineHeight: 1 }}>{agent.name}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', marginTop: 2 }}>{agent.agency}</div>
                 </div>
               </div>
             )}
@@ -109,8 +109,8 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
             <button onClick={handleLogout} className="agent-signout" style={{
               background: '#fff', border: 'none', borderRadius: 999,
               color: 'var(--ink)', fontSize: 12, fontWeight: 700,
-              padding: '9px 20px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-              letterSpacing: '0.05em', boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              padding: '9px 20px', cursor: 'pointer', fontFamily: 'var(--font-sans)',
+              letterSpacing: '0.04em', boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
             }}>
               SIGN OUT
             </button>
@@ -122,15 +122,15 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       <div style={{ flex: 1 }}>{children}</div>
 
       {/* Slim agent footer */}
-      <div style={{ background: 'linear-gradient(0deg, #0d2622 0%, var(--ink) 65%)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ background: 'linear-gradient(0deg, var(--forest) 0%, var(--ink) 65%)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF" style={{ height: 28, width: 'auto', filter: 'brightness(0) invert(1)', opacity: 0.75 }} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.02em' }}>© 2026 GTF Holidays LLP</span>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.02em' }}>© 2026 GTF Holidays LLP</span>
         </div>
         <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
           <a href="mailto:sales@gtfholidays.com" style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', textDecoration: 'none', fontWeight: 500 }}>sales@gtfholidays.com</a>
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)' }}>+91 89288 72400</span>
-          <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, padding: '6px 14px', borderRadius: 999, background: 'rgba(37,211,102,0.16)', border: '1px solid rgba(37,211,102,0.4)', color: '#25D366', fontWeight: 700, textDecoration: 'none', letterSpacing: '0.04em' }}>
+          <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, padding: '6px 14px', borderRadius: 999, background: 'rgba(37,211,102,0.16)', border: '1px solid rgba(37,211,102,0.4)', color: '#25D366', fontWeight: 700, textDecoration: 'none', letterSpacing: '0.04em' }}>
             <WhatsAppIcon size={12} color="#25D366" /> WHATSAPP
           </a>
         </div>

@@ -2,7 +2,7 @@ export default function NotFoundProposal() {
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', gap: 10, background: '#fff', fontFamily: "'Archivo', Arial, sans-serif",
+      justifyContent: 'center', gap: 10, background: '#fff', fontFamily: 'var(--font-sans)',
       padding: 24, textAlign: 'center',
     }}>
       <div style={{ fontSize: 22, fontWeight: 700, color: '#06316D' }}>Proposal not found</div>

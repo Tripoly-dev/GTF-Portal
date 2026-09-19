@@ -27,11 +27,11 @@ export default function AboutPage() {
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,26,23,0.3) 0%, rgba(7,26,23,0.82) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px 56px' }}>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.14em', marginBottom: 12, fontWeight: 600 }}>ABOUT US</div>
-          <h1 className="font-tight" style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', marginBottom: 12, fontWeight: 600 }}>ABOUT US</div>
+          <h1 className="font-display" style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
             Our Story
           </h1>
-          <p className="font-tight" style={{ fontSize: 20, fontWeight: 300, fontStyle: 'italic', color: 'rgba(255,255,255,0.65)', maxWidth: 560 }}>
+          <p className="font-tight" style={{ fontSize: 20, fontWeight: 400, fontStyle: 'italic', color: 'rgba(255,255,255,0.65)', maxWidth: 560 }}>
             GTF Holidays — Connecting Travel Partners to Limitless Exploration. B2B Unleashed.
           </p>
         </div>
@@ -42,17 +42,17 @@ export default function AboutPage() {
         {/* Intro with GTF map */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, marginBottom: 80, alignItems: 'center' }}>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 20 }}>WHO WE ARE</div>
-            <h2 className="font-tight" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 24 }}>
+            <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>WHO WE ARE</div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 24 }}>
               A Legacy of<br />B2B Excellence
             </h2>
-            <p style={{ fontSize: 16, color: 'var(--ink-mid)', lineHeight: 1.85, fontWeight: 300, marginBottom: 20 }}>
+            <p style={{ fontSize: 16, color: 'var(--ink-mid)', lineHeight: 1.85, fontWeight: 400, marginBottom: 20 }}>
               Welcome to the world of Global Travel Fusion (GTF Holidays LLP), your trusted B2B Travel Partner, facilitating seamless journeys to destinations spanning the globe. Within the sphere of the travel industry, we are recognized as seasoned experts who bring a distinctive personal touch to every aspect of our service.
             </p>
-            <p style={{ fontSize: 15, color: 'var(--ink-light)', lineHeight: 1.85, fontWeight: 300, marginBottom: 20 }}>
+            <p style={{ fontSize: 15, color: 'var(--ink-light)', lineHeight: 1.85, fontWeight: 400, marginBottom: 20 }}>
               Our commitment to providing exceptional travel experiences extends beyond conventional norms, and it is underpinned by our unwavering dedication to meeting your needs on a 24/7 basis.
             </p>
-            <p style={{ fontSize: 15, color: 'var(--ink-light)', lineHeight: 1.85, fontWeight: 300 }}>
+            <p style={{ fontSize: 15, color: 'var(--ink-light)', lineHeight: 1.85, fontWeight: 400 }}>
               We elevate your proficiency by offering comprehensive destination trainings and sales support. We firmly believe that an informed travel professional is better equipped to serve their clientele, and we strive to keep you abreast of the latest insights and knowledge concerning the destinations we encompass.
             </p>
           </div>
@@ -92,16 +92,16 @@ export default function AboutPage() {
             },
           ].map((item, i) => (
             <div key={i} style={{ background: item.bg, padding: '48px 40px' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: item.labelColor, marginBottom: 16 }}>{item.title.toUpperCase()}</div>
-              <h3 className="font-tight" style={{ fontSize: 26, fontWeight: 700, color: item.textColor, marginBottom: 16, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{item.title}</h3>
-              <p style={{ fontSize: 14, color: item.labelColor, lineHeight: 1.8, fontWeight: 300 }}>{item.body}</p>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: item.labelColor, marginBottom: 16 }}>{item.title.toUpperCase()}</div>
+              <h3 className="font-display" style={{ fontSize: 28, fontWeight: 500, color: item.textColor, marginBottom: 16, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{item.title}</h3>
+              <p style={{ fontSize: 14, color: item.labelColor, lineHeight: 1.8, fontWeight: 400 }}>{item.body}</p>
             </div>
           ))}
         </div>
 
         {/* USPs */}
         <div style={{ marginBottom: 80 }}>
-          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 32 }}>WHY CHOOSE GTF</div>
+          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 32 }}>WHY CHOOSE GTF</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
             {usps.map((u, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '20px 28px', borderBottom: '1px solid var(--rule)', borderRight: i % 2 === 0 ? '1px solid var(--rule)' : 'none', background: 'white' }}>
@@ -114,11 +114,11 @@ export default function AboutPage() {
 
         {/* Affiliations & certifications */}
         <div style={{ marginBottom: 80 }}>
-          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 24 }}>MEMBERSHIPS &amp; AFFILIATIONS</div>
+          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 24 }}>MEMBERSHIPS &amp; AFFILIATIONS</div>
           <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28, marginBottom: 40 }}>
             <LogoWall logos={AFFILIATION_LOGOS} height={84} />
           </div>
-          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 24 }}>DESTINATION CERTIFICATIONS</div>
+          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 24 }}>DESTINATION CERTIFICATIONS</div>
           <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28 }}>
             <LogoWall logos={CERTIFICATION_LOGOS} height={100} caption />
           </div>
@@ -134,9 +134,9 @@ export default function AboutPage() {
             />
                       </div>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 16 }}>HEADQUARTERS</div>
-            <h3 className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', marginBottom: 12, letterSpacing: '-0.01em' }}>Global Travel Fusion</h3>
-            <p style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.9, fontWeight: 300 }}>
+            <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>HEADQUARTERS</div>
+            <h3 className="font-display" style={{ fontSize: 18, fontWeight: 500, color: 'var(--ink)', marginBottom: 12, letterSpacing: '-0.01em' }}>Global Travel Fusion</h3>
+            <p style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.9, fontWeight: 400 }}>
               Office No.102, Mahant Chambers<br />
               Plot No. A-315, Road No. 34<br />
               Opp. Cybertech House, near New Passport Office<br />
@@ -145,7 +145,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 16 }}>CONTACT</div>
+            <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>CONTACT</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {['+91 89288 72400', '+91 93727 33424', '+91 93727 33428', '+91 93727 33425', 'sales@gtfholidays.com', 'fit@gtfholidays.com'].map(c => (
                 <div key={c} style={{ fontSize: 14, color: 'var(--ink-mid)', fontWeight: c.includes('@') ? 400 : 500 }}>{c}</div>

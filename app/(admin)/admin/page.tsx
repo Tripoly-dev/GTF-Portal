@@ -31,15 +31,15 @@ const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
 
 const BOOKING_STATUS: Record<string, { label: string; bg: string; color: string }> = {
-  pending:   { label: 'Pending',   bg: '#FEF3C7', color: '#92400E' },
-  confirmed: { label: 'Confirmed', bg: '#D1FAE5', color: '#065F46' },
-  cancelled: { label: 'Cancelled', bg: '#FEE2E2', color: '#991B1B' },
+  pending:   { label: 'Pending',   bg: 'var(--warn-lt)', color: 'var(--warn)' },
+  confirmed: { label: 'Confirmed', bg: 'var(--ok-bg)', color: 'var(--ok)' },
+  cancelled: { label: 'Cancelled', bg: 'var(--danger-bg)', color: 'var(--danger)' },
 }
 
 const DEP_STATUS: Record<string, { label: string; bg: string; color: string }> = {
-  available:      { label: 'Available',    bg: '#D1FAE5', color: '#065F46' },
-  'fast-filling': { label: 'Fast Filling', bg: '#FEF3C7', color: '#92400E' },
-  'sold-out':     { label: 'Sold Out',     bg: '#FEE2E2', color: '#991B1B' },
+  available:      { label: 'Available',    bg: 'var(--ok-bg)', color: 'var(--ok)' },
+  'fast-filling': { label: 'Fast Filling', bg: 'var(--warn-lt)', color: 'var(--warn)' },
+  'sold-out':     { label: 'Sold Out',     bg: 'var(--danger-bg)', color: 'var(--danger)' },
 }
 
 function Toggle({ checked, disabled, onChange }: { checked: boolean; disabled?: boolean; onChange: () => void }) {
@@ -149,7 +149,7 @@ function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: 
     ['Heard about us via *', 'how_did_you_hear', false],
   ]
   const shownLogo = logoPreview || agent.logo_url
-  const btn = { padding: '9px 18px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" } as const
+  const btn = { padding: '9px 18px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-sans)' } as const
 
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.6)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
@@ -170,12 +170,12 @@ function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: 
           {editing ? (
             <>
               <div style={{ marginBottom: 14 }}>
-                <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 6 }}>{agent.logo_url ? 'REPLACE LOGO' : 'UPLOAD LOGO'} (PNG/JPG/WEBP, max 500KB)</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.04em', display: 'block', marginBottom: 6 }}>{agent.logo_url ? 'REPLACE LOGO' : 'UPLOAD LOGO'} (PNG/JPG/WEBP, max 500KB)</label>
                 <input type="file" accept="image/png,image/jpeg,image/webp" onChange={pickLogo} style={{ fontSize: 12 }} />
               </div>
               {edit.map(([label, key, multi]) => (
                 <div key={key} style={{ marginBottom: 14 }}>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 6 }}>{label.toUpperCase()}</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.04em', display: 'block', marginBottom: 6 }}>{label.toUpperCase()}</label>
                   {multi
                     ? <textarea className="input-field" rows={2} value={f[key]} onChange={set(key)} style={{ resize: 'none' }} />
                     : key === 'how_did_you_hear'
@@ -189,8 +189,8 @@ function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: 
                       : <input className="input-field" value={f[key]} onChange={set(key)} />}
                 </div>
               ))}
-              <div style={{ fontSize: 11, color: 'var(--ink-light)', marginBottom: 14 }}>Email is the agent&apos;s login and can&apos;t be changed here.</div>
-              {error && <div style={{ padding: '10px 14px', background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B', fontSize: 12, marginBottom: 14 }}>{error}</div>}
+              <div style={{ fontSize: 12, color: 'var(--ink-light)', marginBottom: 14 }}>Email is the agent&apos;s login and can&apos;t be changed here.</div>
+              {error && <div style={{ padding: '10px 14px', background: 'var(--danger-bg)', border: '1px solid var(--danger-bg)', color: 'var(--danger)', fontSize: 12, marginBottom: 14 }}>{error}</div>}
               <div style={{ display: 'flex', gap: 10 }}>
                 <button onClick={save} disabled={saving} style={{ ...btn, background: 'var(--teal)', color: '#fff', border: 'none', opacity: saving ? 0.6 : 1 }}>{saving ? 'SAVING...' : 'SAVE CHANGES'}</button>
                 <button onClick={() => { setEditing(false); setError(''); setLogoFile(null); setLogoPreview(null) }} disabled={saving} style={{ ...btn, background: 'white', color: 'var(--ink-mid)', border: '1px solid var(--rule)' }}>CANCEL</button>
@@ -199,7 +199,7 @@ function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: 
           ) : (
             view.map(([k, v]) => (
               <div key={k} style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: 12, padding: '9px 0', borderBottom: '1px solid var(--rule)', fontSize: 13 }}>
-                <div style={{ color: 'var(--ink-light)', fontWeight: 600, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', paddingTop: 2 }}>{k}</div>
+                <div style={{ color: 'var(--ink-light)', fontWeight: 600, fontSize: 12, letterSpacing: '0.04em', textTransform: 'uppercase', paddingTop: 2 }}>{k}</div>
                 <div style={{ color: 'var(--ink)', wordBreak: 'break-word' }}>{v}</div>
               </div>
             ))
@@ -410,9 +410,9 @@ export default function AdminPage() {
         <div style={{ padding: '28px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF" style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>GTF <span style={{ fontWeight: 300 }}>Admin</span></span>
+            <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>GTF <span style={{ fontWeight: 400 }}>Admin</span></span>
           </Link>
-          <div style={{ marginTop: 12, padding: '4px 10px', background: 'rgba(127,212,196,0.15)', border: '1px solid rgba(127,212,196,0.4)', display: 'inline-block', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: '#7FD4C4' }}>ADMIN PANEL</div>
+          <div style={{ marginTop: 12, padding: '4px 10px', background: 'rgba(127,212,196,0.15)', border: '1px solid rgba(127,212,196,0.4)', display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: '#7FD4C4' }}>ADMIN PANEL</div>
         </div>
 
         <nav style={{ padding: '16px 0', flex: 1 }}>
@@ -423,12 +423,12 @@ export default function AdminPage() {
               borderLeft: `2px solid ${section === item.id ? 'var(--teal)' : 'transparent'}`,
               border: 'none', color: section === item.id ? '#fff' : 'rgba(255,255,255,0.45)',
               fontSize: 13, fontWeight: section === item.id ? 600 : 400, cursor: 'pointer',
-              textAlign: 'left', fontFamily: "'DM Sans', sans-serif",
+              textAlign: 'left', fontFamily: 'var(--font-sans)',
             }}>
               <span>{item.icon}</span>
               <span style={{ flex: 1 }}>{item.label}</span>
               {item.badge && item.badge > 0 && (
-                <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--warn)', color: '#fff', fontSize: 10, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.badge}</span>
+                <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--warn)', color: '#fff', fontSize: 12, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.badge}</span>
               )}
             </button>
           ))}
@@ -438,7 +438,7 @@ export default function AdminPage() {
           <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'rgba(255,255,255,0.62)', fontSize: 13, marginBottom: 12 }}>
             <span>←</span> View Portal
           </Link>
-          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.62)', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, fontFamily: "'DM Sans', sans-serif" }}>
+          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.62)', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-sans)' }}>
             <span>→</span> Sign Out
           </button>
         </div>
@@ -454,7 +454,7 @@ export default function AdminPage() {
           <>
             <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <h1 className="font-tight" style={{ fontSize: 20, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em', margin: 0 }}>Agent Management</h1>
+                <h1 className="font-display" style={{ fontSize: 24, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.015em', margin: 0 }}>Agent Management</h1>
                 <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2, marginBottom: 0 }}>Review and approve partner registrations</p>
               </div>
               {agentCounts.pending > 0 && (
@@ -470,12 +470,12 @@ export default function AdminPage() {
                 {[
                   { label: 'Total Agents', n: agentCounts.all, color: 'var(--teal)' },
                   { label: 'Pending', n: agentCounts.pending, color: 'var(--warn)' },
-                  { label: 'Approved', n: agentCounts.approved, color: '#065F46' },
-                  { label: 'Rejected', n: agentCounts.rejected, color: '#991B1B' },
+                  { label: 'Approved', n: agentCounts.approved, color: 'var(--ok)' },
+                  { label: 'Rejected', n: agentCounts.rejected, color: 'var(--danger)' },
                 ].map(s => (
                   <div key={s.label} style={{ background: 'white', border: '1px solid var(--rule)', padding: '24px' }}>
                     <div className="font-tight" style={{ fontSize: 40, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 6 }}>{s.n}</div>
-                    <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em' }}>{s.label.toUpperCase()}</div>
+                    <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em' }}>{s.label.toUpperCase()}</div>
                   </div>
                 ))}
               </div>
@@ -484,7 +484,7 @@ export default function AdminPage() {
                 <input placeholder="Search by name, agency, email or city..." value={agentSearch} onChange={e => setAgentSearch(e.target.value)} className="input-field" style={{ maxWidth: 320 }} />
                 <div style={{ display: 'flex', gap: 6 }}>
                   {(['all', 'pending', 'approved', 'rejected'] as const).map(f => (
-                    <button key={f} onClick={() => setAgentFilter(f)} style={{ padding: '8px 18px', border: '1.5px solid var(--rule)', background: agentFilter === f ? 'var(--ink)' : 'white', color: agentFilter === f ? '#fff' : 'var(--ink-mid)', fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textTransform: 'capitalize' }}>
+                    <button key={f} onClick={() => setAgentFilter(f)} style={{ padding: '8px 18px', border: '1.5px solid var(--rule)', background: agentFilter === f ? 'var(--ink)' : 'white', color: agentFilter === f ? '#fff' : 'var(--ink-mid)', fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', cursor: 'pointer', fontFamily: 'var(--font-sans)', textTransform: 'capitalize' }}>
                       {f} ({agentCounts[f]})
                     </button>
                   ))}
@@ -502,15 +502,15 @@ export default function AdminPage() {
                 <div style={{ background: 'white', border: '1px solid var(--rule)', overflow: 'hidden' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px 120px 140px 180px', padding: '12px 20px', background: 'var(--bg)', borderBottom: '1px solid var(--rule)', gap: 16 }}>
                     {['Agent / Agency', 'Contact', 'City', 'IATA#', 'Applied', 'Action'].map(h => (
-                      <div key={h} style={{ fontSize: 10, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.1em' }}>{h.toUpperCase()}</div>
+                      <div key={h} style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em' }}>{h.toUpperCase()}</div>
                     ))}
                   </div>
                   {filteredAgents.map((agent, i) => (
-                    <div key={agent.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px 120px 140px 180px', padding: '16px 20px', borderBottom: i < filteredAgents.length - 1 ? '1px solid var(--rule)' : 'none', gap: 16, alignItems: 'center', background: agent.status === 'pending' ? '#FFFBF5' : 'white' }}>
+                    <div key={agent.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px 120px 140px 180px', padding: '16px 20px', borderBottom: i < filteredAgents.length - 1 ? '1px solid var(--rule)' : 'none', gap: 16, alignItems: 'center', background: agent.status === 'pending' ? 'var(--warn-lt)' : 'white' }}>
                       <div>
                         <button onClick={() => setViewAgent(agent)} className="font-tight" title="View full details" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', marginBottom: 3, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'var(--rule)', textUnderlineOffset: 3 }}>{agent.full_name}</button>
                         <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{agent.agency_name}</div>
-                        <button onClick={() => setViewAgent(agent)} style={{ display: 'block', marginTop: 4, fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--teal)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>VIEW DETAILS →</button>
+                        <button onClick={() => setViewAgent(agent)} style={{ display: 'block', marginTop: 4, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--teal)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>VIEW DETAILS →</button>
                       </div>
                       <div>
                         <div style={{ fontSize: 13, color: 'var(--ink-mid)', marginBottom: 2 }}>{agent.email}</div>
@@ -522,19 +522,19 @@ export default function AdminPage() {
                       <div>
                         {agent.status === 'pending' ? (
                           <div style={{ display: 'flex', gap: 8 }}>
-                            <button onClick={() => handleAgentAction(agent.id, 'approved')} disabled={updatingAgent === agent.id} style={{ padding: '7px 14px', background: 'var(--teal)', color: '#fff', border: 'none', fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: updatingAgent === agent.id ? 0.6 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+                            <button onClick={() => handleAgentAction(agent.id, 'approved')} disabled={updatingAgent === agent.id} style={{ padding: '7px 14px', background: 'var(--teal)', color: '#fff', border: 'none', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: updatingAgent === agent.id ? 0.6 : 1, fontFamily: 'var(--font-sans)' }}>
                               {updatingAgent === agent.id ? '...' : 'APPROVE'}
                             </button>
-                            <button onClick={() => handleAgentAction(agent.id, 'rejected')} disabled={updatingAgent === agent.id} style={{ padding: '7px 14px', background: 'transparent', color: '#991B1B', border: '1px solid #FECACA', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
+                            <button onClick={() => handleAgentAction(agent.id, 'rejected')} disabled={updatingAgent === agent.id} style={{ padding: '7px 14px', background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger-bg)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>
                               REJECT
                             </button>
                           </div>
                         ) : (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', letterSpacing: '0.06em', background: agent.status === 'approved' ? '#D1FAE5' : '#FEE2E2', color: agent.status === 'approved' ? '#065F46' : '#991B1B' }}>{agent.status.toUpperCase()}</span>
-                            {agent.status === 'approved' && <button onClick={() => handleAgentAction(agent.id, 'rejected')} style={{ fontSize: 10, color: 'var(--ink-light)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>revoke</button>}
-                            {agent.status === 'rejected' && <button onClick={() => handleAgentAction(agent.id, 'approved')} style={{ fontSize: 10, color: 'var(--teal)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>approve</button>}
-                            {agent.status === 'approved' && <button onClick={() => handleAgentAction(agent.id, 'suspended')} style={{ fontSize: 10, color: 'var(--warn)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>suspend</button>}
+                            <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 8px', letterSpacing: '0.04em', background: agent.status === 'approved' ? 'var(--ok-bg)' : 'var(--danger-bg)', color: agent.status === 'approved' ? 'var(--ok)' : 'var(--danger)' }}>{agent.status.toUpperCase()}</span>
+                            {agent.status === 'approved' && <button onClick={() => handleAgentAction(agent.id, 'rejected')} style={{ fontSize: 12, color: 'var(--ink-light)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>revoke</button>}
+                            {agent.status === 'rejected' && <button onClick={() => handleAgentAction(agent.id, 'approved')} style={{ fontSize: 12, color: 'var(--teal)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>approve</button>}
+                            {agent.status === 'approved' && <button onClick={() => handleAgentAction(agent.id, 'suspended')} style={{ fontSize: 12, color: 'var(--warn)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>suspend</button>}
                           </div>
                         )}
                       </div>
@@ -550,7 +550,7 @@ export default function AdminPage() {
         {section === 'bookings' && (
           <>
             <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px 40px' }}>
-              <h1 className="font-tight" style={{ fontSize: 20, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em', margin: 0 }}>All Bookings</h1>
+              <h1 className="font-display" style={{ fontSize: 24, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.015em', margin: 0 }}>All Bookings</h1>
               <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2, marginBottom: 0 }}>Confirm or cancel booking requests from agents</p>
             </div>
             <div style={{ padding: '32px 40px' }}>
@@ -558,20 +558,20 @@ export default function AdminPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
                 {[
                   { label: 'Total', n: bookingCounts.all, color: 'var(--teal)' },
-                  { label: 'Pending', n: bookingCounts.pending, color: '#92400E' },
-                  { label: 'Confirmed', n: bookingCounts.confirmed, color: '#065F46' },
-                  { label: 'Cancelled', n: bookingCounts.cancelled, color: '#991B1B' },
+                  { label: 'Pending', n: bookingCounts.pending, color: 'var(--warn)' },
+                  { label: 'Confirmed', n: bookingCounts.confirmed, color: 'var(--ok)' },
+                  { label: 'Cancelled', n: bookingCounts.cancelled, color: 'var(--danger)' },
                 ].map(s => (
                   <div key={s.label} style={{ background: 'white', border: '1px solid var(--rule)', padding: '20px 24px' }}>
                     <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{s.n}</div>
-                    <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em' }}>{s.label.toUpperCase()}</div>
+                    <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em' }}>{s.label.toUpperCase()}</div>
                   </div>
                 ))}
               </div>
               {/* Filter */}
               <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
                 {(['all', 'pending', 'confirmed', 'cancelled'] as const).map(f => (
-                  <button key={f} onClick={() => setBookingFilter(f)} style={{ padding: '8px 16px', border: '1.5px solid var(--rule)', borderRadius: 6, background: bookingFilter === f ? 'var(--ink)' : 'white', color: bookingFilter === f ? '#fff' : 'var(--ink-mid)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textTransform: 'capitalize' }}>
+                  <button key={f} onClick={() => setBookingFilter(f)} style={{ padding: '8px 16px', border: '1.5px solid var(--rule)', borderRadius: 6, background: bookingFilter === f ? 'var(--ink)' : 'white', color: bookingFilter === f ? '#fff' : 'var(--ink-mid)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-sans)', textTransform: 'capitalize' }}>
                     {f} ({bookingCounts[f]})
                   </button>
                 ))}
@@ -585,7 +585,7 @@ export default function AdminPage() {
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--rule)', background: 'var(--bg)' }}>
                         {['Ref', 'Agent', 'Package', 'Departure', 'Pax', 'Total', 'Status', 'Actions'].map(h => (
-                          <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.1em' }}>{h.toUpperCase()}</th>
+                          <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.04em' }}>{h.toUpperCase()}</th>
                         ))}
                       </tr>
                     </thead>
@@ -598,26 +598,26 @@ export default function AdminPage() {
                           <tr key={b.id} style={{ borderBottom: '1px solid var(--rule)', background: i % 2 === 0 ? 'white' : 'var(--bg)' }}>
                             <td style={{ padding: '14px 16px' }}>
                               <Link href={`/admin/bookings/${b.id}`} style={{ fontSize: 12, fontWeight: 700, color: 'var(--teal)', textDecoration: 'none' }}>{b.id.slice(0, 8).toUpperCase()}</Link>
-                              <div style={{ fontSize: 11, color: 'var(--ink-light)' }}>{fmtDate(b.created_at)}</div>
+                              <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{fmtDate(b.created_at)}</div>
                             </td>
                             <td style={{ padding: '14px 16px' }}>
                               <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{b.agent?.full_name || '—'}</div>
-                              <div style={{ fontSize: 11, color: 'var(--ink-light)' }}>{b.agent?.agency_name || '—'}</div>
+                              <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{b.agent?.agency_name || '—'}</div>
                             </td>
                             <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{b.package_name}</td>
                             <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)', whiteSpace: 'nowrap' }}>{fmtDate(b.departure_date)}</td>
                             <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{pax}</td>
                             <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{fmtPrice(b.total_price)}</td>
                             <td style={{ padding: '14px 16px' }}>
-                              <span style={{ fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.06em' }}>{st.label.toUpperCase()}</span>
+                              <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
                             </td>
                             <td style={{ padding: '14px 16px' }}>
                               {b.status === 'pending' ? (
                                 <div style={{ display: 'flex', gap: 6 }}>
-                                  <button onClick={() => handleBookingStatus(b.id, 'confirmed')} disabled={isUpdating} style={{ padding: '6px 12px', background: '#16a34a', color: 'white', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: isUpdating ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+                                  <button onClick={() => handleBookingStatus(b.id, 'confirmed')} disabled={isUpdating} style={{ padding: '6px 12px', background: 'var(--ok)', color: 'white', border: 'none', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: isUpdating ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
                                     {isUpdating ? '...' : 'Confirm'}
                                   </button>
-                                  <button onClick={() => handleBookingStatus(b.id, 'cancelled')} disabled={isUpdating} style={{ padding: '6px 12px', background: '#ef4444', color: 'white', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: isUpdating ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+                                  <button onClick={() => handleBookingStatus(b.id, 'cancelled')} disabled={isUpdating} style={{ padding: '6px 12px', background: 'var(--danger)', color: 'white', border: 'none', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: isUpdating ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
                                     Cancel
                                   </button>
                                 </div>
@@ -641,12 +641,12 @@ export default function AdminPage() {
           <>
             <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <h1 className="font-tight" style={{ fontSize: 20, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em', margin: 0 }}>Departure Management</h1>
+                <h1 className="font-display" style={{ fontSize: 24, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.015em', margin: 0 }}>Departure Management</h1>
                 <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2, marginBottom: 0 }}>Manage availability and seat counts per departure</p>
               </div>
               <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                {seedMsg && <span style={{ fontSize: 12, color: seedMsg.startsWith('✓') ? '#16a34a' : '#ef4444', fontWeight: 600 }}>{seedMsg}</span>}
-                <button onClick={seedDepartures} disabled={seeding} style={{ padding: '10px 18px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', opacity: seeding ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif" }}>
+                {seedMsg && <span style={{ fontSize: 12, color: seedMsg.startsWith('✓') ? 'var(--ok)' : 'var(--danger)', fontWeight: 600 }}>{seedMsg}</span>}
+                <button onClick={seedDepartures} disabled={seeding} style={{ padding: '10px 18px', background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', opacity: seeding ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
                   {seeding ? 'Seeding...' : '⚡ Seed All Departures'}
                 </button>
               </div>
@@ -661,10 +661,10 @@ export default function AdminPage() {
                   {PACKAGES.map(pkg => {
                     const active = !!packageActive[pkg.id]
                     return (
-                      <div key={pkg.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 14px', background: 'white', border: `1px solid ${active ? 'var(--rule)' : '#FECACA'}`, borderRadius: 8 }}>
+                      <div key={pkg.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 14px', background: 'white', border: `1px solid ${active ? 'var(--rule)' : 'var(--danger-bg)'}`, borderRadius: 8 }}>
                         <div style={{ minWidth: 0 }}>
-                          <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pkg.name}</div>
-                          <div style={{ fontSize: 10.5, color: active ? 'var(--ink-light)' : '#991B1B', textTransform: 'capitalize', fontWeight: active ? 400 : 700 }}>{pkg.region} · {active ? 'Active' : 'Inactive'}</div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pkg.name}</div>
+                          <div style={{ fontSize: 12, color: active ? 'var(--ink-light)' : 'var(--danger)', textTransform: 'capitalize', fontWeight: active ? 400 : 700 }}>{pkg.region} · {active ? 'Active' : 'Inactive'}</div>
                         </div>
                         <Toggle checked={active} disabled={updatingPkg === pkg.id} onChange={() => handlePackageActive(pkg.id, !active)} />
                       </div>
@@ -674,7 +674,7 @@ export default function AdminPage() {
               </div>
 
               <div style={{ marginBottom: 20 }}>
-                <input value={depSearch} onChange={e => setDepSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--rule)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: "'DM Sans', sans-serif" }} />
+                <input value={depSearch} onChange={e => setDepSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--rule)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: 'var(--font-sans)' }} />
               </div>
               <div style={{ background: 'white', border: '1px solid var(--rule)', borderRadius: 12, overflow: 'hidden' }}>
                 {filteredDeps.length === 0 ? (
@@ -688,7 +688,7 @@ export default function AdminPage() {
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--rule)', background: 'var(--bg)' }}>
                         {['Package', 'Region', 'Departure Date', 'Booked / Total', 'Status', 'Override', 'Active'].map(h => (
-                          <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.1em' }}>{h.toUpperCase()}</th>
+                          <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.04em' }}>{h.toUpperCase()}</th>
                         ))}
                       </tr>
                     </thead>
@@ -705,16 +705,16 @@ export default function AdminPage() {
                               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                 <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{d.booked_seats || 0} / {d.total_seats || 30}</span>
                                 <div style={{ flex: 1, height: 6, background: 'var(--rule)', borderRadius: 3, minWidth: 60 }}>
-                                  <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? '#ef4444' : pct >= 33 ? '#f59e0b' : '#16a34a' }} />
+                                  <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? 'var(--danger)' : pct >= 33 ? '#f59e0b' : 'var(--ok)' }} />
                                 </div>
-                                <span style={{ fontSize: 11, color: 'var(--ink-light)' }}>{pct}%</span>
+                                <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>{pct}%</span>
                               </div>
                             </td>
                             <td style={{ padding: '14px 16px' }}>
-                              <span style={{ fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.06em' }}>{st.label.toUpperCase()}</span>
+                              <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
                             </td>
                             <td style={{ padding: '14px 16px' }}>
-                              <select value={d.status} disabled={updatingDep === d.id} onChange={e => handleDepStatus(d.id, e.target.value)} style={{ padding: '6px 10px', border: '1.5px solid var(--rule)', borderRadius: 6, fontSize: 12, fontFamily: "'DM Sans', sans-serif", cursor: 'pointer', background: 'white' }}>
+                              <select value={d.status} disabled={updatingDep === d.id} onChange={e => handleDepStatus(d.id, e.target.value)} style={{ padding: '6px 10px', border: '1.5px solid var(--rule)', borderRadius: 6, fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer', background: 'white' }}>
                                 <option value="available">Available</option>
                                 <option value="fast-filling">Fast Filling</option>
                                 <option value="sold-out">Sold Out</option>

@@ -43,11 +43,11 @@ export default function BespokeHolidaysPage() {
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,26,23,0.3) 0%, rgba(7,26,23,0.85) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px 56px' }}>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.14em', marginBottom: 12, fontWeight: 600 }}>BESPOKE HOLIDAYS</div>
-          <h1 className="font-tight" style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
-            Personally curated.<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>Globally delivered.</span>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', marginBottom: 12, fontWeight: 600 }}>BESPOKE HOLIDAYS</div>
+          <h1 className="font-display" style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
+            Personally curated.<br /><span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>Globally delivered.</span>
           </h1>
-          <p className="font-tight" style={{ fontSize: 20, fontWeight: 300, fontStyle: 'italic', color: 'rgba(255,255,255,0.65)', maxWidth: 560 }}>
+          <p className="font-tight" style={{ fontSize: 20, fontWeight: 400, fontStyle: 'italic', color: 'rgba(255,255,255,0.65)', maxWidth: 560 }}>
             Personally Curated Global Holidays!
           </p>
         </div>
@@ -57,20 +57,20 @@ export default function BespokeHolidaysPage() {
 
         {/* Who we are */}
         <div style={{ maxWidth: 760, marginBottom: 80 }}>
-          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 20 }}>WHO WE ARE</div>
-          <h2 className="font-tight" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 24 }}>
-            A global destination <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>management company.</span>
+          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>WHO WE ARE</div>
+          <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 24 }}>
+            A global destination <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>management company.</span>
           </h2>
-          <p style={{ fontSize: 16, color: 'var(--ink-mid)', lineHeight: 1.85, fontWeight: 300 }}>
+          <p style={{ fontSize: 16, color: 'var(--ink-mid)', lineHeight: 1.85, fontWeight: 400 }}>
             GTF Holidays LLP (Global Travel Fusion) is a Global Destination Management Company backed by a leadership team with 25+ years of travel industry experience, committed exclusively to empowering Travel Partners through professionally managed travel solutions, seamless operations, and exceptional destination expertise worldwide.
           </p>
         </div>
 
         {/* Philosophy */}
         <div style={{ marginBottom: 80 }}>
-          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 20 }}>THE BESPOKE HOLIDAYS PHILOSOPHY</div>
-          <h2 className="font-tight" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 32, maxWidth: 640 }}>
-            Every traveller is different. <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>Every holiday should be too.</span>
+          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>THE BESPOKE HOLIDAYS PHILOSOPHY</div>
+          <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 32, maxWidth: 640 }}>
+            Every traveller is different. <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>Every holiday should be too.</span>
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             {PHILOSOPHY_IMAGES.map((img, i) => (
@@ -90,8 +90,8 @@ export default function BespokeHolidaysPage() {
           />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(7,26,23,0.9) 0%, rgba(7,26,23,0.5) 55%, rgba(7,26,23,0.25) 100%)' }} />
           <div style={{ position: 'relative', padding: '56px 48px', maxWidth: 560 }}>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 16 }}>UNFORGETTABLE HOLIDAYS. UNIQUE STORY.</div>
-            <p className="font-tight" style={{ fontSize: 18, fontWeight: 300, color: '#fff', lineHeight: 1.7 }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>UNFORGETTABLE HOLIDAYS. UNIQUE STORY.</div>
+            <p className="font-tight" style={{ fontSize: 18, fontWeight: 400, color: '#fff', lineHeight: 1.7 }}>
               At Bespoke Holidays, we believe unforgettable holidays are never created from templates. Every traveller has a unique story, a different purpose of travel, and their own idea of the perfect holiday. Whether it&apos;s a honeymoon, multi-generational family holiday, luxury escape, milestone celebration, self-drive adventure, cruise, rail journey, wildlife expedition, pilgrimage, or a once-in-a-lifetime dream vacation, we transform ideas into unforgettable travel experiences.
             </p>
           </div>
@@ -99,20 +99,20 @@ export default function BespokeHolidaysPage() {
 
         {/* Your Client Remains Yours */}
         <div style={{ background: 'var(--teal-lt)', padding: '56px 48px', marginBottom: 80, textAlign: 'center' }}>
-          <div style={{ fontSize: 11, color: 'var(--teal-dark)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 16 }}>OUR COMMITMENT TO YOU</div>
-          <h3 className="font-tight" style={{ fontSize: 'clamp(24px, 3vw, 34px)', fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 16, maxWidth: 620, margin: '0 auto 16px' }}>
-            Your client remains yours. <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>Always.</span>
+          <div style={{ fontSize: 12, color: 'var(--teal-dark)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>OUR COMMITMENT TO YOU</div>
+          <h3 className="font-display" style={{ fontSize: 'clamp(24px, 3vw, 34px)', fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 16, maxWidth: 620, margin: '0 auto 16px' }}>
+            Your client remains yours. <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>Always.</span>
           </h3>
-          <p style={{ fontSize: 15.5, color: 'var(--ink-mid)', lineHeight: 1.8, fontWeight: 300, maxWidth: 560, margin: '0 auto' }}>
+          <p style={{ fontSize: 16, color: 'var(--ink-mid)', lineHeight: 1.8, fontWeight: 400, maxWidth: 560, margin: '0 auto' }}>
             As a 100% B2B travel company, we work exclusively with Travel Partners. We never compete for your clients — we become an extension of your team.
           </p>
         </div>
 
         {/* Why Partner */}
         <div>
-          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 20 }}>WHY PARTNER WITH BESPOKE HOLIDAYS</div>
-          <h2 className="font-tight" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 40, maxWidth: 640 }}>
-            Crafted for the <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>discerning traveller.</span>
+          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>WHY PARTNER WITH BESPOKE HOLIDAYS</div>
+          <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 40, maxWidth: 640 }}>
+            Crafted for the <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>discerning traveller.</span>
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
             {BENEFITS.map((b, i) => (
@@ -123,7 +123,7 @@ export default function BespokeHolidaysPage() {
                 background: 'white',
               }}>
                 <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0 }} />
-                <span className="font-tight" style={{ fontSize: 15.5, fontWeight: 600, color: 'var(--ink)', letterSpacing: '-0.01em', lineHeight: 1.35 }}>{b}</span>
+                <span className="font-tight" style={{ fontSize: 16, fontWeight: 600, color: 'var(--ink)', letterSpacing: '-0.01em', lineHeight: 1.35 }}>{b}</span>
               </div>
             ))}
           </div>
@@ -133,9 +133,8 @@ export default function BespokeHolidaysPage() {
       {/* Closing CTA */}
       <div style={{ background: 'var(--ink)', padding: '80px 56px', textAlign: 'center' }}>
         <div style={{ maxWidth: 640, margin: '0 auto' }}>
-          <div className="eyebrow" style={{ color: 'var(--teal)', marginBottom: 16 }}>LET&apos;S TALK</div>
-          <h2 className="font-tight" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 24 }}>
-            Let&apos;s design something <span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>unforgettable.</span>
+          <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', marginBottom: 24 }}>
+            Let&apos;s design something <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>unforgettable.</span>
           </h2>
           <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal"><WhatsAppIcon size={16} color="#fff" /> CHAT WITH OUR TEAM ON WHATSAPP →</a>
         </div>

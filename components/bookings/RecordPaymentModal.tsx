@@ -5,12 +5,12 @@ import { PAYMENT_MODES, type Payment } from './types'
 function inputStyle(): React.CSSProperties {
   return {
     width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)',
-    borderRadius: 6, fontSize: 13, fontFamily: "'DM Sans', sans-serif",
+    borderRadius: 6, fontSize: 13, fontFamily: 'var(--font-sans)',
     outline: 'none', boxSizing: 'border-box', background: 'white', color: 'var(--ink)',
   }
 }
 function labelStyle(): React.CSSProperties {
-  return { fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 6 }
+  return { fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 6 }
 }
 
 type Props = {
@@ -68,13 +68,13 @@ export default function RecordPaymentModal({ bookingId, payment, onClose, onSave
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,23,0.55)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ background: 'white', width: '100%', maxWidth: 480, maxHeight: '90vh', overflowY: 'auto', borderRadius: 12, boxShadow: '0 24px 64px rgba(7,26,23,0.2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid var(--rule)' }}>
-          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', fontFamily: "'Playfair Display', serif" }}>{isEdit ? 'Edit Payment' : 'Record Payment'}</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)' }}>{isEdit ? 'Edit Payment' : 'Record Payment'}</div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)', lineHeight: 1 }}>✕</button>
         </div>
 
         <div style={{ padding: 24 }}>
           {error && (
-            <div style={{ marginBottom: 16, padding: '10px 14px', background: '#FEE2E2', border: '1px solid #FECACA', borderRadius: 8, fontSize: 13, color: '#991B1B' }}>{error}</div>
+            <div style={{ marginBottom: 16, padding: '10px 14px', background: 'var(--danger-bg)', border: '1px solid var(--danger-bg)', borderRadius: 8, fontSize: 13, color: 'var(--danger)' }}>{error}</div>
           )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

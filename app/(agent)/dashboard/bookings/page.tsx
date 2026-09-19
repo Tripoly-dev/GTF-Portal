@@ -6,9 +6,9 @@ const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
-  pending:   { label: 'Pending',   bg: '#FEF3C7', color: '#92400E' },
-  confirmed: { label: 'Confirmed', bg: '#D1FAE5', color: '#065F46' },
-  cancelled: { label: 'Cancelled', bg: '#FEE2E2', color: '#991B1B' },
+  pending:   { label: 'Pending',   bg: 'var(--warn-lt)', color: 'var(--warn)' },
+  confirmed: { label: 'Confirmed', bg: 'var(--ok-bg)', color: 'var(--ok)' },
+  cancelled: { label: 'Cancelled', bg: 'var(--danger-bg)', color: 'var(--danger)' },
 }
 
 export default function MyBookingsPage() {
@@ -40,7 +40,7 @@ export default function MyBookingsPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
           <div>
             <div className="eyebrow" style={{ marginBottom: 8 }}>MY BOOKINGS</div>
-            <h1 className="font-tight" style={{ fontSize: 32, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Booking Requests</h1>
+            <h1 className="font-display" style={{ fontSize: 32, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Booking Requests</h1>
           </div>
           <Link href="/dashboard" style={{ fontSize: 13, color: 'var(--teal)', textDecoration: 'none', fontWeight: 600 }}>← Dashboard</Link>
         </div>
@@ -49,13 +49,13 @@ export default function MyBookingsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
           {[
             { label: 'Total', n: counts.all, color: 'var(--teal)' },
-            { label: 'Pending', n: counts.pending, color: '#92400E' },
-            { label: 'Confirmed', n: counts.confirmed, color: '#065F46' },
-            { label: 'Cancelled', n: counts.cancelled, color: '#991B1B' },
+            { label: 'Pending', n: counts.pending, color: 'var(--warn)' },
+            { label: 'Confirmed', n: counts.confirmed, color: 'var(--ok)' },
+            { label: 'Cancelled', n: counts.cancelled, color: 'var(--danger)' },
           ].map(s => (
             <div key={s.label} style={{ background: 'white', border: '1px solid var(--rule)', borderRadius: 12, padding: '20px 24px' }}>
               <div className="font-tight" style={{ fontSize: 36, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{s.n}</div>
-              <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em' }}>{s.label.toUpperCase()}</div>
+              <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em' }}>{s.label.toUpperCase()}</div>
             </div>
           ))}
         </div>
@@ -63,7 +63,7 @@ export default function MyBookingsPage() {
         {/* Filter */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
           {(['all', 'pending', 'confirmed', 'cancelled'] as const).map(f => (
-            <button key={f} onClick={() => setFilter(f)} style={{ padding: '8px 16px', border: '1.5px solid var(--rule)', borderRadius: 6, background: filter === f ? 'var(--ink)' : 'white', color: filter === f ? '#fff' : 'var(--ink-mid)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textTransform: 'capitalize' }}>
+            <button key={f} onClick={() => setFilter(f)} style={{ padding: '8px 16px', border: '1.5px solid var(--rule)', borderRadius: 6, background: filter === f ? 'var(--ink)' : 'white', color: filter === f ? '#fff' : 'var(--ink-mid)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-sans)', textTransform: 'capitalize' }}>
               {f} ({counts[f]})
             </button>
           ))}
@@ -84,7 +84,7 @@ export default function MyBookingsPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--rule)', background: 'var(--bg)' }}>
                   {['Package', 'Departure', 'Passengers', 'Total', 'Deposit', 'Status', 'Created', ''].map(h => (
-                    <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 10, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.1em' }}>{h.toUpperCase()}</th>
+                    <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.04em' }}>{h.toUpperCase()}</th>
                   ))}
                 </tr>
               </thead>
@@ -96,14 +96,14 @@ export default function MyBookingsPage() {
                     <tr key={b.id} style={{ borderBottom: '1px solid var(--rule)', background: i % 2 === 0 ? 'white' : 'var(--bg)' }}>
                       <td style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)', marginBottom: 2 }}>{b.package_name}</div>
-                        <div style={{ fontSize: 11, color: 'var(--ink-light)' }}>Ref: {b.id.slice(0, 8).toUpperCase()}</div>
+                        <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>Ref: {b.id.slice(0, 8).toUpperCase()}</div>
                       </td>
                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{fmtDate(b.departure_date)}</td>
                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{pax} pax</td>
                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{fmtPrice(b.total_price)}</td>
                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{fmtPrice(b.deposit_amount)}</td>
                       <td style={{ padding: '14px 16px' }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.06em' }}>{st.label.toUpperCase()}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
                       </td>
                       <td style={{ padding: '14px 16px', fontSize: 12, color: 'var(--ink-light)' }}>{fmtDate(b.created_at)}</td>
                       <td style={{ padding: '14px 16px' }}>

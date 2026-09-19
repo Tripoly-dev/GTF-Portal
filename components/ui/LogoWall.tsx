@@ -14,7 +14,7 @@ export default function LogoWall({ logos, caption = false, height = 44 }: { logo
             alignItems: 'center', justifyContent: 'center', gap: 6, minWidth: 130,
           }}>
             <img src={l.url} alt={l.name} loading="lazy" style={{ height, width: 'auto', maxWidth: 200, objectFit: 'contain', display: 'block' }} />
-            {caption && <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: '#4b5563', textTransform: 'uppercase' }}>{l.name}</span>}
+            {caption && <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: '#4b5563', textTransform: 'uppercase' }}>{l.name}</span>}
           </div>
         ))}
       </div>

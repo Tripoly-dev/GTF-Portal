@@ -6,21 +6,20 @@ import { PACKAGES, Package } from '@/data/packages'
 
 // ── DESIGN TOKENS ─────────────────────────────────────────────────────────────
 const C = {
-  bg:       '#F4F8F7',
-  ink:      '#18161a',
-  inkMid:   '#494540',
-  inkLight: '#6b655c',
-  rule:     '#d6d0c5',
-  nav:      '#241f2b',
-  navFg:    '#efebe3',
-  accent:   '#9e2233',
-  gold:     '#6f5320',
-  teal:     '#0a6e5e',
-  tealDark: '#085e50',
+  bg:       'var(--bg)',
+  ink:      'var(--ink)',
+  inkMid:   'var(--ink-mid)',
+  inkLight: 'var(--ink-light)',
+  rule:     'var(--rule)',
+  nav:      'var(--forest)',
+  navFg:    'var(--paper)',
+  accent:   'var(--brand)',
+  gold:     'var(--warn)',
+  teal:     'var(--brand)',
+  tealDark: 'var(--teal-dark)',
   cardBg:   '#ffffff',
 }
-const font = '"DM Sans", "Archivo", system-ui, sans-serif'
-
+const font = 'var(--font-sans)'
 // ── FILTER DATA ───────────────────────────────────────────────────────────────
 const DURATION_RANGES = [
   { label: '4–8 Nights', min: 4, max: 8 },
@@ -55,12 +54,12 @@ function FilterRow({ label, checked, onChange, count }: { label: string; checked
         border: `2px solid ${checked ? C.ink : C.rule}`,
         background: checked ? C.ink : 'transparent',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: C.navFg, fontSize: 9, fontWeight: 800,
+        color: C.navFg, fontSize: 12, fontWeight: 800,
       }}>
         {checked ? '✓' : ''}
       </span>
       <span style={{ flex: 1 }}>{label}</span>
-      {count !== undefined && <span style={{ fontSize: 12, color: '#6b655c' }}>{count}</span>}
+      {count !== undefined && <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>{count}</span>}
     </div>
   )
 }
@@ -69,7 +68,7 @@ function FilterRow({ label, checked, onChange, count }: { label: string; checked
 function FilterSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ borderTop: `1px solid ${C.rule}`, padding: '16px 0 6px' }}>
-      <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.14em', color: C.inkMid, marginBottom: 12, fontFamily: font }}>{title}</div>
+      <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: C.inkMid, marginBottom: 12, fontFamily: font }}>{title}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>{children}</div>
     </div>
   )
@@ -77,10 +76,10 @@ function FilterSection({ title, children }: { title: string; children: React.Rea
 
 // ── STATUS HELPERS ────────────────────────────────────────────────────────────
 const STATUS_BG: Record<string, string> = {
-  'available':    '#D1FAE5', 'fast-filling': '#FEF3C7', 'sold-out': '#FEE2E2',
+  'available':    'var(--ok-bg)', 'fast-filling': 'var(--warn-lt)', 'sold-out': 'var(--danger-bg)',
 }
 const STATUS_FG: Record<string, string> = {
-  'available':    '#065F46', 'fast-filling': '#92400E', 'sold-out': '#991B1B',
+  'available':    'var(--ok)', 'fast-filling': 'var(--warn)', 'sold-out': 'var(--danger)',
 }
 const STATUS_LABEL: Record<string, string> = {
   'available': 'AVAILABLE', 'fast-filling': 'FAST FILLING', 'sold-out': 'SOLD OUT',
@@ -134,11 +133,11 @@ function PackageCard({ pkg }: { pkg: Package }) {
         }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(24,22,26,0.72) 0%, transparent 55%)' }} />
         {pkg.tag && pkg.tag !== 'COMING SOON' && (
-          <div style={{ position: 'absolute', top: 0, left: 0, padding: '5px 10px', background: C.accent, fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', color: '#fff', textTransform: 'uppercase', fontFamily: font }}>{pkg.tag}</div>
+          <div style={{ position: 'absolute', top: 0, left: 0, padding: '5px 10px', background: C.accent, fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: '#fff', textTransform: 'uppercase', fontFamily: font }}>{pkg.tag}</div>
         )}
         <div style={{ position: 'absolute', bottom: 10, left: 14, right: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div style={{ fontSize: 11, color: 'rgba(239,236,229,0.75)', letterSpacing: '0.1em', fontWeight: 700, fontFamily: font }}>{pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D</div>
-          <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: '#d9b877', fontSize: 11 }}>★</span>)}</div>
+          <div style={{ fontSize: 12, color: 'rgba(239,236,229,0.75)', letterSpacing: '0.04em', fontWeight: 700, fontFamily: font }}>{pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D</div>
+          <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: '#d9b877', fontSize: 12 }}>★</span>)}</div>
         </div>
       </div>
 
@@ -146,13 +145,13 @@ function PackageCard({ pkg }: { pkg: Package }) {
       <div style={{ padding: '16px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
           {pkg.travelerTypes.slice(0, 2).map(t => (
-            <span key={t} style={{ padding: '3px 8px', border: `1px solid ${C.teal}`, fontSize: 11, color: C.teal, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
+            <span key={t} style={{ padding: '3px 8px', border: `1px solid ${C.teal}`, fontSize: 12, color: C.teal, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
           ))}
           {pkg.themes.slice(0, 1).map(t => (
-            <span key={t} style={{ padding: '3px 8px', background: C.teal, fontSize: 11, color: '#fff', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
+            <span key={t} style={{ padding: '3px 8px', background: C.teal, fontSize: 12, color: '#fff', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: font }}>{t}</span>
           ))}
         </div>
-        <h3 style={{ margin: '0 0 12px', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em', color: C.ink, lineHeight: 1.2, fontFamily: font }}>{pkg.name}</h3>
+        <h3 className="font-display" style={{ margin: '0 0 12px', fontSize: 18, fontWeight: 500, letterSpacing: '-0.01em', color: C.ink, lineHeight: 1.2, fontFamily: font }}>{pkg.name}</h3>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8 }}>
           <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', color: C.ink, fontFamily: font }}>{fmtPrice()}</span>
           <span style={{ fontSize: 13, color: C.inkLight }}>per person</span>
@@ -160,7 +159,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
         {nextDep && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.inkLight, marginBottom: 14 }}>
             Next: <strong style={{ color: C.inkMid, fontWeight: 600 }}>{new Date(nextDep.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</strong>
-            <span style={{ background: STATUS_BG[nextDep.status] || '#D1FAE5', color: STATUS_FG[nextDep.status] || '#065F46', padding: '2px 7px', fontSize: 11, fontWeight: 700, letterSpacing: '0.04em', fontFamily: font }}>
+            <span style={{ background: STATUS_BG[nextDep.status] || 'var(--ok-bg)', color: STATUS_FG[nextDep.status] || 'var(--ok)', padding: '2px 7px', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: font }}>
               {STATUS_LABEL[nextDep.status] || 'AVAILABLE'}
             </span>
           </div>
@@ -169,7 +168,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
           {pkg.hasPrice ? (
             <Link href={`/dashboard/packages/${pkg.id}`} style={{
               flex: 1, textAlign: 'left', padding: '11px 18px', background: C.teal, color: '#fff',
-              fontSize: 13, fontWeight: 700, letterSpacing: '0.08em',
+              fontSize: 13, fontWeight: 700, letterSpacing: '0.04em',
               textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.teal}`,
               transition: 'background 0.15s, border-color 0.15s', borderRadius: 6,
@@ -183,7 +182,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
             <a href={`https://wa.me/918928872400?text=${encodeURIComponent(`Hi GTF Team, I'd like to request pricing for ${pkg.name} (${pkg.nights}N/${pkg.days}D).`)}`}
               target="_blank" rel="noopener noreferrer" style={{
                 flex: 1, textAlign: 'center', padding: '11px 0', background: C.accent, color: '#fff',
-                fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textDecoration: 'none', display: 'block',
+                fontSize: 13, fontWeight: 700, letterSpacing: '0.04em', textDecoration: 'none', display: 'block',
                 fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.accent}`, borderRadius: 6,
               }}>
               Request Pricing →
@@ -284,15 +283,15 @@ function PackagesInner() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F4F8F7', color: C.ink, fontFamily: font }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: C.ink, fontFamily: font }}>
       <div style={{ maxWidth: 1560, margin: '0 auto', padding: '0 40px 88px', display: 'grid', gridTemplateColumns: '220px 1fr', gap: 0 }}>
 
         {/* ── FILTER SIDEBAR ─────────────────────────────────────────────────── */}
         <aside style={{ padding: '36px 32px 60px 0', borderRight: `2px solid rgba(24,22,26,0.35)`, position: 'sticky', top: 54, maxHeight: 'calc(100vh - 54px)', overflowY: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
-            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: font }}>Filters</div>
+            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: font }}>Filters</div>
             {activeCount > 0 && (
-              <button onClick={clearAll} style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.06em', color: C.accent, cursor: 'pointer', background: 'none', border: 'none', fontFamily: font }}>
+              <button onClick={clearAll} style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: C.accent, cursor: 'pointer', background: 'none', border: 'none', fontFamily: font }}>
                 CLEAR ALL
               </button>
             )}
@@ -359,7 +358,7 @@ function PackagesInner() {
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16 }}>
             <div>
-              <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.025em', margin: '0 0 6px', fontFamily: font, color: C.ink }}>
+              <h1 className="font-display" style={{ fontSize: 32, fontWeight: 500, letterSpacing: '-0.025em', margin: '0 0 6px', color: C.ink }}>
                 Browse Packages
               </h1>
               <p style={{ margin: 0, fontSize: 13, color: C.inkLight }}>
@@ -376,7 +375,7 @@ function PackagesInner() {
                   onChange={e => setSearch(e.target.value)}
                   style={{
                     fontFamily: font, fontSize: 13, padding: '9px 12px',
-                    border: `1px solid ${C.rule}`, background: '#F4F8F7',
+                    border: `1px solid ${C.rule}`, background: 'var(--bg)',
                     color: C.ink, outline: 'none', width: 220,
                   }}
                 />
@@ -440,7 +439,7 @@ function PackagesInner() {
               </div>
               <button onClick={clearAll} style={{
                 padding: '12px 24px', background: C.ink, color: C.navFg,
-                fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', cursor: 'pointer',
+                fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', cursor: 'pointer',
                 border: `2px solid ${C.ink}`, fontFamily: font, textTransform: 'uppercase',
               }}>
                 Clear all filters
@@ -459,7 +458,7 @@ function PackagesInner() {
 
 export default function PackagesPage() {
   return (
-    <Suspense fallback={<div style={{ padding: 40, color: '#6b655c', fontFamily: '"Archivo", system-ui, sans-serif' }}>Loading...</div>}>
+    <Suspense fallback={<div style={{ padding: 40, color: 'var(--ink-light)', fontFamily: 'var(--font-sans)' }}>Loading...</div>}>
       <PackagesInner />
     </Suspense>
   )

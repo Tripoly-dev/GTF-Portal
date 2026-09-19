@@ -24,15 +24,15 @@ type Quote = {
   notes: string
 }
 
-const NAVY = '#12213c'
-const TEAL = '#0f6d5c'
-const AMBER = '#c98a12'
-const RED = '#c0392b'
-const GREY = '#5c6764'
+const NAVY = 'var(--forest)'
+const TEAL = 'var(--brand)'
+const AMBER = 'var(--warn)'
+const RED = 'var(--danger)'
+const GREY = 'var(--ink-light)'
 
 const STATUS_COLORS: Record<string, string> = {
   draft: GREY,
-  created: '#2f5fa8',
+  created: 'var(--info)',
   sent: AMBER,
   cancelled: RED,
 }
@@ -91,7 +91,7 @@ export default function QuotesPage() {
 
   const stats = [
     { key: 'all', label: 'TOTAL QUOTES', value: counts.all, color: NAVY, icon: ICONS.total },
-    { key: 'created', label: 'CREATED', value: counts.created, color: '#2f5fa8', icon: ICONS.created },
+    { key: 'created', label: 'CREATED', value: counts.created, color: 'var(--info)', icon: ICONS.created },
     { key: 'sent', label: 'SENT', value: counts.sent, color: AMBER, icon: ICONS.sent },
     { key: 'cancelled', label: 'CANCELLED', value: counts.cancelled, color: RED, icon: ICONS.cancelled },
   ]
@@ -104,7 +104,7 @@ export default function QuotesPage() {
   ]
 
   return (
-    <div style={{ padding: '40px 32px 80px', background: '#f3f2f2', minHeight: '100vh', fontFamily: "'Archivo', sans-serif" }}>
+    <div style={{ padding: '40px 32px 80px', background: 'var(--paper)', minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
       <style>{`
         .qrow { transition: background .15s ease, box-shadow .15s ease; }
         .qrow:hover { background: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
@@ -122,12 +122,12 @@ export default function QuotesPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32, gap: 24, flexWrap: 'wrap' }}>
           <div>
-            <h1 style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 34, color: NAVY, letterSpacing: '-0.01em' }}>My Quotes</h1>
+            <h1 className="font-display" style={{ margin: '0 0 6px', fontWeight: 500, fontSize: 32, color: NAVY, letterSpacing: '-0.02em' }}>My Quotes</h1>
             <p style={{ margin: 0, color: '#666', fontSize: 14 }}>All your saved proposals and quote requests</p>
           </div>
           <Link href="/dashboard/packages" style={{
             display: 'flex', alignItems: 'center', gap: 8, background: TEAL, color: '#fff',
-            border: 'none', padding: '14px 22px', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em',
+            border: 'none', padding: '14px 22px', fontSize: 13, fontWeight: 700, letterSpacing: '0.04em',
             textDecoration: 'none',
           }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M12 5v14M5 12h14" /></svg>
@@ -136,27 +136,27 @@ export default function QuotesPage() {
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: '#fff', border: '1px solid #e3e1df', marginBottom: 28, boxShadow: '0 1px 4px rgba(0,0,0,.05)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: '#fff', border: '1px solid var(--rule)', marginBottom: 28, boxShadow: '0 1px 4px rgba(0,0,0,.05)' }}>
           {stats.map((s, i) => (
-            <div key={s.key} className="stat" style={{ padding: '26px 28px', borderRight: i < stats.length - 1 ? '1px solid #e3e1df' : 'none', position: 'relative', overflow: 'hidden' }}>
+            <div key={s.key} className="stat" style={{ padding: '26px 28px', borderRight: i < stats.length - 1 ? '1px solid var(--rule)' : 'none', position: 'relative', overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ fontSize: 40, fontWeight: 800, color: s.color, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
-                <div style={{ width: 34, height: 34, background: `${s.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div>
+                <div style={{ width: 34, height: 34, background: `color-mix(in srgb, ${s.color} 8%, transparent)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div>
               </div>
-              <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#5c6764' }}>{s.label}</div>
+              <div style={{ marginTop: 10, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--ink-light)' }}>{s.label}</div>
               <div className="stat-bar" style={{ position: 'absolute', left: 0, bottom: 0, height: 3, width: 28, background: s.color }} />
             </div>
           ))}
         </div>
 
         {/* Filter tabs */}
-        <div style={{ display: 'flex', gap: 0, border: '1px solid #d8d6d3', width: 'fit-content', marginBottom: 24 }}>
+        <div style={{ display: 'flex', gap: 0, border: '1px solid var(--rule)', width: 'fit-content', marginBottom: 24 }}>
           {tabs.map((t, i) => (
             <button key={t.id} onClick={() => setFilter(t.id)} style={{
-              border: 'none', borderRight: i < tabs.length - 1 ? '1px solid #d8d6d3' : 'none',
+              border: 'none', borderRight: i < tabs.length - 1 ? '1px solid var(--rule)' : 'none',
               padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
               background: filter === t.id ? NAVY : '#fff', color: filter === t.id ? '#fff' : '#333',
-              fontFamily: "'Archivo', sans-serif",
+              fontFamily: 'var(--font-sans)',
             }}>
               {t.label}
             </button>
@@ -164,11 +164,11 @@ export default function QuotesPage() {
         </div>
 
         {/* List */}
-        <div style={{ border: '1px solid #e3e1df', background: '#fbfbfa' }}>
+        <div style={{ border: '1px solid var(--rule)', background: 'var(--bg)' }}>
           {loading ? (
-            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#5c6764', fontSize: 14 }}>Loading quotes...</div>
+            <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--ink-light)', fontSize: 14 }}>Loading quotes...</div>
           ) : filtered.length === 0 ? (
-            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#5c6764' }}>
+            <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--ink-light)' }}>
               <div style={{ fontSize: 14, fontWeight: 600 }}>No quotes in this category yet.</div>
             </div>
           ) : (
@@ -176,36 +176,36 @@ export default function QuotesPage() {
               const statusColor = STATUS_COLORS[q.status] || STATUS_COLORS.created
               const isOpen = expanded === q.id
               return (
-                <div key={q.id} className="qrow" style={{ borderBottom: '1px solid #e3e1df', position: 'relative' }}>
+                <div key={q.id} className="qrow" style={{ borderBottom: '1px solid var(--rule)', position: 'relative' }}>
                   <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: statusColor }} />
                   <div onClick={() => setExpanded(isOpen ? null : q.id)} style={{ display: 'flex', alignItems: 'center', padding: '22px 28px 22px 32px', gap: 24, cursor: 'pointer' }}>
 
                     <div style={{ flex: 1.6, minWidth: 220 }}>
-                      <div style={{ fontSize: 11, color: '#5c6764', fontWeight: 600, letterSpacing: '0.04em' }}>PROPOSAL NO: <span style={{ color: '#333', fontWeight: 800 }}>{q.quote_number || '—'}</span></div>
-                      <div style={{ fontSize: 19, fontWeight: 800, color: NAVY, margin: '4px 0 4px' }}>{q.trip_name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em' }}>PROPOSAL NO: <span style={{ color: '#333', fontWeight: 800 }}>{q.quote_number || '—'}</span></div>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: NAVY, margin: '4px 0 4px' }}>{q.trip_name}</div>
                       <div style={{ fontSize: 13, color: '#555' }}>Client: <strong>{q.client_name}</strong> · {q.client_type}</div>
-                      <div style={{ fontSize: 12, color: '#5c6764', marginTop: 2 }}>{q.package_name} · {q.region?.toUpperCase()}</div>
+                      <div style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2 }}>{q.package_name} · {q.region?.toUpperCase()}</div>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 110 }}>
-                      <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>DEPARTURE</div>
+                      <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>DEPARTURE</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#222', marginTop: 4 }}>{fmtDate(q.departure_date)}</div>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 120 }}>
-                      <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>PAX</div>
+                      <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>PAX</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#222', marginTop: 4 }}>{q.adults} adults · {q.room_type}</div>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 130 }}>
-                      <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>QUOTE TOTAL</div>
+                      <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>QUOTE TOTAL</div>
                       <div style={{ fontSize: 17, fontWeight: 800, color: TEAL, marginTop: 4 }}>{fmt(q.total_price)}</div>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 120, justifyContent: 'flex-end' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ width: 7, height: 7, background: statusColor, display: 'inline-block' }} />
-                        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: statusColor }}>{q.status.toUpperCase()}</span>
+                        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: statusColor }}>{q.status.toUpperCase()}</span>
                       </div>
                       <button onClick={e => { e.stopPropagation(); setExpanded(isOpen ? null : q.id) }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6 }}>
                         <svg className="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth={2.5} style={{ transform: `rotate(${isOpen ? 180 : 0}deg)` }}><path d="M6 9l6 6 6-6" /></svg>
@@ -214,28 +214,28 @@ export default function QuotesPage() {
                   </div>
 
                   {isOpen && (
-                    <div style={{ margin: '0 32px 20px', paddingTop: 18, borderTop: '1px solid #e3e1df' }}>
+                    <div style={{ margin: '0 32px 20px', paddingTop: 18, borderTop: '1px solid var(--rule)' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))', gap: 20, marginBottom: 18 }}>
                         <div>
-                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>CREATED</div>
+                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>CREATED</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{fmtDate(q.created_at)}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>EST. BOOKING DATE</div>
+                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>EST. BOOKING DATE</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.estimated_booking_date ? fmtDate(q.estimated_booking_date) : '—'}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>FLIGHTS BOOKED</div>
+                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>FLIGHTS BOOKED</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.flights_booked ? 'Yes' : 'No'}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>ADD-ONS</div>
+                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>ADD-ONS</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.add_ons?.length > 0 ? q.add_ons.map((a: any) => a.label).join(', ') : 'None'}</div>
                         </div>
                       </div>
                       {q.notes && (
-                        <div style={{ marginBottom: 18, padding: '12px 16px', background: '#f3f2f2', border: '1px solid #e3e1df' }}>
-                          <div style={{ fontSize: 10, color: '#5c6764', letterSpacing: '0.08em', marginBottom: 4 }}>NOTES</div>
+                        <div style={{ marginBottom: 18, padding: '12px 16px', background: 'var(--paper)', border: '1px solid var(--rule)' }}>
+                          <div style={{ fontSize: 12, color: 'var(--ink-light)', letterSpacing: '0.04em', marginBottom: 4 }}>NOTES</div>
                           <div style={{ fontSize: 13, color: '#333' }}>{q.notes}</div>
                         </div>
                       )}
