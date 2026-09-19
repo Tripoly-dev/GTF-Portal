@@ -60,7 +60,7 @@ function FilterRow({ label, checked, onChange, count }: { label: string; checked
         {checked ? '✓' : ''}
       </span>
       <span style={{ flex: 1 }}>{label}</span>
-      {count !== undefined && <span style={{ fontSize: 12, color: '#8f8879' }}>{count}</span>}
+      {count !== undefined && <span style={{ fontSize: 12, color: '#6b655c' }}>{count}</span>}
     </div>
   )
 }

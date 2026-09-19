@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Inter+Tight:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300;1,400;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,12 +7,12 @@
   --paper:     #EBF2F0;
   --ink:       #071A17;
   --ink-mid:   #2D4A44;
-  --ink-light: #7A9690;
+  --ink-light: #4F6964;
   --teal:      #0A7B6C;
   --teal-dark: #065A4F;
   --teal-lt:   #E0F0ED;
-  --orange:    #E8613A;
-  --orange-lt: #FDF0EB;
+  --warn:      #6B4E00;
+  --warn-lt:   #FAF1CF;
   --rule:      #C8DEDA;
   --white:     #FFFFFF;
 }
@@ -71,8 +70,6 @@ body {
 .btn-teal:hover { background: var(--teal-dark); }
 .btn-teal:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.btn-orange { display:inline-flex; align-items:center; gap:8px; padding:13px 28px; background:var(--orange); color:white; font-size:13px; font-weight:600; letter-spacing:0.04em; border:none; cursor:pointer; transition:all 0.2s; font-family:'DM Sans','Inter',sans-serif; border-radius:8px; }
-.btn-orange:hover { background: #d4522e; }
 
 .btn-outline { display:inline-flex; align-items:center; gap:8px; padding:12px 26px; background:transparent; color:var(--ink); font-size:13px; font-weight:600; letter-spacing:0.04em; border:1.5px solid var(--ink); cursor:pointer; transition:all 0.2s; font-family:'DM Sans','Inter',sans-serif; border-radius:8px; }
 .btn-outline:hover { background:var(--ink); color:white; }
@@ -202,9 +199,9 @@ body {
 .approved-platform strong i { color: #8b5d86; font: 500 .78em/.82 Georgia, serif; }
 .approved-platform p { max-width: 34ch; margin: 0; font-size: 14px; line-height: 1.35; }
 .approved-ticket { grid-area: 3 / 1 / 4 / 3; padding: 0; display: grid; grid-template-columns: 1fr 80px; background: #fffaf1; color: #351b24; }
-.ticket-main { padding: 15px 18px; display: flex; flex-direction: column; justify-content: space-between; border-right: 2px dashed #bf4a36; }
-.ticket-main strong { font: 700 clamp(29px, 3vw, 45px)/.8 Arial Narrow, Arial, sans-serif; color: #bf4a36; letter-spacing: -.07em; }
-.ticket-stub { padding: 12px 9px; display: flex; flex-direction: column; justify-content: space-between; background: #f28b61; }
+.ticket-main { padding: 15px 18px; display: flex; flex-direction: column; justify-content: space-between; border-right: 2px dashed #0A5F54; }
+.ticket-main strong { font: 700 clamp(29px, 3vw, 45px)/.8 Arial Narrow, Arial, sans-serif; color: #0A5F54; letter-spacing: -.07em; }
+.ticket-stub { padding: 12px 9px; display: flex; flex-direction: column; justify-content: space-between; background: #7FD4C4; }
 .ticket-barcode { display: block; height: 55px; position: relative; background: repeating-linear-gradient(90deg,#351b24 0 2px,transparent 2px 5px,#351b24 5px 6px,transparent 6px 9px); }
 .ticket-barcode:after { content: ''; position: absolute; left: 0; right: 0; height: 2px; background: #fffaf1; animation: approved-scan 2.7s ease-in-out infinite; }
 .approved-flow { grid-area: 3 / 3 / 4 / 5; background: #e7dfb5; color: #34291f; }
@@ -303,6 +300,17 @@ body {
   nav > div > div:nth-child(2) .nav-link { font-size: 12px; }
 }
 
+.nav-burger { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; background: transparent; border: 1.5px solid var(--rule); border-radius: 999px; color: var(--ink); cursor: pointer; }
+.nav-burger:focus-visible, .nav-drawer a:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.nav-drawer { display: none; }
+@media (max-width: 820px) {
+  .nav-burger { display: inline-flex; }
+  .nav-cta { display: none !important; }
+  .nav-drawer { display: block; position: absolute; top: 100%; left: 0; right: 0; max-height: calc(100vh - 68px); overflow-y: auto; background: var(--bg); border-top: 1px solid var(--rule); box-shadow: 0 24px 40px rgba(7,26,23,0.14); padding: 8px 18px 24px; }
+  .nav-drawer a.drawer-link { display: flex; align-items: center; min-height: 48px; font-size: 16px; font-weight: 500; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .nav-drawer .drawer-group { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-light); padding: 16px 0 4px; }
+  .nav-drawer .drawer-sub { padding-left: 14px; font-size: 15px; }
+}
 @media (max-width: 820px) {
   nav > div > div:nth-child(2) { display: none !important; }
   nav > div { padding-left: 18px !important; padding-right: 18px !important; }

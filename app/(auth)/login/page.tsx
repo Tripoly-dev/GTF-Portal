@@ -51,7 +51,7 @@ export default function LoginPage() {
               Access your partner dashboard, browse packages, download itineraries and manage your business with GTF.
             </p>
           </div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)' }}>
             Not yet a partner? <Link href="/register" style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 600, textDecoration: 'none' }}>Register here →</Link>
           </div>
         </div>
@@ -93,14 +93,6 @@ export default function LoginPage() {
               ) : 'SIGN IN →'}
             </button>
           </form>
-
-          <div style={{ marginTop: 32, padding: '20px 24px', background: 'var(--paper)', border: '1px solid var(--rule)' }}>
-            <div style={{ fontSize: 11, color: 'var(--ink-light)', marginBottom: 8, fontWeight: 600, letterSpacing: '0.06em' }}>DEMO CREDENTIALS</div>
-            <div style={{ fontSize: 12, color: 'var(--ink-mid)', lineHeight: 1.8 }}>
-              <div>Admin: <strong>it@gtfholidays.com</strong></div>
-              <div>Password: <strong>GTFAdmin@2025</strong></div>
-            </div>
-          </div>
 
           <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 20, textAlign: 'center' }}>
             Don't have an account? <Link href="/register" style={{ color: 'var(--teal)', fontWeight: 600, textDecoration: 'none' }}>Register as partner →</Link>

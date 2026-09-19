@@ -16,11 +16,11 @@ export default function FAQPage() {
       {/* Header */}
       <div style={{ background: 'var(--ink)', padding: '72px 56px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 16 }}>HELP & FAQ</div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 16 }}>HELP & FAQ</div>
           <h1 className="font-tight" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 16 }}>
             Frequently Asked<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal-lt)' }}>Questions</span>
           </h1>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', maxWidth: 500, lineHeight: 1.7, fontWeight: 300 }}>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.62)', maxWidth: 500, lineHeight: 1.7, fontWeight: 300 }}>
             Everything you need to know about GTF Holidays, our products, and how to partner with us.
           </p>
         </div>

@@ -93,7 +93,7 @@ export default function DeparturePage({ region }: { region: Region }) {
                     {pkg.tag && (
                       <div style={{
                         position: 'absolute', top: 14, left: 14,
-                        padding: '4px 10px', background: pkg.tag === 'COMING SOON' ? 'var(--ink-light)' : 'var(--orange)',
+                        padding: '4px 10px', background: pkg.tag === 'COMING SOON' ? 'var(--ink-light)' : 'var(--teal)',
                         fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: '#fff',
                       }}>{pkg.tag}</div>
                     )}

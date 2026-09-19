@@ -82,9 +82,9 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
       <div style={{ background: 'white', width: '100%', maxWidth: 580, maxHeight: '92vh', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         <div style={{ background: 'var(--ink)', padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', marginBottom: 4 }}>SAVE PROPOSAL</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.12em', marginBottom: 4 }}>SAVE PROPOSAL</div>
             <h2 className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>{pkg.name}</h2>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', marginTop: 2 }}>
               {fmtDate(summary.departureDate)} · {summary.adults} adult{summary.adults > 1 ? 's' : ''}
               {summary.childrenWithBed > 0 ? ` · ${summary.childrenWithBed} child w/ bed` : ''}
               {summary.childrenWithoutBed > 0 ? ` · ${summary.childrenWithoutBed} child w/o bed` : ''}
@@ -106,7 +106,7 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
               </div>
             )}
             {markupAmount > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--orange)', marginBottom: 6 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--teal)', marginBottom: 6 }}>
                 <span>Your markup ({form.markup_type === 'percentage' ? `${form.markup_value}%` : 'fixed'})</span>
                 <span>+ {f(markupAmount)}</span>
               </div>
@@ -482,20 +482,20 @@ function QuotePanel({ pkg, departures, onSave, onDepartureChange }: { pkg: Packa
               {hasChildren && (
                 <>
                   {pkg.childWithBedPrice !== undefined && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: `1px solid ${childrenWithBed > 0 ? 'rgba(232,97,58,0.3)' : 'var(--rule)'}`, background: childrenWithBed > 0 ? 'rgba(232,97,58,0.04)' : '#fff', borderRadius: 4, transition: 'all 0.15s' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: `1px solid ${childrenWithBed > 0 ? 'rgba(10,123,108,0.3)' : 'var(--rule)'}`, background: childrenWithBed > 0 ? 'rgba(10,123,108,0.04)' : '#fff', borderRadius: 4, transition: 'all 0.15s' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: childrenWithBed > 0 ? 'rgba(232,97,58,0.08)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={childrenWithBed > 0 ? 'var(--orange)' : 'var(--ink-light)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><line x1="12" y1="11" x2="12" y2="14"/><line x1="10" y1="13" x2="14" y2="13"/></svg>
+                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: childrenWithBed > 0 ? 'rgba(10,123,108,0.08)' : 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={childrenWithBed > 0 ? 'var(--teal)' : 'var(--ink-light)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><line x1="12" y1="11" x2="12" y2="14"/><line x1="10" y1="13" x2="14" y2="13"/></svg>
                         </div>
                         <div>
                           <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)' }}>Child — With Bed</div>
                           <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 400, marginTop: 1 }}>Age 2–11 · {f(pkg.childWithBedPrice)}</div>
                         </div>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${childrenWithBed > 0 ? 'rgba(232,97,58,0.3)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
-                        <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 32, height: 32, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--orange)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
+                      <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${childrenWithBed > 0 ? 'rgba(10,123,108,0.3)' : 'var(--rule)'}`, borderRadius: 20, overflow: 'hidden', background: '#fff' }}>
+                        <button onClick={() => setChildrenWithBed(c => Math.max(0, c - 1))} style={{ width: 32, height: 32, background: 'none', border: 'none', fontSize: 16, cursor: childrenWithBed <= 0 ? 'not-allowed' : 'pointer', color: 'var(--teal)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                         <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', minWidth: 24, textAlign: 'center' }}>{childrenWithBed}</span>
-                        <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 32, height: 32, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: 'var(--orange)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        <button onClick={() => setChildrenWithBed(c => c + 1)} style={{ width: 32, height: 32, background: 'none', border: 'none', fontSize: 16, cursor: 'pointer', color: 'var(--teal)', fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
                       </div>
                     </div>
                   )}
@@ -943,7 +943,7 @@ function SimilarPackageCard({ sp }: { sp: import('@/data/packages').Package }) {
           <div style={{ position: 'absolute', bottom: 10, left: 12 }}>
             <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 600, letterSpacing: '0.06em', marginBottom: 3, fontFamily: "'DM Sans', sans-serif" }}>{sp.region.toUpperCase()} · {sp.nights}N/{sp.days}D</div>
           </div>
-          {sp.tag && <div style={{ position: 'absolute', top: 10, left: 10, padding: '2px 7px', background: 'var(--orange)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{sp.tag}</div>}
+          {sp.tag && <div style={{ position: 'absolute', top: 10, left: 10, padding: '2px 7px', background: 'var(--teal)', fontSize: 9, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{sp.tag}</div>}
         </div>
         <div style={{ padding: '14px 14px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', marginBottom: 8, lineHeight: 1.3, fontFamily: "'DM Sans', sans-serif" }}>{sp.name}</div>
@@ -1165,7 +1165,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
               />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.82) 0%, rgba(7,26,23,0.1) 45%, transparent 100%)', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(7,26,23,0.2) 0%, transparent 60%)', pointerEvents: 'none' }} />
-              {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--orange)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2, fontFamily: "'DM Sans', sans-serif" }}>{pkg.tag}</div>}
+              {pkg.tag && <div style={{ position: 'absolute', top: 16, left: 16, padding: '4px 12px', background: 'var(--teal)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', zIndex: 2, fontFamily: "'DM Sans', sans-serif" }}>{pkg.tag}</div>}
               {/* Click to expand hint */}
               <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.45)', color: 'rgba(255,255,255,0.8)', fontSize: 10, fontWeight: 600, padding: '4px 10px', letterSpacing: '0.06em', zIndex: 2, pointerEvents: 'none', fontFamily: "'DM Sans', sans-serif" }}>CLICK TO EXPAND</div>
               {/* Thumbnail strip — vertical, right side, scrollable */}
@@ -1190,7 +1190,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                       <Icon path={h.icon} size={13} color="rgba(255,255,255,0.45)" />
                       <div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.08em', fontFamily: "'DM Sans', sans-serif" }}>{h.label}</div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.62)', fontWeight: 600, letterSpacing: '0.08em', fontFamily: "'DM Sans', sans-serif" }}>{h.label}</div>
                         <div style={{ fontSize: 13, color: (h as any).valueColor || 'rgba(255,255,255,0.85)', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>{h.value}</div>
                       </div>
                     </div>
@@ -1293,7 +1293,7 @@ export default function PackageDetailPage({ params }: { params: Promise<{ id: st
               {/* EXCLUSIONS TAB */}
               {activeTab === 'exclusions' && (
                 <div>
-                  <div style={{ fontSize: 12, color: 'var(--orange)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 20 }}>WHAT'S NOT INCLUDED</div>
+                  <div style={{ fontSize: 12, color: 'var(--warn)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 20 }}>WHAT'S NOT INCLUDED</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {pkg.exclusions.map((item, i) => (
                       <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>

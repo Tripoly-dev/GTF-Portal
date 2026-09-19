@@ -101,7 +101,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
                 </div>
                 <div>
                   <div style={{ fontSize: 13.5, fontWeight: 600, color: '#fff', lineHeight: 1 }}>{agent.name}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{agent.agency}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.62)', marginTop: 2 }}>{agent.agency}</div>
                 </div>
               </div>
             )}
@@ -125,11 +125,11 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       <div style={{ background: 'linear-gradient(0deg, #0d2622 0%, var(--ink) 65%)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF" style={{ height: 28, width: 'auto', filter: 'brightness(0) invert(1)', opacity: 0.75 }} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.02em' }}>© 2026 GTF Holidays LLP</span>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.02em' }}>© 2026 GTF Holidays LLP</span>
         </div>
         <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-          <a href="mailto:sales@gtfholidays.com" style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontWeight: 500 }}>sales@gtfholidays.com</a>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>+91 89288 72400</span>
+          <a href="mailto:sales@gtfholidays.com" style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', textDecoration: 'none', fontWeight: 500 }}>sales@gtfholidays.com</a>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)' }}>+91 89288 72400</span>
           <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, padding: '6px 14px', borderRadius: 999, background: 'rgba(37,211,102,0.16)', border: '1px solid rgba(37,211,102,0.4)', color: '#25D366', fontWeight: 700, textDecoration: 'none', letterSpacing: '0.04em' }}>
             <WhatsAppIcon size={12} color="#25D366" /> WHATSAPP
           </a>

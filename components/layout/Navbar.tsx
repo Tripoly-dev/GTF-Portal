@@ -6,6 +6,7 @@ export default function Navbar() {
   const [depsOpen, setDepsOpen] = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const overPhoto = false
 
@@ -15,6 +16,13 @@ export default function Navbar() {
       if (d.agent?.role === 'admin') setIsAdmin(true)
     }).catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   const regions = [
     { name: 'Europe', href: '/departures/europe' },
@@ -153,7 +161,15 @@ export default function Navbar() {
 
         {/* CTAs */}
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <Link href="/login" style={{
+          <button type="button" className="nav-burger" aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen(o => !o)}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              {menuOpen
+                ? <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                : <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />}
+            </svg>
+          </button>
+          <Link href="/login" className="nav-cta" style={{
             padding: '9px 20px', borderRadius: 999,
             border: `1.5px solid ${overPhoto ? 'rgba(255,255,255,0.45)' : 'var(--rule)'}`,
             color: overPhoto ? '#fff' : 'var(--ink-mid)',
@@ -169,7 +185,7 @@ export default function Navbar() {
             (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
             ;(e.currentTarget as HTMLElement).style.borderColor = overPhoto ? 'rgba(255,255,255,0.45)' : 'var(--rule)'
           }}>AGENT LOGIN</Link>
-          <Link href="/register" style={{
+          <Link href="/register" className="nav-cta" style={{
             padding: '9px 22px', borderRadius: 999,
             background: overPhoto ? 'rgba(10,123,108,0.75)' : 'var(--teal)',
             boxShadow: '0 6px 18px rgba(10,123,108,0.32)',
@@ -188,6 +204,36 @@ export default function Navbar() {
         </div>
 
       </div>
+      {menuOpen && (
+        <div id="mobile-menu" className="nav-drawer">
+          <div className="drawer-group">B2B DEPARTURES</div>
+          {regions.map(r => (
+            <Link key={r.href} href={r.href} className="drawer-link drawer-sub" onClick={() => setMenuOpen(false)}>{r.name}</Link>
+          ))}
+          <div className="drawer-group">EXPLORE</div>
+          {[
+            { label: 'Adhoc & White Label', href: '/adhoc-and-white-label-solutions' },
+            { label: 'Bespoke Holidays', href: '/bespoke-holidays' },
+            { label: 'About Us', href: '/about' },
+            { label: 'FAQ', href: '/faq' },
+            { label: 'Contact Us', href: '/contact' },
+          ].map(l => (
+            <Link key={l.href} href={l.href} className="drawer-link" onClick={() => setMenuOpen(false)}>{l.label}</Link>
+          ))}
+          {isAdmin && (
+            <>
+              <div className="drawer-group">ADMIN</div>
+              {adminLinks.map(l => (
+                <Link key={l.href} href={l.href} className="drawer-link drawer-sub" onClick={() => setMenuOpen(false)}>{l.name}</Link>
+              ))}
+            </>
+          )}
+          <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+            <Link href="/login" onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: 'center', padding: '13px 0', borderRadius: 999, border: '1.5px solid var(--ctl, var(--rule))', color: 'var(--ink)', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Agent login</Link>
+            <Link href="/register" onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: 'center', padding: '13px 0', borderRadius: 999, background: 'var(--teal)', color: '#fff', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Join as partner</Link>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }

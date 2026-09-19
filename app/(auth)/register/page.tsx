@@ -125,7 +125,7 @@ export default function RegisterPage() {
               ))}
             </div>
           </div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)' }}>
             Already have an account? <Link href="/login" style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 600, textDecoration: 'none' }}>Sign in →</Link>
           </div>
         </div>

@@ -17,7 +17,7 @@ export default function Footer() {
             <p style={{ fontSize: 13, lineHeight: 1.8, maxWidth: 260, marginBottom: 24, fontWeight: 300 }}>
               The B2B travel platform for professional tour operators and travel agencies. 100% B2B. Non-compete. Global.
             </p>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', lineHeight: 1.8 }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', lineHeight: 1.8 }}>
               <div>+91 89288 72400 | +91 93727 33424</div>
               <div>sales@gtfholidays.com</div>
               <div>fit@gtfholidays.com</div>
@@ -27,7 +27,7 @@ export default function Footer() {
 
           {/* Departures */}
           <div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: 20, fontWeight: 600 }}>B2B DEPARTURES</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.1em', marginBottom: 20, fontWeight: 600 }}>B2B DEPARTURES</div>
             {[
               { label: 'Europe', href: '/departures/europe' },
               { label: 'Africa', href: '/departures/africa' },
@@ -41,7 +41,7 @@ export default function Footer() {
 
           {/* Products */}
           <div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: 20, fontWeight: 600 }}>PRODUCTS</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.1em', marginBottom: 20, fontWeight: 600 }}>PRODUCTS</div>
             {['Series Departures', 'White Label Solutions', 'ADHOC Groups', 'Bespoke Holidays', 'Agent Voice'].map(l => (
               <div key={l} style={{ fontSize: 13, marginBottom: 10, color: 'rgba(255,255,255,0.5)' }}>{l}</div>
             ))}
@@ -49,7 +49,7 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: 20, fontWeight: 600 }}>COMPANY</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.1em', marginBottom: 20, fontWeight: 600 }}>COMPANY</div>
             {[
               { label: 'About Us', href: '/about' },
               { label: 'FAQ', href: '/faq' },

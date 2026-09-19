@@ -286,17 +286,17 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>CHILD WITH BED</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
-                    <button onClick={() => setForm(p => ({ ...p, children_with_bed: Math.max(0, p.children_with_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--orange)' }}>−</button>
+                    <button onClick={() => setForm(p => ({ ...p, children_with_bed: Math.max(0, p.children_with_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700 }}>{form.children_with_bed}</span>
-                    <button onClick={() => setForm(p => ({ ...p, children_with_bed: p.children_with_bed + 1 }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--orange)' }}>+</button>
+                    <button onClick={() => setForm(p => ({ ...p, children_with_bed: p.children_with_bed + 1 }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>+</button>
                   </div>
                 </div>
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.08em', display: 'block', marginBottom: 8 }}>CHILD WITHOUT BED</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
-                    <button onClick={() => setForm(p => ({ ...p, children_without_bed: Math.max(0, p.children_without_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--orange)' }}>−</button>
+                    <button onClick={() => setForm(p => ({ ...p, children_without_bed: Math.max(0, p.children_without_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700 }}>{form.children_without_bed}</span>
-                    <button onClick={() => setForm(p => ({ ...p, children_without_bed: p.children_without_bed + 1 }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--orange)' }}>+</button>
+                    <button onClick={() => setForm(p => ({ ...p, children_without_bed: p.children_without_bed + 1 }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>+</button>
                   </div>
                 </div>
               </div>
@@ -532,7 +532,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               { l: 'DURATION', v: pkg ? `${pkg.nights}N/${pkg.days}D` : '' },
             ].filter(x => x.v).map(({ l, v }) => (
               <div key={l}>
-                <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.42)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{l}</div>
+                <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.62)', fontWeight: 600, letterSpacing: '0.1em', marginBottom: 4 }}>{l}</div>
                 <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>{v}</div>
               </div>
             ))}
@@ -639,7 +639,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           {/* EXCLUSIONS */}
           {activeTab === 'exclusions' && (
             <div>
-              <div className="eyebrow" style={{ color: 'var(--orange)', marginBottom: 20 }}>NOT INCLUDED</div>
+              <div className="eyebrow" style={{ color: 'var(--warn)', marginBottom: 20 }}>NOT INCLUDED</div>
               {pkg?.exclusions?.map((item: string, i: number) => (
                 <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
                   <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>

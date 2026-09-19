@@ -412,7 +412,7 @@ export default function AdminPage() {
             <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF" style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
             <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>GTF <span style={{ fontWeight: 300 }}>Admin</span></span>
           </Link>
-          <div style={{ marginTop: 12, padding: '4px 10px', background: 'rgba(232,97,58,0.2)', border: '1px solid rgba(232,97,58,0.4)', display: 'inline-block', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--orange)' }}>ADMIN PANEL</div>
+          <div style={{ marginTop: 12, padding: '4px 10px', background: 'rgba(127,212,196,0.15)', border: '1px solid rgba(127,212,196,0.4)', display: 'inline-block', fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', color: '#7FD4C4' }}>ADMIN PANEL</div>
         </div>
 
         <nav style={{ padding: '16px 0', flex: 1 }}>
@@ -428,17 +428,17 @@ export default function AdminPage() {
               <span>{item.icon}</span>
               <span style={{ flex: 1 }}>{item.label}</span>
               {item.badge && item.badge > 0 && (
-                <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--orange)', color: '#fff', fontSize: 10, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.badge}</span>
+                <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--warn)', color: '#fff', fontSize: 10, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.badge}</span>
               )}
             </button>
           ))}
         </nav>
 
         <div style={{ padding: '16px 24px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'rgba(255,255,255,0.4)', fontSize: 13, marginBottom: 12 }}>
+          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'rgba(255,255,255,0.62)', fontSize: 13, marginBottom: 12 }}>
             <span>←</span> View Portal
           </Link>
-          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, fontFamily: "'DM Sans', sans-serif" }}>
+          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.62)', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, fontFamily: "'DM Sans', sans-serif" }}>
             <span>→</span> Sign Out
           </button>
         </div>
@@ -458,9 +458,9 @@ export default function AdminPage() {
                 <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2, marginBottom: 0 }}>Review and approve partner registrations</p>
               </div>
               {agentCounts.pending > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px', background: 'var(--orange-lt)', border: '1px solid rgba(232,97,58,0.3)' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--orange)' }} />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--orange)' }}>{agentCounts.pending} pending approval{agentCounts.pending !== 1 ? 's' : ''}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px', background: 'var(--warn-lt)', border: '1px solid rgba(107,78,0,0.3)' }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--warn)' }} />
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--warn)' }}>{agentCounts.pending} pending approval{agentCounts.pending !== 1 ? 's' : ''}</span>
                 </div>
               )}
             </div>
@@ -469,7 +469,7 @@ export default function AdminPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
                 {[
                   { label: 'Total Agents', n: agentCounts.all, color: 'var(--teal)' },
-                  { label: 'Pending', n: agentCounts.pending, color: 'var(--orange)' },
+                  { label: 'Pending', n: agentCounts.pending, color: 'var(--warn)' },
                   { label: 'Approved', n: agentCounts.approved, color: '#065F46' },
                   { label: 'Rejected', n: agentCounts.rejected, color: '#991B1B' },
                 ].map(s => (
@@ -534,7 +534,7 @@ export default function AdminPage() {
                             <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', letterSpacing: '0.06em', background: agent.status === 'approved' ? '#D1FAE5' : '#FEE2E2', color: agent.status === 'approved' ? '#065F46' : '#991B1B' }}>{agent.status.toUpperCase()}</span>
                             {agent.status === 'approved' && <button onClick={() => handleAgentAction(agent.id, 'rejected')} style={{ fontSize: 10, color: 'var(--ink-light)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>revoke</button>}
                             {agent.status === 'rejected' && <button onClick={() => handleAgentAction(agent.id, 'approved')} style={{ fontSize: 10, color: 'var(--teal)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>approve</button>}
-                            {agent.status === 'approved' && <button onClick={() => handleAgentAction(agent.id, 'suspended')} style={{ fontSize: 10, color: 'var(--orange)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>suspend</button>}
+                            {agent.status === 'approved' && <button onClick={() => handleAgentAction(agent.id, 'suspended')} style={{ fontSize: 10, color: 'var(--warn)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>suspend</button>}
                           </div>
                         )}
                       </div>

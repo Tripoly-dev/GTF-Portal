@@ -155,7 +155,7 @@ export default function GlobeSection() {
               <div key={r.name} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: r.dot, flexShrink: 0 }} />
                 <span style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.85)', fontFamily: 'Inter, sans-serif' }}>{r.name}</span>
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontFamily: 'Inter, sans-serif' }}>{r.count}</span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', fontFamily: 'Inter, sans-serif' }}>{r.count}</span>
               </div>
             ))}
           </div>
@@ -173,7 +173,7 @@ export default function GlobeSection() {
                 borderRight: i < STATS.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
               }}>
                 <div style={{ fontSize: 28, fontWeight: 800, color: '#fff', lineHeight: 1, fontFamily: 'Inter Tight, sans-serif' }}>{s.value}</div>
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.4)', marginTop: 5, fontFamily: 'Inter, sans-serif' }}>{s.label}</div>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.62)', marginTop: 5, fontFamily: 'Inter, sans-serif' }}>{s.label}</div>
               </div>
             ))}
           </div>

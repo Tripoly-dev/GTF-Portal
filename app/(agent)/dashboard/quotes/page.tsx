@@ -28,7 +28,7 @@ const NAVY = '#12213c'
 const TEAL = '#0f6d5c'
 const AMBER = '#c98a12'
 const RED = '#c0392b'
-const GREY = '#8a8a8a'
+const GREY = '#5c6764'
 
 const STATUS_COLORS: Record<string, string> = {
   draft: GREY,
@@ -143,7 +143,7 @@ export default function QuotesPage() {
                 <div style={{ fontSize: 40, fontWeight: 800, color: s.color, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
                 <div style={{ width: 34, height: 34, background: `${s.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div>
               </div>
-              <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#8a8a8a' }}>{s.label}</div>
+              <div style={{ marginTop: 10, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#5c6764' }}>{s.label}</div>
               <div className="stat-bar" style={{ position: 'absolute', left: 0, bottom: 0, height: 3, width: 28, background: s.color }} />
             </div>
           ))}
@@ -166,9 +166,9 @@ export default function QuotesPage() {
         {/* List */}
         <div style={{ border: '1px solid #e3e1df', background: '#fbfbfa' }}>
           {loading ? (
-            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#9a9a9a', fontSize: 14 }}>Loading quotes...</div>
+            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#5c6764', fontSize: 14 }}>Loading quotes...</div>
           ) : filtered.length === 0 ? (
-            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#9a9a9a' }}>
+            <div style={{ padding: '64px 32px', textAlign: 'center', color: '#5c6764' }}>
               <div style={{ fontSize: 14, fontWeight: 600 }}>No quotes in this category yet.</div>
             </div>
           ) : (
@@ -181,24 +181,24 @@ export default function QuotesPage() {
                   <div onClick={() => setExpanded(isOpen ? null : q.id)} style={{ display: 'flex', alignItems: 'center', padding: '22px 28px 22px 32px', gap: 24, cursor: 'pointer' }}>
 
                     <div style={{ flex: 1.6, minWidth: 220 }}>
-                      <div style={{ fontSize: 11, color: '#9a9a9a', fontWeight: 600, letterSpacing: '0.04em' }}>PROPOSAL NO: <span style={{ color: '#333', fontWeight: 800 }}>{q.quote_number || '—'}</span></div>
+                      <div style={{ fontSize: 11, color: '#5c6764', fontWeight: 600, letterSpacing: '0.04em' }}>PROPOSAL NO: <span style={{ color: '#333', fontWeight: 800 }}>{q.quote_number || '—'}</span></div>
                       <div style={{ fontSize: 19, fontWeight: 800, color: NAVY, margin: '4px 0 4px' }}>{q.trip_name}</div>
                       <div style={{ fontSize: 13, color: '#555' }}>Client: <strong>{q.client_name}</strong> · {q.client_type}</div>
-                      <div style={{ fontSize: 12, color: '#9a9a9a', marginTop: 2 }}>{q.package_name} · {q.region?.toUpperCase()}</div>
+                      <div style={{ fontSize: 12, color: '#5c6764', marginTop: 2 }}>{q.package_name} · {q.region?.toUpperCase()}</div>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 110 }}>
-                      <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>DEPARTURE</div>
+                      <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>DEPARTURE</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#222', marginTop: 4 }}>{fmtDate(q.departure_date)}</div>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 120 }}>
-                      <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>PAX</div>
+                      <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>PAX</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#222', marginTop: 4 }}>{q.adults} adults · {q.room_type}</div>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 130 }}>
-                      <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>QUOTE TOTAL</div>
+                      <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>QUOTE TOTAL</div>
                       <div style={{ fontSize: 17, fontWeight: 800, color: TEAL, marginTop: 4 }}>{fmt(q.total_price)}</div>
                     </div>
 
@@ -217,25 +217,25 @@ export default function QuotesPage() {
                     <div style={{ margin: '0 32px 20px', paddingTop: 18, borderTop: '1px solid #e3e1df' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))', gap: 20, marginBottom: 18 }}>
                         <div>
-                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>CREATED</div>
+                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>CREATED</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{fmtDate(q.created_at)}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>EST. BOOKING DATE</div>
+                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>EST. BOOKING DATE</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.estimated_booking_date ? fmtDate(q.estimated_booking_date) : '—'}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>FLIGHTS BOOKED</div>
+                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>FLIGHTS BOOKED</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.flights_booked ? 'Yes' : 'No'}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 10, color: '#9a9a9a', fontWeight: 700, letterSpacing: '0.08em' }}>ADD-ONS</div>
+                          <div style={{ fontSize: 10, color: '#5c6764', fontWeight: 700, letterSpacing: '0.08em' }}>ADD-ONS</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.add_ons?.length > 0 ? q.add_ons.map((a: any) => a.label).join(', ') : 'None'}</div>
                         </div>
                       </div>
                       {q.notes && (
                         <div style={{ marginBottom: 18, padding: '12px 16px', background: '#f3f2f2', border: '1px solid #e3e1df' }}>
-                          <div style={{ fontSize: 10, color: '#9a9a9a', letterSpacing: '0.08em', marginBottom: 4 }}>NOTES</div>
+                          <div style={{ fontSize: 10, color: '#5c6764', letterSpacing: '0.08em', marginBottom: 4 }}>NOTES</div>
                           <div style={{ fontSize: 13, color: '#333' }}>{q.notes}</div>
                         </div>
                       )}

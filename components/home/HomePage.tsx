@@ -82,7 +82,7 @@ function Hero() {
           Curated global departures built exclusively for travel professionals. Series Departures · White Label · Bespoke Holidays — one B2B platform, three continents, zero B2C.
         </p>
 
-        {/* CTAs — zip exact: pill 999px, coral #FF5A5F primary */}
+        {/* CTAs — pill 999px, teal primary */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 18, marginTop: 6,
           opacity: loaded ? 1 : 0,
@@ -93,18 +93,18 @@ function Hero() {
             textDecoration: 'none', fontSize: 14, fontWeight: 700,
             letterSpacing: '0.02em', color: '#fff',
             padding: '18px 32px', borderRadius: 999,
-            background: '#FF5A5F',
-            boxShadow: '0 8px 24px rgba(255,90,95,0.35)',
+            background: 'var(--teal)',
+            boxShadow: '0 8px 24px rgba(10,123,108,0.35)',
             display: 'inline-block', fontFamily: 'Inter, sans-serif',
             transition: 'transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease',
           }}
           onMouseEnter={e => {
             (e.currentTarget as HTMLElement).style.transform = 'scale(1.045) translateY(-1px)'
-            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 14px 32px rgba(255,90,95,0.48)'
+            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 14px 32px rgba(10,123,108,0.48)'
           }}
           onMouseLeave={e => {
             (e.currentTarget as HTMLElement).style.transform = 'scale(1) translateY(0)'
-            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(255,90,95,0.35)'
+            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(10,123,108,0.35)'
           }}>
             JOIN AS PARTNER →
           </Link>
@@ -482,7 +482,7 @@ function EditorialIntro() {
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 36, fontWeight: 300, maxWidth: 380 }}>
             Join a global partner network built to help travel professionals sell further — while GTF coordinates the world behind the scenes.
           </p>
-          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 16, letterSpacing: '0.08em' }}>
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.62)', marginBottom: 16, letterSpacing: '0.08em' }}>
             B2B ONLY · FREE REGISTRATION · ADMIN APPROVAL REQUIRED
           </div>
         </div>
@@ -824,8 +824,8 @@ function WhatWeOffer() {
           <div style={{ position: 'relative', borderRadius: 4, height: 612, overflow: 'hidden' }}>
             <img src={services[0].img} alt={services[0].label} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s ease' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.9) 0%, rgba(7,26,23,0.05) 50%)' }} />
-            <div style={{ position: 'absolute', top: 0, left: 0, width: 4, height: '100%', background: 'var(--orange)' }} />
-            <div style={{ position: 'absolute', top: 28, left: 28, padding: '5px 12px', background: 'var(--orange)', fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', color: '#fff' }}>{services[0].tag}</div>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: 4, height: '100%', background: 'var(--teal)' }} />
+            <div style={{ position: 'absolute', top: 28, left: 28, padding: '5px 12px', background: 'var(--teal)', fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', color: '#fff' }}>{services[0].tag}</div>
             <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '36px 32px' }}>
               <div className="font-tight" style={{ fontSize: 80, fontWeight: 800, color: 'rgba(255,255,255,0.06)', lineHeight: 1, marginBottom: -24, letterSpacing: '-0.04em', userSelect: 'none' }}>01</div>
               <h3 className="font-tight" style={{ fontSize: 32, fontWeight: 700, color: '#fff', marginBottom: 14, lineHeight: 1.05, letterSpacing: '-0.02em' }}>{services[0].label}</h3>
@@ -843,7 +843,7 @@ function WhatWeOffer() {
               <div key={i} style={{ position: 'relative', borderRadius: 4, height: rightHeights[i], overflow: 'hidden', flexShrink: 0 }}>
                 <img src={s.img} alt={s.label} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s ease' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.88) 0%, rgba(7,26,23,0.1) 60%)' }} />
-                <div style={{ position: 'absolute', top: 16, left: 16, padding: '3px 8px', background: 'var(--orange)', fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', color: '#fff' }}>{s.tag}</div>
+                <div style={{ position: 'absolute', top: 16, left: 16, padding: '3px 8px', background: 'var(--teal)', fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', color: '#fff' }}>{s.tag}</div>
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '18px 20px' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
                     <div>
@@ -879,12 +879,12 @@ function OneStopShop() {
             fontSize: 'clamp(40px, 5vw, 68px)', fontWeight: 800,
             color: '#fff', lineHeight: 0.92, marginBottom: 32, letterSpacing: '-0.03em',
           }}>
-            One desk.<br />The entire<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--orange)' }}>world.</span>
+            One desk.<br />The entire<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'var(--teal)' }}>world.</span>
           </h2>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, maxWidth: 380, fontWeight: 300, marginBottom: 40 }}>
             No matter how complex the routing — 8 countries, 40 hotels, group transfers, activities — you send one brief and receive one comprehensive proposal.
           </p>
-          <Link href="/register" className="btn-orange">JOIN THE NETWORK →</Link>
+          <Link href="/register" className="btn-teal">JOIN THE NETWORK →</Link>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           {points.map((p, i) => (
@@ -897,7 +897,7 @@ function OneStopShop() {
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', paddingTop: 6, flexShrink: 0, fontFamily: 'Inter, sans-serif', letterSpacing: '0.06em' }}>{p.n}</span>
                 <div>
                   <h3 className="font-tight" style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 10, lineHeight: 1.1, letterSpacing: '-0.01em' }}>{p.title}</h3>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.75, fontWeight: 300 }}>{p.body}</p>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.62)', lineHeight: 1.75, fontWeight: 300 }}>{p.body}</p>
                 </div>
               </div>
             </div>
@@ -928,7 +928,7 @@ function StatsStrip() {
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '40px 36px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 10 }}>
               <span className="font-tight" style={{ fontSize: 'clamp(52px, 6vw, 76px)', fontWeight: 800, color: '#fff', lineHeight: 1, letterSpacing: '-0.04em' }}>{s.n}</span>
-              <span className="font-tight" style={{ fontSize: 'clamp(28px, 3vw, 38px)', fontWeight: 300, color: 'var(--orange)', lineHeight: 1 }}>{s.sup}</span>
+              <span className="font-tight" style={{ fontSize: 'clamp(28px, 3vw, 38px)', fontWeight: 300, color: 'var(--teal)', lineHeight: 1 }}>{s.sup}</span>
             </div>
             <div style={{ fontSize: 10, letterSpacing: '0.14em', color: 'var(--teal-lt)', marginBottom: 16, fontWeight: 600, textTransform: 'uppercase' }}>{s.label}</div>
             <div style={{ width: 32, height: 1, background: 'rgba(255,255,255,0.2)', marginBottom: 16 }} />
@@ -965,7 +965,7 @@ function Testimonials() {
     <section style={{ background: 'var(--ink)', padding: '120px 56px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 80 }}>
-          <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.3)' }}>PARTNER VOICES</div>
+          <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.62)' }}>PARTNER VOICES</div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
             {items.map((_, i) => (
               <button key={i} onClick={() => goTo(i)} style={{
@@ -985,7 +985,7 @@ function Testimonials() {
             <div style={{ width: 32, height: 1, background: 'var(--teal)', flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{items[active].name}</div>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 4, fontWeight: 300 }}>{items[active].role} · {items[active].city}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', marginTop: 4, fontWeight: 300 }}>{items[active].role} · {items[active].city}</div>
             </div>
           </div>
         </div>
