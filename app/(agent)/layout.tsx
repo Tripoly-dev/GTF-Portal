@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
+import Logo from '@/components/ui/Logo'
 
 const NAV = [
   { label: 'Dashboard', href: '/dashboard' },
@@ -40,6 +41,15 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
 
       <style>{`
         .agent-nav-link { position: relative; }
+        @media (max-width: 820px) {
+          .agent-bar { flex-wrap: wrap; height: auto !important; padding-top: 10px; }
+          .agent-logo { margin-right: auto !important; }
+          .agent-right { margin-left: auto; }
+          .agent-user { display: none !important; }
+          .agent-nav { order: 3; flex: 0 0 100% !important; overflow-x: auto; margin: 6px -18px 0; padding: 0 12px; scrollbar-width: none; }
+          .agent-nav::-webkit-scrollbar { display: none; }
+          .agent-nav-link { height: 48px !important; padding: 0 14px !important; }
+        }
         .agent-nav-link::after {
           content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px;
           background: var(--teal); transform: scaleX(0); transform-origin: center;
@@ -60,18 +70,15 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
         position: 'sticky', top: 0, zIndex: 200,
         boxShadow: '0 1px 0 rgba(255,255,255,0.06), 0 12px 28px rgba(0,0,0,0.28)',
       }}>
-        <div style={{ padding: '0 32px', display: 'flex', alignItems: 'center', height: 76, gap: 0 }}>
+        <div className="agent-bar" style={{ padding: '0 clamp(18px, 5vw, 32px)', display: 'flex', alignItems: 'center', height: 76, gap: 0 }}>
 
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', marginRight: 40, flexShrink: 0 }}>
-            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 56, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 22, fontWeight: 700, color: '#fff' }}>
-              GTF <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>Connect</span>
-            </span>
+          <Link href="/" className="agent-logo" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', marginRight: 40, flexShrink: 0 }}>
+            <Logo tone="light" size={28} />
           </Link>
 
           {/* Nav links */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1 }}>
+          <nav className="agent-nav" style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1 }}>
             {NAV.map(item => {
               const active = isActive(item.href)
               return (
@@ -88,9 +95,9 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
           </nav>
 
           {/* Right side — agent info + logout */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+          <div className="agent-right" style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
             {agent && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div className="agent-user" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{
                   width: 38, height: 38, borderRadius: '50%',
                   background: 'linear-gradient(135deg, var(--teal), var(--teal-dark))',
@@ -105,14 +112,14 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
                 </div>
               </div>
             )}
-            <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.12)' }} />
+            <div className="agent-user" style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.12)' }} />
             <button onClick={handleLogout} className="agent-signout" style={{
               background: '#fff', border: 'none', borderRadius: 999,
               color: 'var(--ink)', fontSize: 12, fontWeight: 700,
-              padding: '9px 20px', cursor: 'pointer', fontFamily: 'var(--font-sans)',
-              letterSpacing: '0.04em', boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              padding: '10px 20px', cursor: 'pointer', fontFamily: 'var(--font-sans)',
+              letterSpacing: '0.01em', boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
             }}>
-              SIGN OUT
+              Sign out
             </button>
           </div>
         </div>
@@ -122,16 +129,16 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       <div style={{ flex: 1 }}>{children}</div>
 
       {/* Slim agent footer */}
-      <div style={{ background: 'linear-gradient(0deg, var(--forest) 0%, var(--ink) 65%)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ background: 'linear-gradient(0deg, var(--forest) 0%, var(--ink) 65%)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px clamp(18px, 5vw, 32px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF" style={{ height: 28, width: 'auto', filter: 'brightness(0) invert(1)', opacity: 0.75 }} />
+          <Logo tone="light" size={20} />
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.02em' }}>© 2026 GTF Holidays LLP</span>
         </div>
         <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
           <a href="mailto:sales@gtfholidays.com" style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', textDecoration: 'none', fontWeight: 500 }}>sales@gtfholidays.com</a>
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)' }}>+91 89288 72400</span>
           <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, padding: '6px 14px', borderRadius: 999, background: 'rgba(37,211,102,0.16)', border: '1px solid rgba(37,211,102,0.4)', color: '#25D366', fontWeight: 700, textDecoration: 'none', letterSpacing: '0.04em' }}>
-            <WhatsAppIcon size={12} color="#25D366" /> WHATSAPP
+            <WhatsAppIcon size={12} color="#25D366" /> WhatsApp
           </a>
         </div>
       </div>

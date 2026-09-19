@@ -4,13 +4,13 @@ import { PAYMENT_MODES, type Payment } from './types'
 
 function inputStyle(): React.CSSProperties {
   return {
-    width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)',
-    borderRadius: 6, fontSize: 13, fontFamily: 'var(--font-sans)',
-    outline: 'none', boxSizing: 'border-box', background: 'white', color: 'var(--ink)',
+    width: '100%', minHeight: 44, padding: '10px 12px', border: '1.5px solid var(--ctl)',
+    borderRadius: 8, fontSize: 14, fontFamily: 'var(--font-sans)',
+    boxSizing: 'border-box', background: 'white', color: 'var(--ink)',
   }
 }
 function labelStyle(): React.CSSProperties {
-  return { fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 6 }
+  return { fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)', display: 'block', marginBottom: 6 }
 }
 
 type Props = {
@@ -69,7 +69,7 @@ export default function RecordPaymentModal({ bookingId, payment, onClose, onSave
       <div style={{ background: 'white', width: '100%', maxWidth: 480, maxHeight: '90vh', overflowY: 'auto', borderRadius: 12, boxShadow: '0 24px 64px rgba(7,26,23,0.2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid var(--rule)' }}>
           <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)' }}>{isEdit ? 'Edit Payment' : 'Record Payment'}</div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)', lineHeight: 1 }}>✕</button>
+          <button type="button" aria-label="Close" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)', lineHeight: 1 }}>✕</button>
         </div>
 
         <div style={{ padding: 24 }}>
@@ -79,26 +79,26 @@ export default function RecordPaymentModal({ bookingId, payment, onClose, onSave
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>
-              <label style={labelStyle()}>AMOUNT (₹)</label>
+              <label style={labelStyle()}>Amount (₹)</label>
               <input type="number" min="1" style={inputStyle()} value={amount} onChange={e => setAmount(e.target.value)} placeholder="e.g. 50000" />
             </div>
             <div>
-              <label style={labelStyle()}>PAYMENT DATE</label>
+              <label style={labelStyle()}>Payment date</label>
               <input type="date" style={inputStyle()} value={paymentDate} onChange={e => setPaymentDate(e.target.value)} />
             </div>
             <div>
-              <label style={labelStyle()}>PAYMENT MODE</label>
+              <label style={labelStyle()}>Payment mode</label>
               <select style={inputStyle()} value={paymentMode} onChange={e => setPaymentMode(e.target.value)}>
                 <option value="">Select mode</option>
                 {PAYMENT_MODES.map(m => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
             <div>
-              <label style={labelStyle()}>REFERENCE NUMBER (OPTIONAL)</label>
+              <label style={labelStyle()}>Reference number (optional)</label>
               <input style={inputStyle()} value={referenceNumber} onChange={e => setReferenceNumber(e.target.value)} placeholder="Transaction / UTR / cheque no." />
             </div>
             <div>
-              <label style={labelStyle()}>REMARKS (OPTIONAL)</label>
+              <label style={labelStyle()}>Remarks (optional)</label>
               <textarea rows={3} style={{ ...inputStyle(), resize: 'none' }} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Any additional notes..." />
             </div>
           </div>

@@ -1,9 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { formatDate, moneyOrDash as fmtPrice } from '@/lib/format'
+import StatusBadge from '@/components/ui/StatusBadge'
 
-const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
-const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
+const fmtDate = (d: string) => formatDate(d, 'short')
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   pending:   { label: 'Pending',   bg: 'var(--warn-lt)', color: 'var(--warn)' },
@@ -39,14 +40,14 @@ export default function MyBookingsPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
           <div>
-            <div className="eyebrow" style={{ marginBottom: 8 }}>MY BOOKINGS</div>
+            <div className="eyebrow" style={{ marginBottom: 8 }}>My bookings</div>
             <h1 className="font-display" style={{ fontSize: 32, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Booking Requests</h1>
           </div>
           <Link href="/dashboard" style={{ fontSize: 13, color: 'var(--teal)', textDecoration: 'none', fontWeight: 600 }}>← Dashboard</Link>
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+        <div className="rg-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
           {[
             { label: 'Total', n: counts.all, color: 'var(--teal)' },
             { label: 'Pending', n: counts.pending, color: 'var(--warn)' },
@@ -103,7 +104,7 @@ export default function MyBookingsPage() {
                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{fmtPrice(b.total_price)}</td>
                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{fmtPrice(b.deposit_amount)}</td>
                       <td style={{ padding: '14px 16px' }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
+                        <StatusBadge status={b.status}>{st.label}</StatusBadge>
                       </td>
                       <td style={{ padding: '14px 16px', fontSize: 12, color: 'var(--ink-light)' }}>{fmtDate(b.created_at)}</td>
                       <td style={{ padding: '14px 16px' }}>

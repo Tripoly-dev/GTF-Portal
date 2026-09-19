@@ -6,9 +6,9 @@ import PaymentSummaryStrip from '@/components/bookings/PaymentSummaryStrip'
 import PaymentHistoryTable from '@/components/bookings/PaymentHistoryTable'
 import RecordPaymentModal from '@/components/bookings/RecordPaymentModal'
 import type { Payment } from '@/components/bookings/types'
+import { formatDate, moneyOrDash as fmtPrice } from '@/lib/format'
 
-const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
-const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
+const fmtDate = (d: string) => formatDate(d, 'long')
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   pending:   { label: 'Awaiting Confirmation', bg: 'var(--warn)', color: '#fff' },
@@ -74,8 +74,8 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
   const depositPct = booking.total_price ? Math.min(100, Math.round((booking.deposit_amount || 0) / booking.total_price * 100)) : 0
 
   const meta = [
-    { l: 'DEPARTURE', v: fmtDate(booking.departure_date), icon: ICONS.calendar },
-    { l: 'PASSENGERS', v: paxStr, icon: ICONS.users },
+    { l: 'Departure', v: fmtDate(booking.departure_date), icon: ICONS.calendar },
+    { l: 'Passengers', v: paxStr, icon: ICONS.users },
     { l: 'TOTAL', v: fmtPrice(booking.total_price), icon: <span style={{ fontSize: 12, fontWeight: 800 }}>₹</span> },
     { l: 'SUBMITTED', v: fmtDate(booking.created_at), icon: ICONS.send },
   ]
@@ -101,7 +101,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
               <img src={heroImg} alt={booking.package_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           )}
-          <div style={{ padding: '28px 32px' }}>
+          <div style={{ padding: '28px clamp(18px, 5vw, 32px)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20, flexWrap: 'wrap' }}>
               <div>
                 <div className="eyebrow" style={{ marginBottom: 8 }}>BOOKING REF: {booking.id.slice(0, 8).toUpperCase()}</div>
@@ -137,11 +137,11 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr', gap: 24, alignItems: 'start' }}>
+        <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr', gap: 24, alignItems: 'start' }}>
           {/* Passengers */}
           <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.05)', overflow: 'hidden' }}>
             <div style={{ padding: '18px 28px', borderBottom: '1px solid var(--rule)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="eyebrow">PASSENGER DETAILS</span>
+              <span className="eyebrow">Passenger details</span>
               <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-light)' }}>{paxStr}</span>
             </div>
             {passengers.map((p: any, i: number) => {
@@ -157,12 +157,12 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                           <a href={p.passport_url} target="_blank" rel="noopener noreferrer" style={{
                             display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: 'var(--ink-mid)',
                             textDecoration: 'none', border: '1px solid var(--rule)', borderRadius: 8, padding: '8px 13px', whiteSpace: 'nowrap',
-                            transition: 'all 0.15s',
+                            transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease',
                           }}
                           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)'; (e.currentTarget as HTMLElement).style.background = 'var(--teal-lt)' }}
                           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-mid)'; (e.currentTarget as HTMLElement).style.background = 'transparent' }}>
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /></svg>
-                            VIEW PASSPORT
+                            View passport
                           </a>
                         )}
                       </div>
@@ -189,7 +189,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'sticky', top: 20 }}>
             <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.05)', overflow: 'hidden' }}>
               <div style={{ padding: '18px 28px', borderBottom: '1px solid var(--rule)' }}>
-                <span className="eyebrow">PAYMENT SCHEDULE</span>
+                <span className="eyebrow">Payment schedule</span>
               </div>
               <div style={{ padding: '6px 28px 22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '14px 0', borderBottom: '1px solid var(--rule)' }}>
@@ -206,7 +206,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                     <div style={{ height: '100%', width: `${depositPct}%`, background: 'var(--teal)', borderRadius: 3, transition: 'width 0.4s ease' }} />
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--ink-light)' }}>
-                    <span>DEPOSIT RECEIVED</span>
+                    <span>Deposit received</span>
                     <span>{depositPct}%</span>
                   </div>
                 </div>
@@ -233,7 +233,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
             </div>
             {booking.notes && (
               <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--rule)', boxShadow: '0 2px 10px rgba(7,26,23,0.05)', padding: '20px 24px' }}>
-                <div className="eyebrow" style={{ marginBottom: 10 }}>NOTES</div>
+                <div className="eyebrow" style={{ marginBottom: 10 }}>Notes</div>
                 <p style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6, margin: 0 }}>{booking.notes}</p>
               </div>
             )}
@@ -243,9 +243,9 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         {/* Payments */}
         <div style={{ marginTop: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
-            <div className="eyebrow">PAYMENTS</div>
+            <div className="eyebrow">Payments</div>
             <button onClick={() => { setEditingPayment(null); setShowRecordModal(true) }} className="btn-teal">
-              + RECORD PAYMENT
+              + Record payment
             </button>
           </div>
 

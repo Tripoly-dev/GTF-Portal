@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { money as fmt, formatDate } from '@/lib/format'
 
 type Quote = {
   id: string
@@ -37,8 +38,7 @@ const STATUS_COLORS: Record<string, string> = {
   cancelled: RED,
 }
 
-const fmt = (n: number) => '₹' + Math.round(n).toLocaleString('en-IN')
-const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+const fmtDate = (d: string) => formatDate(d, 'short', '')
 
 const ICONS: Record<string, React.ReactNode> = {
   total: (
@@ -90,7 +90,7 @@ export default function QuotesPage() {
   }
 
   const stats = [
-    { key: 'all', label: 'TOTAL QUOTES', value: counts.all, color: NAVY, icon: ICONS.total },
+    { key: 'all', label: 'Total quotes', value: counts.all, color: NAVY, icon: ICONS.total },
     { key: 'created', label: 'CREATED', value: counts.created, color: 'var(--info)', icon: ICONS.created },
     { key: 'sent', label: 'SENT', value: counts.sent, color: AMBER, icon: ICONS.sent },
     { key: 'cancelled', label: 'CANCELLED', value: counts.cancelled, color: RED, icon: ICONS.cancelled },
@@ -104,7 +104,7 @@ export default function QuotesPage() {
   ]
 
   return (
-    <div style={{ padding: '40px 32px 80px', background: 'var(--paper)', minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
+    <div style={{ padding: '40px clamp(18px, 5vw, 32px) clamp(48px, 9vw, 80px)', background: 'var(--paper)', minHeight: '100vh', fontFamily: 'var(--font-sans)' }}>
       <style>{`
         .qrow { transition: background .15s ease, box-shadow .15s ease; }
         .qrow:hover { background: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
@@ -131,12 +131,12 @@ export default function QuotesPage() {
             textDecoration: 'none',
           }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M12 5v14M5 12h14" /></svg>
-            NEW QUOTE
+            New quote
           </Link>
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: '#fff', border: '1px solid var(--rule)', marginBottom: 28, boxShadow: '0 1px 4px rgba(0,0,0,.05)' }}>
+        <div className="rg-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: '#fff', border: '1px solid var(--rule)', marginBottom: 28, boxShadow: '0 1px 4px rgba(0,0,0,.05)' }}>
           {stats.map((s, i) => (
             <div key={s.key} className="stat" style={{ padding: '26px 28px', borderRight: i < stats.length - 1 ? '1px solid var(--rule)' : 'none', position: 'relative', overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -166,9 +166,9 @@ export default function QuotesPage() {
         {/* List */}
         <div style={{ border: '1px solid var(--rule)', background: 'var(--bg)' }}>
           {loading ? (
-            <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--ink-light)', fontSize: 14 }}>Loading quotes...</div>
+            <div style={{ padding: 'clamp(38px, 9vw, 64px) clamp(18px, 5vw, 32px)', textAlign: 'center', color: 'var(--ink-light)', fontSize: 14 }}>Loading quotes...</div>
           ) : filtered.length === 0 ? (
-            <div style={{ padding: '64px 32px', textAlign: 'center', color: 'var(--ink-light)' }}>
+            <div style={{ padding: 'clamp(38px, 9vw, 64px) clamp(18px, 5vw, 32px)', textAlign: 'center', color: 'var(--ink-light)' }}>
               <div style={{ fontSize: 14, fontWeight: 600 }}>No quotes in this category yet.</div>
             </div>
           ) : (
@@ -178,17 +178,17 @@ export default function QuotesPage() {
               return (
                 <div key={q.id} className="qrow" style={{ borderBottom: '1px solid var(--rule)', position: 'relative' }}>
                   <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: statusColor }} />
-                  <div onClick={() => setExpanded(isOpen ? null : q.id)} style={{ display: 'flex', alignItems: 'center', padding: '22px 28px 22px 32px', gap: 24, cursor: 'pointer' }}>
+                  <div onClick={() => setExpanded(isOpen ? null : q.id)} style={{ display: 'flex', alignItems: 'center', padding: '22px 28px 22px clamp(18px, 5vw, 32px)', gap: 24, cursor: 'pointer' }}>
 
                     <div style={{ flex: 1.6, minWidth: 220 }}>
-                      <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em' }}>PROPOSAL NO: <span style={{ color: '#333', fontWeight: 800 }}>{q.quote_number || '—'}</span></div>
+                      <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 600 }}>Proposal no: <span style={{ color: '#333', fontWeight: 800 }}>{q.quote_number || '—'}</span></div>
                       <div style={{ fontSize: 20, fontWeight: 800, color: NAVY, margin: '4px 0 4px' }}>{q.trip_name}</div>
                       <div style={{ fontSize: 13, color: '#555' }}>Client: <strong>{q.client_name}</strong> · {q.client_type}</div>
                       <div style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2 }}>{q.package_name} · {q.region?.toUpperCase()}</div>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 110 }}>
-                      <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>DEPARTURE</div>
+                      <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 700 }}>Departure</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#222', marginTop: 4 }}>{fmtDate(q.departure_date)}</div>
                     </div>
 
@@ -198,7 +198,7 @@ export default function QuotesPage() {
                     </div>
 
                     <div style={{ flex: 1, minWidth: 130 }}>
-                      <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>QUOTE TOTAL</div>
+                      <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 700 }}>Quote total</div>
                       <div style={{ fontSize: 17, fontWeight: 800, color: TEAL, marginTop: 4 }}>{fmt(q.total_price)}</div>
                     </div>
 
@@ -215,49 +215,49 @@ export default function QuotesPage() {
 
                   {isOpen && (
                     <div style={{ margin: '0 32px 20px', paddingTop: 18, borderTop: '1px solid var(--rule)' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))', gap: 20, marginBottom: 18 }}>
+                      <div className="rg-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))', gap: 20, marginBottom: 18 }}>
                         <div>
-                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>CREATED</div>
+                          <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 700 }}>Created</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{fmtDate(q.created_at)}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>EST. BOOKING DATE</div>
+                          <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 700 }}>Est. booking date</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.estimated_booking_date ? fmtDate(q.estimated_booking_date) : '—'}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>FLIGHTS BOOKED</div>
+                          <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 700 }}>Flights booked</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.flights_booked ? 'Yes' : 'No'}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: 12, color: 'var(--ink-light)', fontWeight: 700, letterSpacing: '0.04em' }}>ADD-ONS</div>
+                          <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 700 }}>Add-ons</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#333', marginTop: 4 }}>{q.add_ons?.length > 0 ? q.add_ons.map((a: any) => a.label).join(', ') : 'None'}</div>
                         </div>
                       </div>
                       {q.notes && (
                         <div style={{ marginBottom: 18, padding: '12px 16px', background: 'var(--paper)', border: '1px solid var(--rule)' }}>
-                          <div style={{ fontSize: 12, color: 'var(--ink-light)', letterSpacing: '0.04em', marginBottom: 4 }}>NOTES</div>
+                          <div style={{ fontSize: 12, color: 'var(--ink-light)', marginBottom: 4 }}>Notes</div>
                           <div style={{ fontSize: 13, color: '#333' }}>{q.notes}</div>
                         </div>
                       )}
                       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                         <Link href={`/dashboard/quotes/${q.id}`} className="actbtn actbtn-primary" style={{
                           display: 'flex', alignItems: 'center', gap: 8, border: 'none', background: NAVY, color: '#fff',
-                          fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '10px 18px', textDecoration: 'none',
+                          fontSize: 13, fontWeight: 700, padding: '10px 18px', textDecoration: 'none',
                         }}>
-                          VIEW PROPOSAL
+                          View proposal
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                         </Link>
                         <Link href={`/dashboard/packages/${q.package_id}`} className="actbtn actbtn-outline" style={{
                           border: '1px solid #d3d1ce', background: '#fff', color: '#333',
-                          fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '10px 18px', textDecoration: 'none',
+                          fontSize: 13, fontWeight: 700, padding: '10px 18px', textDecoration: 'none',
                         }}>
-                          DUPLICATE QUOTE
+                          Duplicate quote
                         </Link>
                         <a href={`/api/quotes/pdf?id=${q.id}`} target="_blank" rel="noopener noreferrer" className="actbtn actbtn-teal" style={{
                           border: `1px solid ${TEAL}`, background: '#fff', color: TEAL,
-                          fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '10px 18px', textDecoration: 'none',
+                          fontSize: 13, fontWeight: 700, padding: '10px 18px', textDecoration: 'none',
                         }}>
-                          DOWNLOAD PDF
+                          Download PDF
                         </a>
                       </div>
                     </div>

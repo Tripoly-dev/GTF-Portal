@@ -3,6 +3,8 @@ import { useState, useEffect, Suspense, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES, Package } from '@/data/packages'
+import { money } from '@/lib/format'
+import StatusBadge from '@/components/ui/StatusBadge'
 
 // ── DESIGN TOKENS ─────────────────────────────────────────────────────────────
 const C = {
@@ -75,15 +77,6 @@ function FilterSection({ title, children }: { title: string; children: React.Rea
 }
 
 // ── STATUS HELPERS ────────────────────────────────────────────────────────────
-const STATUS_BG: Record<string, string> = {
-  'available':    'var(--ok-bg)', 'fast-filling': 'var(--warn-lt)', 'sold-out': 'var(--danger-bg)',
-}
-const STATUS_FG: Record<string, string> = {
-  'available':    'var(--ok)', 'fast-filling': 'var(--warn)', 'sold-out': 'var(--danger)',
-}
-const STATUS_LABEL: Record<string, string> = {
-  'available': 'AVAILABLE', 'fast-filling': 'FAST FILLING', 'sold-out': 'SOLD OUT',
-}
 
 // ── PACKAGE CARD ──────────────────────────────────────────────────────────────
 function PackageCard({ pkg }: { pkg: Package }) {
@@ -92,11 +85,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
   const [glowPos, setGlowPos] = useState({ x: 0, y: 0 })
   const [hovered, setHovered] = useState(false)
 
-  const fmtPrice = () => {
-    if (pkg.currency === 'USD') return `$${pkg.basePrice.toLocaleString('en-US')}`
-    if (pkg.currency === 'EUR') return `€${pkg.basePrice.toLocaleString('en-IN')}`
-    return `₹${pkg.basePrice.toLocaleString('en-IN')}`
-  }
+  const fmtPrice = () => money(pkg.basePrice, pkg.currency)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = cardRef.current?.getBoundingClientRect()
@@ -129,15 +118,15 @@ function PackageCard({ pkg }: { pkg: Package }) {
           width: '100%', height: '100%', objectFit: 'cover',
           filter: hovered ? 'grayscale(0%) brightness(1)' : 'grayscale(35%) brightness(0.92)',
           transform: hovered ? 'scale(1.04)' : 'scale(1)',
-          transition: 'filter 0.5s ease, transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94)',
+          transition: 'filter 0.5s ease, transform 0.6s cubic-bezier(.22,1,.36,1)',
         }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(24,22,26,0.72) 0%, transparent 55%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(7,26,23,0.72) 0%, transparent 55%)' }} />
         {pkg.tag && pkg.tag !== 'COMING SOON' && (
           <div style={{ position: 'absolute', top: 0, left: 0, padding: '5px 10px', background: C.accent, fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: '#fff', textTransform: 'uppercase', fontFamily: font }}>{pkg.tag}</div>
         )}
         <div style={{ position: 'absolute', bottom: 10, left: 14, right: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div style={{ fontSize: 12, color: 'rgba(239,236,229,0.75)', letterSpacing: '0.04em', fontWeight: 700, fontFamily: font }}>{pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D</div>
-          <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: '#d9b877', fontSize: 12 }}>★</span>)}</div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', letterSpacing: '0.04em', fontWeight: 700, fontFamily: font }}>{pkg.region.toUpperCase()} · {pkg.nights}N/{pkg.days}D</div>
+          <div>{'★'.repeat(pkg.starRating).split('').map((_, i) => <span key={i} style={{ color: 'var(--teal)', fontSize: 12 }}>★</span>)}</div>
         </div>
       </div>
 
@@ -159,9 +148,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
         {nextDep && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.inkLight, marginBottom: 14 }}>
             Next: <strong style={{ color: C.inkMid, fontWeight: 600 }}>{new Date(nextDep.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</strong>
-            <span style={{ background: STATUS_BG[nextDep.status] || 'var(--ok-bg)', color: STATUS_FG[nextDep.status] || 'var(--ok)', padding: '2px 7px', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: font }}>
-              {STATUS_LABEL[nextDep.status] || 'AVAILABLE'}
-            </span>
+            <StatusBadge status={nextDep.status} />
           </div>
         )}
         <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
@@ -170,7 +157,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
               flex: 1, textAlign: 'left', padding: '11px 18px', background: C.teal, color: '#fff',
               fontSize: 13, fontWeight: 700, letterSpacing: '0.04em',
               textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.teal}`,
+              fontFamily: font, border: `2px solid ${C.teal}`,
               transition: 'background 0.15s, border-color 0.15s', borderRadius: 6,
             }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = C.tealDark; (e.currentTarget as HTMLElement).style.borderColor = C.tealDark }}
@@ -183,7 +170,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
               target="_blank" rel="noopener noreferrer" style={{
                 flex: 1, textAlign: 'center', padding: '11px 0', background: C.accent, color: '#fff',
                 fontSize: 13, fontWeight: 700, letterSpacing: '0.04em', textDecoration: 'none', display: 'block',
-                fontFamily: font, textTransform: 'uppercase', border: `2px solid ${C.accent}`, borderRadius: 6,
+                fontFamily: font, border: `2px solid ${C.accent}`, borderRadius: 6,
               }}>
               Request Pricing →
             </a>
@@ -284,15 +271,15 @@ function PackagesInner() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)', color: C.ink, fontFamily: font }}>
-      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '0 40px 88px', display: 'grid', gridTemplateColumns: '220px 1fr', gap: 0 }}>
+      <div className="rg-stack" style={{ maxWidth: 1560, margin: '0 auto', padding: '0 clamp(18px, 5vw, 40px) clamp(53px, 9vw, 88px)', display: 'grid', gridTemplateColumns: '220px 1fr', gap: 0 }}>
 
         {/* ── FILTER SIDEBAR ─────────────────────────────────────────────────── */}
-        <aside style={{ padding: '36px 32px 60px 0', borderRight: `2px solid rgba(24,22,26,0.35)`, position: 'sticky', top: 54, maxHeight: 'calc(100vh - 54px)', overflowY: 'auto' }}>
+        <aside style={{ padding: '36px clamp(18px, 5vw, 32px) 60px 0', borderRight: `2px solid rgba(7,26,23,0.35)`, position: 'sticky', top: 54, maxHeight: 'calc(100vh - 54px)', overflowY: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
-            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: font }}>Filters</div>
+            <div style={{ fontSize: 13, fontWeight: 800, fontFamily: font }}>Filters</div>
             {activeCount > 0 && (
-              <button onClick={clearAll} style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: C.accent, cursor: 'pointer', background: 'none', border: 'none', fontFamily: font }}>
-                CLEAR ALL
+              <button onClick={clearAll} style={{ fontSize: 13, fontWeight: 700, color: C.accent, cursor: 'pointer', background: 'none', border: 'none', fontFamily: font }}>
+                Clear all
               </button>
             )}
           </div>
@@ -304,7 +291,7 @@ function PackagesInner() {
             ))}
           </FilterSection>
 
-          <FilterSection title="DURATION">
+          <FilterSection title="Duration">
             {DURATION_RANGES.map(d => (
               <FilterRow key={d.label} label={d.label} checked={durations.includes(d.label)}
                 onChange={() => toggle(durations, setDurations, d.label)}
@@ -312,7 +299,7 @@ function PackagesInner() {
             ))}
           </FilterSection>
 
-          <FilterSection title="PRICE PER PERSON">
+          <FilterSection title="Price per person">
             {PRICE_RANGES.map(r => (
               <FilterRow key={r.label} label={r.label} checked={priceRanges.includes(r.label)}
                 onChange={() => toggle(priceRanges, setPriceRanges, r.label)}
@@ -320,7 +307,7 @@ function PackagesInner() {
             ))}
           </FilterSection>
 
-          <FilterSection title="HOTEL STARS">
+          <FilterSection title="Hotel stars">
             {[3, 4, 5].map(s => (
               <FilterRow key={s} label={`${s}★ Hotels`} checked={stars.includes(s)}
                 onChange={() => toggleN(stars, setStars, s)}
@@ -328,7 +315,7 @@ function PackagesInner() {
             ))}
           </FilterSection>
 
-          <FilterSection title="MONTH OF TRAVEL">
+          <FilterSection title="Month of travel">
             {MONTHS.map(m => (
               <FilterRow key={m.value} label={m.label} checked={months.includes(m.value)}
                 onChange={() => toggle(months, setMonths, m.value)}
@@ -336,7 +323,7 @@ function PackagesInner() {
             ))}
           </FilterSection>
 
-          <FilterSection title="TRAVELER TYPE">
+          <FilterSection title="Traveler type">
             {TRAVELER_TYPES.map(t => (
               <FilterRow key={t} label={t} checked={travelerTypes.includes(t)}
                 onChange={() => toggle(travelerTypes, setTravelerTypes, t)}
@@ -344,7 +331,7 @@ function PackagesInner() {
             ))}
           </FilterSection>
 
-          <FilterSection title="GTF THEMES">
+          <FilterSection title="GTF themes">
             {THEMES.map(t => (
               <FilterRow key={t} label={t} checked={themes.includes(t)}
                 onChange={() => toggle(themes, setThemes, t)}
@@ -354,7 +341,7 @@ function PackagesInner() {
         </aside>
 
         {/* ── MAIN CONTENT ───────────────────────────────────────────────────── */}
-        <main style={{ padding: '36px 0 0 40px' }}>
+        <main style={{ padding: '36px 0 0 clamp(18px, 5vw, 40px)' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16 }}>
             <div>
@@ -376,7 +363,7 @@ function PackagesInner() {
                   style={{
                     fontFamily: font, fontSize: 13, padding: '9px 12px',
                     border: `1px solid ${C.rule}`, background: 'var(--bg)',
-                    color: C.ink, outline: 'none', width: 220,
+                    color: C.ink, width: 220,
                   }}
                 />
               </div>
@@ -429,24 +416,24 @@ function PackagesInner() {
 
           {/* Package grid */}
           {activePackageIds === null ? (
-            <div style={{ padding: '80px 0', textAlign: 'center', fontSize: 14, color: C.inkLight, fontFamily: font }}>
+            <div style={{ padding: 'clamp(48px, 9vw, 80px) 0', textAlign: 'center', fontSize: 14, color: C.inkLight, fontFamily: font }}>
               Loading packages...
             </div>
           ) : filtered.length === 0 ? (
-            <div style={{ padding: '80px 0', textAlign: 'center' }}>
+            <div style={{ padding: 'clamp(48px, 9vw, 80px) 0', textAlign: 'center' }}>
               <div style={{ fontSize: 14, color: C.inkLight, marginBottom: 16, fontFamily: font }}>
                 No packages match those filters. Loosen the price band or clear a filter to see the full catalogue.
               </div>
               <button onClick={clearAll} style={{
                 padding: '12px 24px', background: C.ink, color: C.navFg,
                 fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', cursor: 'pointer',
-                border: `2px solid ${C.ink}`, fontFamily: font, textTransform: 'uppercase',
+                border: `2px solid ${C.ink}`, fontFamily: font,
               }}>
                 Clear all filters
               </button>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
               {filtered.map(pkg => <PackageCard key={pkg.id} pkg={pkg} />)}
             </div>
           )}

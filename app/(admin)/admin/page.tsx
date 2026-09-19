@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES } from '@/data/packages'
+import { formatDate, moneyOrDash as fmtPrice } from '@/lib/format'
+import Logo from '@/components/ui/Logo'
+import StatusBadge from '@/components/ui/StatusBadge'
 
 type Agent = {
   id: string; full_name: string; agency_name: string; city: string
@@ -27,8 +30,7 @@ type Departure = {
   package_name?: string; region?: string
 }
 
-const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
-const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
+const fmtDate = (d: string) => formatDate(d, 'short')
 
 const BOOKING_STATUS: Record<string, { label: string; bg: string; color: string }> = {
   pending:   { label: 'Pending',   bg: 'var(--warn-lt)', color: 'var(--warn)' },
@@ -157,8 +159,8 @@ function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid var(--rule)' }}>
           <div className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>{editing ? 'Edit agent details' : 'Agent details'}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            {!editing && <button onClick={() => setEditing(true)} style={{ ...btn, padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none' }}>EDIT</button>}
-            <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--ink-light)' }}>×</button>
+            {!editing && <button onClick={() => setEditing(true)} style={{ ...btn, padding: '6px 14px', background: 'var(--teal)', color: '#fff', border: 'none' }}>Edit</button>}
+            <button type="button" aria-label="Close" onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--ink-light)' }}>×</button>
           </div>
         </div>
         <div style={{ padding: 24 }}>
@@ -170,7 +172,7 @@ function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: 
           {editing ? (
             <>
               <div style={{ marginBottom: 14 }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.04em', display: 'block', marginBottom: 6 }}>{agent.logo_url ? 'REPLACE LOGO' : 'UPLOAD LOGO'} (PNG/JPG/WEBP, max 500KB)</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.04em', display: 'block', marginBottom: 6 }}>{agent.logo_url ? 'Replace logo' : 'Upload logo'} (PNG/JPG/WEBP, max 500KB)</label>
                 <input type="file" accept="image/png,image/jpeg,image/webp" onChange={pickLogo} style={{ fontSize: 12 }} />
               </div>
               {edit.map(([label, key, multi]) => (
@@ -192,13 +194,13 @@ function AgentDetailModal({ agent, onClose, onSaved }: { agent: Agent; onClose: 
               <div style={{ fontSize: 12, color: 'var(--ink-light)', marginBottom: 14 }}>Email is the agent&apos;s login and can&apos;t be changed here.</div>
               {error && <div style={{ padding: '10px 14px', background: 'var(--danger-bg)', border: '1px solid var(--danger-bg)', color: 'var(--danger)', fontSize: 12, marginBottom: 14 }}>{error}</div>}
               <div style={{ display: 'flex', gap: 10 }}>
-                <button onClick={save} disabled={saving} style={{ ...btn, background: 'var(--teal)', color: '#fff', border: 'none', opacity: saving ? 0.6 : 1 }}>{saving ? 'SAVING...' : 'SAVE CHANGES'}</button>
-                <button onClick={() => { setEditing(false); setError(''); setLogoFile(null); setLogoPreview(null) }} disabled={saving} style={{ ...btn, background: 'white', color: 'var(--ink-mid)', border: '1px solid var(--rule)' }}>CANCEL</button>
+                <button onClick={save} disabled={saving} style={{ ...btn, background: 'var(--teal)', color: '#fff', border: 'none', opacity: saving ? 0.6 : 1 }}>{saving ? 'Saving...' : 'Save changes'}</button>
+                <button onClick={() => { setEditing(false); setError(''); setLogoFile(null); setLogoPreview(null) }} disabled={saving} style={{ ...btn, background: 'white', color: 'var(--ink-mid)', border: '1px solid var(--rule)' }}>Cancel</button>
               </div>
             </>
           ) : (
             view.map(([k, v]) => (
-              <div key={k} style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: 12, padding: '9px 0', borderBottom: '1px solid var(--rule)', fontSize: 13 }}>
+              <div key={k} className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: 12, padding: '9px 0', borderBottom: '1px solid var(--rule)', fontSize: 13 }}>
                 <div style={{ color: 'var(--ink-light)', fontWeight: 600, fontSize: 12, letterSpacing: '0.04em', textTransform: 'uppercase', paddingTop: 2 }}>{k}</div>
                 <div style={{ color: 'var(--ink)', wordBreak: 'break-word' }}>{v}</div>
               </div>
@@ -403,21 +405,20 @@ export default function AdminPage() {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex' }}>
+    <div className="admin-shell" style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex' }}>
 
       {/* Sidebar */}
-      <div style={{ width: 240, background: 'var(--ink)', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '28px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="admin-side" style={{ width: 240, background: 'var(--ink)', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        <div className="admin-side-head" style={{ padding: '28px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF" style={{ height: 28, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>GTF <span style={{ fontWeight: 400 }}>Admin</span></span>
+            <Logo tone="light" size={22} suffix="Admin" />
           </Link>
           <div style={{ marginTop: 12, padding: '4px 10px', background: 'rgba(127,212,196,0.15)', border: '1px solid rgba(127,212,196,0.4)', display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: '#7FD4C4' }}>ADMIN PANEL</div>
         </div>
 
-        <nav style={{ padding: '16px 0', flex: 1 }}>
+        <nav className="admin-nav" style={{ padding: '16px 0', flex: 1 }}>
           {navItems.map(item => (
-            <button key={item.id} onClick={() => setSection(item.id)} style={{
+            <button key={item.id} onClick={() => setSection(item.id)} className="admin-nav-btn" style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: 12,
               padding: '12px 24px', background: section === item.id ? 'rgba(10,123,108,0.2)' : 'transparent',
               borderLeft: `2px solid ${section === item.id ? 'var(--teal)' : 'transparent'}`,
@@ -434,7 +435,7 @@ export default function AdminPage() {
           ))}
         </nav>
 
-        <div style={{ padding: '16px 24px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="admin-side-foot" style={{ padding: '16px 24px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'rgba(255,255,255,0.62)', fontSize: 13, marginBottom: 12 }}>
             <span>←</span> View Portal
           </Link>
@@ -452,7 +453,7 @@ export default function AdminPage() {
         {/* ── AGENTS SECTION ── */}
         {section === 'agents' && (
           <>
-            <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px clamp(18px, 5vw, 40px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <h1 className="font-display" style={{ fontSize: 24, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.015em', margin: 0 }}>Agent Management</h1>
                 <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2, marginBottom: 0 }}>Review and approve partner registrations</p>
@@ -464,9 +465,9 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
-            <div style={{ padding: '32px 40px' }}>
+            <div style={{ padding: '32px clamp(18px, 5vw, 40px)' }}>
               {/* Stats */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
+              <div className="rg-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
                 {[
                   { label: 'Total Agents', n: agentCounts.all, color: 'var(--teal)' },
                   { label: 'Pending', n: agentCounts.pending, color: 'var(--warn)' },
@@ -492,14 +493,14 @@ export default function AdminPage() {
               </div>
               {/* Table */}
               {loading ? (
-                <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--ink-light)' }}>Loading agents...</div>
+                <div style={{ textAlign: 'center', padding: 'clamp(48px, 9vw, 80px) 0', color: 'var(--ink-light)' }}>Loading agents...</div>
               ) : filteredAgents.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '80px 0', background: 'white', border: '1px solid var(--rule)' }}>
+                <div style={{ textAlign: 'center', padding: 'clamp(48px, 9vw, 80px) 0', background: 'white', border: '1px solid var(--rule)' }}>
                   <div style={{ fontSize: 32, marginBottom: 16 }}>👥</div>
                   <div className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', marginBottom: 8 }}>{agentFilter === 'pending' ? 'No pending applications' : 'No agents found'}</div>
                 </div>
               ) : (
-                <div style={{ background: 'white', border: '1px solid var(--rule)', overflow: 'hidden' }}>
+                <div className="rg-scroll-x" style={{ background: 'white', border: '1px solid var(--rule)', overflow: 'hidden' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px 120px 140px 180px', padding: '12px 20px', background: 'var(--bg)', borderBottom: '1px solid var(--rule)', gap: 16 }}>
                     {['Agent / Agency', 'Contact', 'City', 'IATA#', 'Applied', 'Action'].map(h => (
                       <div key={h} style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em' }}>{h.toUpperCase()}</div>
@@ -510,7 +511,7 @@ export default function AdminPage() {
                       <div>
                         <button onClick={() => setViewAgent(agent)} className="font-tight" title="View full details" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', marginBottom: 3, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'var(--rule)', textUnderlineOffset: 3 }}>{agent.full_name}</button>
                         <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>{agent.agency_name}</div>
-                        <button onClick={() => setViewAgent(agent)} style={{ display: 'block', marginTop: 4, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--teal)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>VIEW DETAILS →</button>
+                        <button onClick={() => setViewAgent(agent)} style={{ display: 'block', marginTop: 4, fontSize: 13, fontWeight: 700, color: 'var(--teal)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>View details →</button>
                       </div>
                       <div>
                         <div style={{ fontSize: 13, color: 'var(--ink-mid)', marginBottom: 2 }}>{agent.email}</div>
@@ -523,10 +524,10 @@ export default function AdminPage() {
                         {agent.status === 'pending' ? (
                           <div style={{ display: 'flex', gap: 8 }}>
                             <button onClick={() => handleAgentAction(agent.id, 'approved')} disabled={updatingAgent === agent.id} style={{ padding: '7px 14px', background: 'var(--teal)', color: '#fff', border: 'none', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: updatingAgent === agent.id ? 0.6 : 1, fontFamily: 'var(--font-sans)' }}>
-                              {updatingAgent === agent.id ? '...' : 'APPROVE'}
+                              {updatingAgent === agent.id ? '...' : 'Approve'}
                             </button>
-                            <button onClick={() => handleAgentAction(agent.id, 'rejected')} disabled={updatingAgent === agent.id} style={{ padding: '7px 14px', background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger-bg)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>
-                              REJECT
+                            <button onClick={() => handleAgentAction(agent.id, 'rejected')} disabled={updatingAgent === agent.id} style={{ padding: '7px 14px', background: 'transparent', color: 'var(--danger)', border: '1px solid var(--danger-bg)', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}>
+                              Reject
                             </button>
                           </div>
                         ) : (
@@ -549,13 +550,13 @@ export default function AdminPage() {
         {/* ── BOOKINGS SECTION ── */}
         {section === 'bookings' && (
           <>
-            <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px 40px' }}>
+            <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px clamp(18px, 5vw, 40px)' }}>
               <h1 className="font-display" style={{ fontSize: 24, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.015em', margin: 0 }}>All Bookings</h1>
               <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2, marginBottom: 0 }}>Confirm or cancel booking requests from agents</p>
             </div>
-            <div style={{ padding: '32px 40px' }}>
+            <div style={{ padding: '32px clamp(18px, 5vw, 40px)' }}>
               {/* Stats */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+              <div className="rg-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
                 {[
                   { label: 'Total', n: bookingCounts.all, color: 'var(--teal)' },
                   { label: 'Pending', n: bookingCounts.pending, color: 'var(--warn)' },
@@ -609,7 +610,7 @@ export default function AdminPage() {
                             <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{pax}</td>
                             <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{fmtPrice(b.total_price)}</td>
                             <td style={{ padding: '14px 16px' }}>
-                              <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
+                              <StatusBadge status={b.status}>{st.label}</StatusBadge>
                             </td>
                             <td style={{ padding: '14px 16px' }}>
                               {b.status === 'pending' ? (
@@ -639,7 +640,7 @@ export default function AdminPage() {
         {/* ── DEPARTURES SECTION ── */}
         {section === 'departures' && (
           <>
-            <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ background: 'white', borderBottom: '1px solid var(--rule)', padding: '20px clamp(18px, 5vw, 40px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <h1 className="font-display" style={{ fontSize: 24, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.015em', margin: 0 }}>Departure Management</h1>
                 <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 2, marginBottom: 0 }}>Manage availability and seat counts per departure</p>
@@ -651,7 +652,7 @@ export default function AdminPage() {
                 </button>
               </div>
             </div>
-            <div style={{ padding: '32px 40px' }}>
+            <div style={{ padding: '32px clamp(18px, 5vw, 40px)' }}>
 
               {/* Package visibility */}
               <div style={{ marginBottom: 28 }}>
@@ -674,7 +675,7 @@ export default function AdminPage() {
               </div>
 
               <div style={{ marginBottom: 20 }}>
-                <input value={depSearch} onChange={e => setDepSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--rule)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: 'var(--font-sans)' }} />
+                <input value={depSearch} onChange={e => setDepSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--ctl)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: 'var(--font-sans)' }} />
               </div>
               <div style={{ background: 'white', border: '1px solid var(--rule)', borderRadius: 12, overflow: 'hidden' }}>
                 {filteredDeps.length === 0 ? (
@@ -705,16 +706,16 @@ export default function AdminPage() {
                               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                 <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{d.booked_seats || 0} / {d.total_seats || 30}</span>
                                 <div style={{ flex: 1, height: 6, background: 'var(--rule)', borderRadius: 3, minWidth: 60 }}>
-                                  <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? 'var(--danger)' : pct >= 33 ? '#f59e0b' : 'var(--ok)' }} />
+                                  <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? 'var(--danger)' : pct >= 33 ? 'var(--warn)' : 'var(--ok)' }} />
                                 </div>
                                 <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>{pct}%</span>
                               </div>
                             </td>
                             <td style={{ padding: '14px 16px' }}>
-                              <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
+                              <StatusBadge status={d.status}>{st.label}</StatusBadge>
                             </td>
                             <td style={{ padding: '14px 16px' }}>
-                              <select value={d.status} disabled={updatingDep === d.id} onChange={e => handleDepStatus(d.id, e.target.value)} style={{ padding: '6px 10px', border: '1.5px solid var(--rule)', borderRadius: 6, fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer', background: 'white' }}>
+                              <select value={d.status} disabled={updatingDep === d.id} onChange={e => handleDepStatus(d.id, e.target.value)} style={{ padding: '6px 10px', border: '1.5px solid var(--ctl)', borderRadius: 6, fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer', background: 'white' }}>
                                 <option value="available">Available</option>
                                 <option value="fast-filling">Fast Filling</option>
                                 <option value="sold-out">Sold Out</option>

@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Logo from '@/components/ui/Logo'
 
 export default function Navbar() {
   const [depsOpen, setDepsOpen] = useState(false)
@@ -46,22 +47,13 @@ export default function Navbar() {
       backdropFilter: 'blur(20px) saturate(160%)',
       WebkitBackdropFilter: 'blur(20px) saturate(160%)',
       boxShadow: '0 1px 0 rgba(200,222,218,0.7), 0 12px 32px rgba(7,26,23,0.05)',
-      transition: 'all 0.4s ease',
+      transition: 'background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease, opacity 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease',
     }}>
-      <div style={{ width: '100%', height: '100%', padding: '0 64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ width: '100%', height: '100%', padding: '0 clamp(18px, 5vw, 64px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png/v1/crop/x_0,y_7,w_1285,h_1028/fill/w_200,h_160,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/GTF%20Logo_edited.png" alt="GTF Holidays" style={{ height: 34, width: 'auto', objectFit: 'contain' }} />
-          <span style={{
-            fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 800,
-            color: overPhoto ? '#fff' : 'var(--ink)', letterSpacing: '-0.01em',
-          }}>
-            GTF <span style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500,
-              color: overPhoto ? 'rgba(255,255,255,0.85)' : 'var(--teal)', letterSpacing: 0,
-            }}>Connect</span>
-          </span>
+          <Logo tone={overPhoto ? 'light' : 'dark'} size={26} />
         </Link>
 
         {/* Nav links */}
@@ -69,16 +61,19 @@ export default function Navbar() {
           {/* Departures dropdown */}
           <div style={{ position: 'relative' }}
             onMouseEnter={() => setDepsOpen(true)}
-            onMouseLeave={() => setDepsOpen(false)}>
-            <span className="nav-link" style={{
+            onMouseLeave={() => setDepsOpen(false)}
+            onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDepsOpen(false) }}
+            onKeyDown={e => { if (e.key === 'Escape') setDepsOpen(false) }}>
+            <button type="button" className="nav-link" aria-haspopup="menu" aria-expanded={depsOpen} onClick={() => setDepsOpen(o => !o)} style={{
               color: overPhoto ? 'rgba(255,255,255,0.8)' : undefined,
               display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer',
+              background: 'none', border: 'none', padding: 0, font: 'inherit',
             }}>
               B2B Departures
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
-            </span>
+            </button>
             {depsOpen && (
               <div style={{
                 position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
@@ -94,7 +89,7 @@ export default function Navbar() {
                       display: 'block', padding: '11px 20px',
                       fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
                       textDecoration: 'none', borderBottom: i < regions.length - 1 ? '1px solid var(--rule)' : 'none',
-                      transition: 'all 0.15s',
+                      transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease',
                     }}
                     onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
                     onMouseLeave={e => { (e.target as HTMLElement).style.background = 'white'; (e.target as HTMLElement).style.color = 'var(--ink-mid)' }}>
@@ -123,13 +118,15 @@ export default function Navbar() {
           {isAdmin && (
             <div style={{ position: 'relative' }}
               onMouseEnter={() => setAdminOpen(true)}
-              onMouseLeave={() => setAdminOpen(false)}>
-              <span className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', color: 'var(--teal)', fontWeight: 700 }}>
+              onMouseLeave={() => setAdminOpen(false)}
+              onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setAdminOpen(false) }}
+              onKeyDown={e => { if (e.key === 'Escape') setAdminOpen(false) }}>
+              <button type="button" className="nav-link" aria-haspopup="menu" aria-expanded={adminOpen} onClick={() => setAdminOpen(o => !o)} style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', color: 'var(--teal)', fontWeight: 700, background: 'none', border: 'none', padding: 0, font: 'inherit' }}>
                 Admin
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                   <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
-              </span>
+              </button>
               {adminOpen && (
                 <div style={{
                   position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
@@ -145,7 +142,7 @@ export default function Navbar() {
                         display: 'block', padding: '11px 20px',
                         fontSize: 13, fontWeight: 500, color: 'var(--ink-mid)',
                         textDecoration: 'none', borderBottom: i < adminLinks.length - 1 ? '1px solid var(--rule)' : 'none',
-                        transition: 'all 0.15s',
+                        transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease',
                       }}
                       onMouseEnter={e => { (e.target as HTMLElement).style.background = 'var(--teal-lt)'; (e.target as HTMLElement).style.color = 'var(--teal)' }}
                       onMouseLeave={e => { (e.target as HTMLElement).style.background = 'white'; (e.target as HTMLElement).style.color = 'var(--ink-mid)' }}>
@@ -169,48 +166,18 @@ export default function Navbar() {
                 : <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />}
             </svg>
           </button>
-          <Link href="/login" className="nav-cta" style={{
-            padding: '9px 20px', borderRadius: 999,
-            border: `1.5px solid ${overPhoto ? 'rgba(255,255,255,0.45)' : 'var(--rule)'}`,
-            color: overPhoto ? '#fff' : 'var(--ink-mid)',
-            fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
-            textDecoration: 'none', display: 'inline-flex', alignItems: 'center',
-            transition: 'transform 0.25s cubic-bezier(.22,1,.36,1), border-color 0.25s ease',
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
-            ;(e.currentTarget as HTMLElement).style.borderColor = overPhoto ? 'rgba(255,255,255,0.8)' : 'var(--teal)'
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
-            ;(e.currentTarget as HTMLElement).style.borderColor = overPhoto ? 'rgba(255,255,255,0.45)' : 'var(--rule)'
-          }}>AGENT LOGIN</Link>
-          <Link href="/register" className="nav-cta" style={{
-            padding: '9px 22px', borderRadius: 999,
-            background: overPhoto ? 'rgba(10,123,108,0.75)' : 'var(--teal)',
-            boxShadow: '0 6px 18px rgba(10,123,108,0.32)',
-            color: '#fff', fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
-            textDecoration: 'none', display: 'inline-flex', alignItems: 'center',
-            transition: 'transform 0.25s cubic-bezier(.22,1,.36,1), box-shadow 0.25s ease, background 0.25s ease',
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px) scale(1.02)'
-            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 10px 24px rgba(10,123,108,0.42)'
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(0) scale(1)'
-            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 6px 18px rgba(10,123,108,0.32)'
-          }}>JOIN AS PARTNER</Link>
+          <Link href="/login" className={`nav-cta ${overPhoto ? 'btn-outline-white' : 'btn-outline'} btn-sm`}>Agent login</Link>
+          <Link href="/register" className="nav-cta btn-teal btn-sm">Join as partner</Link>
         </div>
 
       </div>
       {menuOpen && (
         <div id="mobile-menu" className="nav-drawer">
-          <div className="drawer-group">B2B DEPARTURES</div>
+          <div className="drawer-group">B2B departures</div>
           {regions.map(r => (
             <Link key={r.href} href={r.href} className="drawer-link drawer-sub" onClick={() => setMenuOpen(false)}>{r.name}</Link>
           ))}
-          <div className="drawer-group">EXPLORE</div>
+          <div className="drawer-group">Explore</div>
           {[
             { label: 'Adhoc & White Label', href: '/adhoc-and-white-label-solutions' },
             { label: 'Bespoke Holidays', href: '/bespoke-holidays' },
@@ -222,7 +189,7 @@ export default function Navbar() {
           ))}
           {isAdmin && (
             <>
-              <div className="drawer-group">ADMIN</div>
+              <div className="drawer-group">Admin</div>
               {adminLinks.map(l => (
                 <Link key={l.href} href={l.href} className="drawer-link drawer-sub" onClick={() => setMenuOpen(false)}>{l.name}</Link>
               ))}

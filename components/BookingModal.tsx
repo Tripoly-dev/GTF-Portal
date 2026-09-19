@@ -1,20 +1,21 @@
 'use client'
 import { useState } from 'react'
 import { todayISO } from '@/lib/date'
+import { money } from '@/lib/format'
 
 const PAYMENT_MODES = ['Cash', 'Bank Transfer', 'UPI', 'Cheque', 'NEFT/RTGS']
 
 function inputStyle(error?: boolean): React.CSSProperties {
   return {
-    width: '100%', padding: '10px 12px', border: `1.5px solid ${error ? 'var(--danger)' : 'var(--rule)'}`,
-    borderRadius: 6, fontSize: 13, fontFamily: 'var(--font-sans)',
-    outline: 'none', boxSizing: 'border-box', background: 'white', color: 'var(--ink)',
+    width: '100%', minHeight: 44, padding: '10px 12px', border: `1.5px solid ${error ? 'var(--danger)' : 'var(--ctl)'}`,
+    borderRadius: 8, fontSize: 14, fontFamily: 'var(--font-sans)',
+    boxSizing: 'border-box', background: 'white', color: 'var(--ink)',
     transition: 'border-color 0.15s',
   }
 }
 
 function labelStyle(): React.CSSProperties {
-  return { fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 6 }
+  return { fontSize: 13, fontWeight: 600, color: 'var(--ink-mid)', display: 'block', marginBottom: 6 }
 }
 
 type Passenger = {
@@ -180,7 +181,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
             <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)', marginBottom: 4 }}>Convert to Booking</div>
             <div style={{ fontSize: 13, color: 'var(--ink-light)' }}>{quote.trip_name} · Proposal No: {quote.quote_number}</div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 22, color: 'var(--ink-light)', lineHeight: 1, padding: 4 }}>✕</button>
+          <button type="button" aria-label="Close" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 22, color: 'var(--ink-light)', lineHeight: 1, padding: 4 }}>✕</button>
         </div>
 
         {/* Step indicators */}
@@ -188,13 +189,13 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
           {STEPS.map((s, i) => (
             <div key={s} style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', background: step > i + 1 ? 'var(--teal)' : step === i + 1 ? 'var(--teal)' : 'var(--rule)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: step >= i + 1 ? '#fff' : 'var(--ink-light)', fontSize: 13, fontWeight: 700, marginBottom: 6, transition: 'all 0.2s' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: step > i + 1 ? 'var(--teal)' : step === i + 1 ? 'var(--teal)' : 'var(--rule)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: step >= i + 1 ? '#fff' : 'var(--ink-light)', fontSize: 13, fontWeight: 700, marginBottom: 6, transition: 'background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease' }}>
                   {step > i + 1 ? '✓' : i + 1}
                 </div>
                 <div style={{ fontSize: 12, fontWeight: 600, color: step >= i + 1 ? 'var(--teal)' : 'var(--ink-light)', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}>{s.toUpperCase()}</div>
               </div>
               {i < STEPS.length - 1 && (
-                <div style={{ height: 2, flex: 1, background: step > i + 1 ? 'var(--teal)' : 'var(--rule)', marginBottom: 24, transition: 'all 0.2s' }} />
+                <div style={{ height: 2, flex: 1, background: step > i + 1 ? 'var(--teal)' : 'var(--rule)', marginBottom: 24, transition: 'background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease' }} />
               )}
             </div>
           ))}
@@ -216,25 +217,25 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
               {passengers.map((p, idx) => (
                 <div key={idx} style={{ background: 'var(--bg)', borderRadius: 10, padding: '20px', marginBottom: 16, border: '1px solid var(--rule)' }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.04em', marginBottom: 16 }}>{paxLabel(idx).toUpperCase()}</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div className="rg-stack-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                     <div style={{ gridColumn: '1 / -1' }}>
-                      <label style={labelStyle()}>FULL NAME (AS PER PASSPORT)</label>
+                      <label style={labelStyle()}>Full name (as per passport)</label>
                       <input style={inputStyle(!!(!p.name && error))} value={p.name} onChange={e => updatePassenger(idx, 'name', e.target.value)} placeholder="e.g. KAUSHIK CHAUHAN" />
                     </div>
                     <div>
-                      <label style={labelStyle()}>PASSPORT NUMBER</label>
+                      <label style={labelStyle()}>Passport number</label>
                       <input style={inputStyle(!!(!p.passport_number && error))} value={p.passport_number} onChange={e => updatePassenger(idx, 'passport_number', e.target.value.toUpperCase())} placeholder="e.g. P1234567" />
                     </div>
                     <div>
-                      <label style={labelStyle()}>DATE OF ISSUE</label>
+                      <label style={labelStyle()}>Date of issue</label>
                       <input type="date" style={inputStyle(!!(!p.doi && error))} value={p.doi} onChange={e => updatePassenger(idx, 'doi', e.target.value)} />
                     </div>
                     <div>
-                      <label style={labelStyle()}>DATE OF EXPIRY</label>
+                      <label style={labelStyle()}>Date of expiry</label>
                       <input type="date" min={todayISO()} style={inputStyle(!!(!p.doe && error))} value={p.doe} onChange={e => updatePassenger(idx, 'doe', e.target.value)} />
                     </div>
                     <div style={{ gridColumn: '1 / -1' }}>
-                      <label style={labelStyle()}>PASSPORT COPY (JPG/PNG/PDF · MAX 2MB)</label>
+                      <label style={labelStyle()}>Passport copy (JPG/PNG/PDF · max 2 MB)</label>
                       {p.passport_url ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'var(--ok-bg)', borderRadius: 6, border: '1px solid #6ee7b7' }}>
                           <span style={{ fontSize: 16 }}>✓</span>
@@ -245,7 +246,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
                         <div>
                           <input type="file" accept=".jpg,.jpeg,.png,.pdf" id={`passport-${idx}`} style={{ display: 'none' }}
                             onChange={e => { const f = e.target.files?.[0]; if (f) uploadPassport(idx, f) }} />
-                          <label htmlFor={`passport-${idx}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px', border: '2px dashed var(--rule)', borderRadius: 6, cursor: p.uploading ? 'not-allowed' : 'pointer', fontSize: 13, color: 'var(--ink-light)', background: 'white', transition: 'all 0.15s' }}>
+                          <label htmlFor={`passport-${idx}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '12px', border: '2px dashed var(--rule)', borderRadius: 6, cursor: p.uploading ? 'not-allowed' : 'pointer', fontSize: 13, color: 'var(--ink-light)', background: 'white', transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease' }}>
                             {p.uploading ? '⏳ Uploading...' : '📎 Click to upload passport'}
                           </label>
                           {p.upload_error && <div style={{ fontSize: 12, color: 'var(--danger)', marginTop: 4 }}>{p.upload_error}</div>}
@@ -263,32 +264,32 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ background: 'var(--teal-lt)', borderRadius: 10, padding: '16px 20px', border: '1px solid var(--rule)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 13, color: 'var(--ink)' }}>Total Package Amount</span>
-                <span style={{ fontSize: 20, fontWeight: 800, color: 'var(--teal)', fontFamily: 'var(--font-sans)' }}>₹{(quote.total_price || 0).toLocaleString('en-IN')}</span>
+                <span style={{ fontSize: 20, fontWeight: 800, color: 'var(--teal)', fontFamily: 'var(--font-sans)' }}>{money(quote.total_price)}</span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div className="rg-stack-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <div>
-                  <label style={labelStyle()}>DEPOSIT AMOUNT (₹)</label>
+                  <label style={labelStyle()}>Deposit amount (₹)</label>
                   <input type="number" style={inputStyle()} value={payment.deposit_amount} onChange={e => setPayment(p => ({ ...p, deposit_amount: e.target.value }))} placeholder="e.g. 50000" />
                 </div>
                 <div>
-                  <label style={labelStyle()}>DEPOSIT DUE DATE</label>
+                  <label style={labelStyle()}>Deposit due date</label>
                   <input type="date" min={todayISO()} style={inputStyle()} value={payment.deposit_due_date} onChange={e => setPayment(p => ({ ...p, deposit_due_date: e.target.value }))} />
                 </div>
               </div>
 
               <div style={{ background: 'var(--bg)', borderRadius: 8, padding: '14px 16px', border: '1px solid var(--rule)', display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: 13, color: 'var(--ink-light)' }}>Balance Amount</span>
-                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--brand)' }}>₹{balanceAmount.toLocaleString('en-IN')}</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--brand)' }}>{money(balanceAmount)}</span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div className="rg-stack-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <div>
-                  <label style={labelStyle()}>BALANCE DUE DATE</label>
+                  <label style={labelStyle()}>Balance due date</label>
                   <input type="date" min={todayISO()} style={inputStyle()} value={payment.balance_due_date} onChange={e => setPayment(p => ({ ...p, balance_due_date: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={labelStyle()}>PAYMENT MODE</label>
+                  <label style={labelStyle()}>Payment mode</label>
                   <select style={inputStyle()} value={payment.payment_mode} onChange={e => setPayment(p => ({ ...p, payment_mode: e.target.value }))}>
                     <option value="">Select mode</option>
                     {PAYMENT_MODES.map(m => <option key={m} value={m}>{m}</option>)}
@@ -297,7 +298,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
               </div>
 
               <div>
-                <label style={labelStyle()}>INTERNAL NOTES (OPTIONAL)</label>
+                <label style={labelStyle()}>Internal notes (optional)</label>
                 <textarea style={{ ...inputStyle(), resize: 'none' } as any} rows={3} value={payment.notes} onChange={e => setPayment(p => ({ ...p, notes: e.target.value }))} placeholder="Any special requests or notes..." />
               </div>
             </div>
@@ -310,13 +311,13 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
 
               {/* Package summary */}
               <div style={{ background: 'var(--teal-lt)', borderRadius: 10, padding: '16px 20px', marginBottom: 16, border: '1px solid var(--rule)' }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--teal)', letterSpacing: '0.04em', marginBottom: 10 }}>PACKAGE DETAILS</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--teal)', marginBottom: 10 }}>Package details</div>
                 {[
                   { l: 'Package', v: quote.trip_name },
                   { l: 'Client', v: quote.client_name },
                   { l: 'Departure', v: new Date(quote.departure_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) },
                   { l: 'Passengers', v: `${quote.adults} Adult${quote.adults > 1 ? 's' : ''}${(quote.children_with_bed || 0) + (quote.children_without_bed || 0) > 0 ? ` + ${(quote.children_with_bed || 0) + (quote.children_without_bed || 0)} Children` : ''}` },
-                  { l: 'Total Amount', v: `₹${(quote.total_price || 0).toLocaleString('en-IN')}` },
+                  { l: 'Total Amount', v: money(quote.total_price) },
                 ].map(({ l, v }) => (
                   <div key={l} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                     <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>{l}</span>
@@ -327,7 +328,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
 
               {/* Passengers summary */}
               <div style={{ marginBottom: 16 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.04em', marginBottom: 10 }}>PASSENGERS</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-light)', marginBottom: 10 }}>Passengers</div>
                 {passengers.map((p, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--rule)' }}>
                     <div>
@@ -345,10 +346,10 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
 
               {/* Payment summary */}
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-light)', letterSpacing: '0.04em', marginBottom: 10 }}>PAYMENT SCHEDULE</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-light)', marginBottom: 10 }}>Payment schedule</div>
                 {[
-                  { l: 'Deposit', v: `₹${Number(payment.deposit_amount).toLocaleString('en-IN')} due by ${payment.deposit_due_date}` },
-                  { l: 'Balance', v: `₹${balanceAmount.toLocaleString('en-IN')} due by ${payment.balance_due_date}` },
+                  { l: 'Deposit', v: `${money(Number(payment.deposit_amount))} due by ${payment.deposit_due_date}` },
+                  { l: 'Balance', v: `${money(balanceAmount)} due by ${payment.balance_due_date}` },
                   { l: 'Payment Mode', v: payment.payment_mode },
                 ].map(({ l, v }) => (
                   <div key={l} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--rule)' }}>

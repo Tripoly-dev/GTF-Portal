@@ -32,9 +32,9 @@ export default function DeparturePage({ region }: { region: Region }) {
         <img src={region.heroImg} alt={region.name}
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,26,23,0.3) 0%, rgba(7,26,23,0.75) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '48px 56px' }}>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', marginBottom: 10, fontWeight: 600 }}>
-            B2B FIXED DEPARTURES
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '48px clamp(18px, 5vw, 56px)' }}>
+          <div style={{ fontSize: 13, color: 'var(--on-dark)', marginBottom: 10, fontWeight: 600 }}>
+            B2B fixed departures
           </div>
           <h1 className="font-display" style={{ fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
             {region.name}
@@ -42,14 +42,14 @@ export default function DeparturePage({ region }: { region: Region }) {
           <p className="font-tight" style={{ fontSize: 22, fontWeight: 400, fontStyle: 'italic', color: 'rgba(255,255,255,0.7)', marginBottom: 12 }}>
             {region.tagline}
           </p>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', maxWidth: 560, lineHeight: 1.7, fontWeight: 400 }}>
+          <p style={{ fontSize: 15, color: 'var(--on-dark)', maxWidth: 560, lineHeight: 1.7, fontWeight: 400 }}>
             {region.desc}
           </p>
         </div>
       </div>
 
       {/* Breadcrumb */}
-      <div style={{ background: 'var(--paper)', borderBottom: '1px solid var(--rule)', padding: '12px 56px' }}>
+      <div style={{ background: 'var(--paper)', borderBottom: '1px solid var(--rule)', padding: '12px clamp(18px, 5vw, 56px)' }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 12, color: 'var(--ink-light)' }}>
           <Link href="/" style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 500 }}>Home</Link>
           <span>→</span>
@@ -60,10 +60,10 @@ export default function DeparturePage({ region }: { region: Region }) {
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '64px 56px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(38px, 9vw, 64px) clamp(18px, 5vw, 56px)' }}>
 
         {activePackageIds === null ? (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--ink-light)', fontSize: 14 }}>Loading packages...</div>
+          <div style={{ textAlign: 'center', padding: 'clamp(48px, 9vw, 80px) 0', color: 'var(--ink-light)', fontSize: 14 }}>Loading packages...</div>
         ) : hasPackages ? (
           <>
             <div style={{ marginBottom: 40, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -81,7 +81,7 @@ export default function DeparturePage({ region }: { region: Region }) {
             </div>
 
             {/* Package grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+            <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
               {visiblePackages.map((pkg) => (
                 <div key={pkg.id} className="pkg-card" style={{
                   background: 'white', border: '1px solid var(--rule)', overflow: 'hidden',
@@ -112,18 +112,18 @@ export default function DeparturePage({ region }: { region: Region }) {
                       {pkg.workdriveUrl && pkg.tag !== 'COMING SOON' ? (
                         <a href={pkg.workdriveUrl} target="_blank" rel="noopener noreferrer"
                           className="btn-teal" style={{ fontSize: 12, padding: '9px 18px' }}>
-                          VIEW ITINERARY ↗
+                          View itinerary ↗
                         </a>
                       ) : (
-                        <div style={{ padding: '9px 18px', background: 'var(--paper)', fontSize: 12, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.04em' }}>
-                          COMING SOON
+                        <div style={{ padding: '9px 18px', background: 'var(--paper)', fontSize: 13, color: 'var(--ink-light)', fontWeight: 600 }}>
+                          Coming soon
                         </div>
                       )}
                       <Link href="/register" style={{
-                        padding: '9px 18px', fontSize: 12, fontWeight: 600, letterSpacing: '0.04em',
+                        padding: '9px 18px', fontSize: 13, fontWeight: 600,
                         border: '1.5px solid var(--rule)', color: 'var(--ink-mid)', textDecoration: 'none',
-                        display: 'inline-flex', alignItems: 'center', transition: 'all 0.2s',
-                      }}>REQUEST QUOTE</Link>
+                        display: 'inline-flex', alignItems: 'center', transition: 'background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease',
+                      }}>Request quote</Link>
                     </div>
                   </div>
                 </div>
@@ -132,7 +132,7 @@ export default function DeparturePage({ region }: { region: Region }) {
           </>
         ) : (
           /* Coming soon state */
-          <div style={{ textAlign: 'center', padding: '80px 0' }}>
+          <div style={{ textAlign: 'center', padding: 'clamp(48px, 9vw, 80px) 0' }}>
             <div style={{ fontSize: 48, marginBottom: 20 }}>🌍</div>
             <h2 className="font-display" style={{ fontSize: 32, fontWeight: 400, color: 'var(--ink)', marginBottom: 16, letterSpacing: '-0.02em' }}>
               New Series Coming Soon
@@ -140,24 +140,24 @@ export default function DeparturePage({ region }: { region: Region }) {
             <p style={{ fontSize: 16, color: 'var(--ink-light)', lineHeight: 1.7, maxWidth: 440, margin: '0 auto 40px' }}>
               GTF is building an exciting new series for {region.name}. Register as a partner to be the first to know when packages launch.
             </p>
-            <Link href="/register" className="btn-teal">REGISTER TO GET EARLY ACCESS</Link>
+            <Link href="/register" className="btn-teal">Register to get early access</Link>
           </div>
         )}
 
         {/* Bottom CTA */}
         {hasPackages && (
-          <div style={{ marginTop: 80, padding: '48px 56px', background: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40 }}>
+          <div style={{ marginTop: 80, padding: '48px clamp(18px, 5vw, 56px)', background: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40 }}>
             <div>
               <h3 className="font-display" style={{ fontSize: 28, fontWeight: 500, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
                 Want to sell these packages?
               </h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', fontWeight: 400 }}>
+              <p style={{ fontSize: 14, color: 'var(--on-dark)', fontWeight: 400 }}>
                 Register as a GTF partner to access full pricing, request quotes, and download detailed itineraries.
               </p>
             </div>
             <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
-              <Link href="/register" className="btn-teal" style={{ whiteSpace: 'nowrap' }}>JOIN AS PARTNER</Link>
-              <Link href="/contact" className="btn-outline-white" style={{ whiteSpace: 'nowrap' }}>TALK TO US</Link>
+              <Link href="/register" className="btn-teal" style={{ whiteSpace: 'nowrap' }}>Join as partner</Link>
+              <Link href="/contact" className="btn-outline-white" style={{ whiteSpace: 'nowrap' }}>Talk to us</Link>
             </div>
           </div>
         )}

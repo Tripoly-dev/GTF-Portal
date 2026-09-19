@@ -2,9 +2,10 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { formatDate, moneyOrDash as fmtPrice } from '@/lib/format'
+import StatusBadge from '@/components/ui/StatusBadge'
 
-const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
-const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
+const fmtDate = (d: string) => formatDate(d, 'short')
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   pending:   { label: 'Pending',   bg: 'var(--warn-lt)', color: 'var(--warn)' },
@@ -59,14 +60,14 @@ export default function AdminBookingsPage() {
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
           <div>
-            <div className="eyebrow" style={{ marginBottom: 8 }}>ADMIN</div>
+            <div className="eyebrow" style={{ marginBottom: 8 }}>Admin</div>
             <h1 className="font-display" style={{ fontSize: 32, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>All Bookings</h1>
           </div>
           <Link href="/admin" style={{ fontSize: 13, color: 'var(--teal)', textDecoration: 'none', fontWeight: 600 }}>← Admin Dashboard</Link>
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+        <div className="rg-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
           {[
             { label: 'Total', n: counts.all, color: 'var(--teal)' },
             { label: 'Pending', n: counts.pending, color: 'var(--warn)' },
@@ -124,7 +125,7 @@ export default function AdminBookingsPage() {
                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{pax}</td>
                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{fmtPrice(b.total_price)}</td>
                       <td style={{ padding: '14px 16px' }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
+                        <StatusBadge status={b.status}>{st.label}</StatusBadge>
                       </td>
                       <td style={{ padding: '14px 16px' }}>
                         {b.status === 'pending' && (

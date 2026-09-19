@@ -1,8 +1,9 @@
 'use client'
 import type { Payment } from './types'
+import { formatDate, money as fmtAmount } from '@/lib/format'
+import StatusBadge from '@/components/ui/StatusBadge'
 
-const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
-const fmtAmount = (n: number) => `₹${Math.round(n).toLocaleString('en-IN')}`
+const fmtDate = (d: string) => formatDate(d, 'short')
 
 type Props = {
   payments: Payment[]
@@ -19,7 +20,7 @@ function IconButton({ title, onClick, children, color }: { title: string; onClic
     <button title={title} onClick={onClick} style={{
       width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
       border: '1px solid var(--rule)', borderRadius: 6, background: 'white', cursor: 'pointer', color,
-      transition: 'all 0.15s',
+      transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease',
     }}
     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = color; (e.currentTarget as HTMLElement).style.background = `color-mix(in srgb, ${color} 8%, transparent)` }}
     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.background = 'white' }}>
@@ -60,13 +61,7 @@ export default function PaymentHistoryTable({ payments, isAdmin, currentUserId, 
               <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)' }}>{p.reference_number || '—'}</td>
               <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--ink-mid)', textTransform: 'capitalize' }}>{p.recorded_by_role}</td>
               <td style={{ padding: '14px 16px' }}>
-                <span style={{
-                  fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '4px 10px', borderRadius: 4, whiteSpace: 'nowrap',
-                  background: p.confirmed ? 'rgba(40,160,120,0.12)' : 'var(--warn-lt)',
-                  color: p.confirmed ? 'var(--ok)' : 'var(--warn)',
-                }}>
-                  {p.confirmed ? 'CONFIRMED' : 'PENDING'}
-                </span>
+                <StatusBadge tone={p.confirmed ? 'ok' : 'warn'}>{p.confirmed ? 'Confirmed' : 'Pending'}</StatusBadge>
               </td>
               <td style={{ padding: '14px 16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -86,7 +81,7 @@ export default function PaymentHistoryTable({ payments, isAdmin, currentUserId, 
                       fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', cursor: 'pointer', whiteSpace: 'nowrap',
                       opacity: confirmingId === p.id ? 0.6 : 1,
                     }}>
-                      {confirmingId === p.id ? '...' : 'CONFIRM'}
+                      {confirmingId === p.id ? '...' : 'Confirm'}
                     </button>
                   )}
                   {!canModify(p) && p.confirmed && <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>—</span>}

@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react'
 import type { Package } from '@/data/packages'
 import { hotelImages, normalizeHotelName } from '@/data/hotel-images'
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
+import { money as fmtPrice, formatDate } from '@/lib/format'
+import { reducedMotion } from '@/lib/motion'
 
 function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) {
   const [idx, setIdx] = useState(0)
@@ -10,7 +12,7 @@ function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) 
   const pauseRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const startAuto = () => {
-    if (images.length < 2) return
+    if (images.length < 2 || reducedMotion()) return
     if (intRef.current) clearInterval(intRef.current)
     intRef.current = setInterval(() => setIdx(i => (i + 1) % images.length), 3500)
   }
@@ -28,7 +30,7 @@ function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) 
 
   if (!images.length) return null
   return (
-    <div style={{ position: 'relative', width: 160, height: 120, flexShrink: 0, overflow: 'hidden' }}>
+    <div onMouseEnter={() => { if (intRef.current) clearInterval(intRef.current) }} onMouseLeave={startAuto} style={{ position: 'relative', width: 160, height: 120, flexShrink: 0, overflow: 'hidden' }}>
       {images.map((src, i) => (
         <img key={src} src={src} alt={alt} style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
@@ -40,7 +42,7 @@ function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) 
         <button type="button" onClick={() => go(1)} aria-label="Next image" style={{ position: 'absolute', right: 4, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff', width: 22, height: 22, borderRadius: '50%', cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>›</button>
         <div style={{ position: 'absolute', bottom: 6, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 4 }}>
           {images.map((_, i) => (
-            <span key={i} style={{ width: i === idx ? 12 : 5, height: 5, borderRadius: 3, background: i === idx ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'all 0.2s' }} />
+            <span key={i} style={{ width: i === idx ? 12 : 5, height: 5, borderRadius: 3, background: i === idx ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease, width 0.2s ease' }} />
           ))}
         </div>
       </>}
@@ -48,18 +50,8 @@ function RotatingHotelImage({ images, alt }: { images: string[]; alt: string }) 
   )
 }
 
-const fmtPrice = (n: number, cur = 'INR') => {
-  if (!n) return cur === 'USD' ? '$0' : cur === 'EUR' ? '€0' : '₹0'
-  const amt = Math.round(n).toLocaleString('en-IN')
-  if (cur === 'USD') return `$${amt}`
-  if (cur === 'EUR') return `€${amt}`
-  return `₹${amt}`
-}
 
-const fmtDate = (d: string) => {
-  if (!d) return ''
-  return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
-}
+const fmtDate = (d: string) => formatDate(d, 'long', '')
 
 type Quote = {
   id: string; trip_name: string; client_name: string; departure_date: string; adults: number
@@ -114,12 +106,12 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
           <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             {[
               { l: 'CLIENT', v: quote.client_name },
-              { l: 'DEPARTURE', v: fmtDate(quote.departure_date) },
-              { l: 'PASSENGERS', v: paxStr },
-              { l: 'DURATION', v: durationStr },
+              { l: 'Departure', v: fmtDate(quote.departure_date) },
+              { l: 'Passengers', v: paxStr },
+              { l: 'Duration', v: durationStr },
             ].filter(x => x.v).map(({ l, v }) => (
               <div key={l}>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 3 }}>{l}</div>
+                <div style={{ fontSize: 12, color: 'var(--on-dark)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 3 }}>{l}</div>
                 <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.92)', fontWeight: 600 }}>{v}</div>
               </div>
             ))}
@@ -140,7 +132,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
       </div>
 
       {/* Main content */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px 64px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px clamp(38px, 9vw, 64px)' }}>
         <div className="pp-grid">
 
           {/* Tab content */}
@@ -152,7 +144,7 @@ export default function ProposalPublicView({ quote, agent, pkg }: { quote: Quote
                 )}
                 {pkg.highlights?.length > 0 && (
                   <div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                       {pkg.highlights.map((h, i) => (
                         <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                           <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0, marginTop: 7 }} />

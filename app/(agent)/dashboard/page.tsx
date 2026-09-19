@@ -2,6 +2,8 @@
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { PACKAGES } from '@/data/packages'
+import { formatDate, money as fmtPrice } from '@/lib/format'
+import StatusBadge from '@/components/ui/StatusBadge'
 
 const C = {
   bg:       'var(--bg)',
@@ -24,13 +26,7 @@ function getGreeting() {
   if (h < 18) return 'Good afternoon'
   return 'Good evening'
 }
-function fmtDate(d: string) {
-  return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-}
-function fmtPrice(amount: number, currency = 'INR') {
-  if (currency === 'USD') return `$${Math.round(amount).toLocaleString('en-US')}`
-  return `₹${Math.round(amount).toLocaleString('en-IN')}`
-}
+const fmtDate = (d: string) => formatDate(d, 'short', '')
 
 type Quote = {
   id: string; client_name: string; package_name: string; departure_date: string
@@ -54,24 +50,6 @@ function getUpcomingDepartures() {
   return upcoming.sort((a, b) => parseInt(a.day) - parseInt(b.day)).slice(0, 6)
 }
 
-const pillStyle = (status: string): React.CSSProperties => {
-  if (status === 'fast-filling') return { background: '#78350f', color: 'var(--warn-lt)' }
-  if (status === 'sold-out')     return { background: 'var(--danger)', color: 'var(--danger-bg)' }
-  if (status === 'draft')        return { background: C.ruleDk, color: C.ink }
-  if (status === 'created')      return { background: '#E0F0ED', color: 'var(--teal-dark)' }
-  if (status === 'sent')         return { background: '#1e3a5f', color: '#bfdbfe' }
-  if (status === 'cancelled')    return { background: 'var(--danger)', color: 'var(--danger-bg)' }
-  return { background: '#14532d', color: '#bbf7d0' }
-}
-const pillLabel = (status: string) => {
-  if (status === 'fast-filling') return 'FAST FILLING'
-  if (status === 'sold-out') return 'SOLD OUT'
-  if (status === 'draft') return 'DRAFT'
-  if (status === 'created') return 'CREATED'
-  if (status === 'sent') return 'SENT'
-  if (status === 'cancelled') return 'CANCELLED'
-  return 'AVAILABLE'
-}
 
 // ── COMMISSION CALC — FY / Quarter / Month ────────────────────────────────────
 type CommPeriod = 'month' | 'lastMonth' | 'quarter' | 'fy'
@@ -113,6 +91,8 @@ function RegionCard({ region, quotes }: { region: { name: string; count: number;
       href={region.href}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
       style={{ position: 'relative', height: 340, display: 'block', overflow: 'hidden', background: '#1a1a1a', textDecoration: 'none', cursor: 'pointer' }}
     >
       {/* Ken Burns image */}
@@ -125,7 +105,7 @@ function RegionCard({ region, quotes }: { region: { name: string; count: number;
           objectFit: 'cover',
           filter: hovered ? 'grayscale(0%) brightness(1.0)' : 'grayscale(0%) brightness(0.88)',
           transform: hovered ? 'scale(1.08) translateX(1%)' : 'scale(1) translateX(0%)',
-          transition: 'transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.5s ease',
+          transition: 'transform 0.7s cubic-bezier(.22,1,.36,1), filter 0.5s ease',
         }}
       />
 
@@ -146,61 +126,40 @@ function RegionCard({ region, quotes }: { region: { name: string; count: number;
         pointerEvents: 'none',
         zIndex: 2,
       }}>
-        <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1, fontFamily: font, color: '#fff' }}>{region.name}</div>
+        <div style={{ fontSize: 32, fontWeight: 500, letterSpacing: '-0.02em', lineHeight: 1, fontFamily: 'var(--font-display)', color: '#fff' }}>{region.name}</div>
         <div style={{ fontSize: 12, letterSpacing: '0.04em', color: 'rgba(255,255,255,0.65)', marginTop: 7, fontFamily: font }}>{region.count} PACKAGES</div>
-      </div>
-
-      {/* Diagonal marquee ribbon — appears on hover */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, zIndex: 3,
-        opacity: hovered ? 1 : 0, transition: 'opacity 0.3s ease 0.1s',
-        overflow: 'hidden', height: 32,
-        transform: 'rotate(-2deg) translateY(-2px) scaleX(1.1)',
-        pointerEvents: 'none',
-      }}>
-        <div style={{
-          background: C.accent, padding: '6px 0',
-          display: 'flex', gap: 0, whiteSpace: 'nowrap',
-          animation: hovered ? 'marqueeSlide 6s linear infinite' : 'none',
-        }}>
-          {Array(8).fill(null).map((_, i) => (
-            <span key={i} style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: '#fff', padding: '0 20px', fontFamily: font }}>
-              EXPLORE {region.name.toUpperCase()} →
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* Frosted glass drawer — slides up on hover */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
         backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
-        background: 'rgba(36,31,43,0.82)',
+        background: 'rgba(7,26,23,0.86)',
         padding: '18px 24px 22px',
         transform: hovered ? 'translateY(0%)' : 'translateY(100%)',
-        transition: 'transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94)',
+        transition: 'transform 0.45s cubic-bezier(.22,1,.36,1)',
         zIndex: 2,
       }}>
-        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'rgba(239,236,229,0.5)', marginBottom: 10, textTransform: 'uppercase', fontFamily: font }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.72)', marginBottom: 10, fontFamily: font }}>
           {region.name} — Featured Departures
         </div>
         {pkgs.map((p, i) => {
           const next = p.departures.find(d => d.status !== 'sold-out')
           return (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 0', borderBottom: i < pkgs.length - 1 ? '1px solid rgba(239,236,229,0.1)' : 'none' }}>
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 0', borderBottom: i < pkgs.length - 1 ? '1px solid rgba(255,255,255,0.1)' : 'none' }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--paper)', fontFamily: font }}>{p.name}</div>
-                <div style={{ fontSize: 12, color: 'rgba(239,236,229,0.5)', marginTop: 2 }}>{p.nights}N · {p.region.toUpperCase()}</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.72)', marginTop: 2 }}>{p.nights}N · {p.region.toUpperCase()}</div>
               </div>
               {next && (
-                <div style={{ fontSize: 12, color: 'rgba(239,236,229,0.6)', textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.72)', textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
                   {new Date(next.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                 </div>
               )}
             </div>
           )
         })}
-        <div style={{ marginTop: 12, fontSize: 12, fontWeight: 700, color: C.accent, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: font }}>
+        <div style={{ marginTop: 12, fontSize: 12, fontWeight: 700, color: C.accent, fontFamily: font }}>
           View all {region.count} packages →
         </div>
       </div>
@@ -265,12 +224,6 @@ export default function DashboardPage() {
     { id: 'cancelled' as const, label: 'Cancelled', count: quotes.filter(q => q.status === 'cancelled').length },
   ]
 
-  const bookingStatusStyle = (s: string) => {
-    if (s === 'confirmed') return { bg: 'var(--ok-bg)', color: 'var(--ok)' }
-    if (s === 'cancelled') return { bg: 'var(--danger-bg)', color: 'var(--danger)' }
-    return { bg: 'var(--warn-lt)', color: 'var(--warn)' }
-  }
-
   const commTabs: { id: CommPeriod; label: string }[] = [
     { id: 'month', label: 'This Month' },
     { id: 'lastMonth', label: 'Last Month' },
@@ -280,21 +233,12 @@ export default function DashboardPage() {
 
   return (
     <>
-      <style>{`
-        @keyframes marqueeSlide {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
       <div style={{ minHeight: '100vh', background: 'var(--bg)', color: C.ink, fontFamily: font }}>
-        <main style={{ maxWidth: 1560, margin: '0 auto', padding: '0 40px 88px' }}>
+        <main style={{ maxWidth: 1560, margin: '0 auto', padding: '0 clamp(18px, 5vw, 40px) clamp(53px, 9vw, 88px)' }}>
 
           {/* ── GREETING ─────────────────────────────────────────────────────── */}
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 40, padding: '44px 0 22px', flexWrap: 'wrap' }}>
             <div style={{ maxWidth: 720 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: C.gold, marginBottom: 14 }}>
-                PARTNER DESK · WEEK {Math.ceil(new Date().getDate() / 7) + (new Date().getMonth() * 4)}, FY{String(new Date().getFullYear()).slice(-2)}
-              </div>
               <h1 className="font-display" style={{ fontSize: 40, lineHeight: 1.08, letterSpacing: '-0.02em', margin: '0 0 12px', fontWeight: 500 }}>
                 {getGreeting()},<br />{agent?.name || 'Demo Agent'}.
               </h1>
@@ -306,9 +250,9 @@ export default function DashboardPage() {
             </div>
             <Link href="/dashboard/packages" style={{
               border: `2px solid ${C.ink}`, background: 'transparent', color: C.ink,
-              fontSize: 14, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase',
+              fontSize: 14, fontWeight: 700, 
               padding: '13px 20px', textDecoration: 'none', display: 'inline-block',
-              fontFamily: font, transition: 'all 0.15s', borderRadius: 8,
+              fontFamily: font, transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease', borderRadius: 8,
             }}>
               Browse Packages
             </Link>
@@ -317,19 +261,19 @@ export default function DashboardPage() {
           <div style={{ height: 2, background: C.ink }} />
 
           {/* ── QUOTES + COMMISSION ───────────────────────────────────────────── */}
-          <section style={{ display: 'grid', gridTemplateColumns: '1.62fr 1fr', gap: 0, borderBottom: `2px solid rgba(24,22,26,0.35)` }}>
+          <section className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1.62fr 1fr', gap: 0, borderBottom: `2px solid rgba(7,26,23,0.35)` }}>
 
             {/* Saved Quotes */}
-            <div style={{ padding: '28px 40px 32px 0', borderRight: `2px solid rgba(24,22,26,0.35)` }}>
+            <div style={{ padding: '28px clamp(18px, 5vw, 40px) 32px 0', borderRight: `2px solid rgba(7,26,23,0.35)` }}>
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 18 }}>
-                <h2 style={{ fontSize: 15, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', margin: 0, fontFamily: font }}>My saved quotes</h2>
+                <h2 style={{ fontSize: 15, fontWeight: 800, margin: 0, fontFamily: font }}>My saved quotes</h2>
                 <Link href="/dashboard/quotes" style={{ fontSize: 13, color: C.inkLight, letterSpacing: '0.02em', textDecoration: 'none' }}>View all →</Link>
               </div>
               <div style={{ display: 'flex', gap: 0, border: `1px solid ${C.ink}`, width: 'max-content', marginBottom: 16 }}>
                 {tabs.map((t, ti) => (
                   <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
-                    padding: '8px 15px', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em',
-                    textTransform: 'uppercase', cursor: 'pointer', fontFamily: font,
+                    padding: '8px 15px', fontSize: 12, fontWeight: 700,
+                    cursor: 'pointer', fontFamily: font,
                     background: activeTab === t.id ? C.ink : 'transparent',
                     color: activeTab === t.id ? C.navFg : C.ink,
                     border: 'none', borderRight: ti < tabs.length - 1 ? `1px solid ${C.ink}` : 'none',
@@ -346,7 +290,6 @@ export default function DashboardPage() {
                       No bookings yet. Convert a sent proposal to get started.
                     </div>
                   ) : bookings.slice(0, 5).map(b => {
-                    const st = bookingStatusStyle(b.status)
                     const pax = (b.adults || 0) + (b.children_with_bed || 0) + (b.children_without_bed || 0)
                     return (
                       <Link key={b.id} href={`/dashboard/bookings/${b.id}`} style={{
@@ -361,15 +304,13 @@ export default function DashboardPage() {
                         </div>
                         <div>
                           <div style={{ fontSize: 14, fontWeight: 600, color: C.ink }}>Departs {fmtDate(b.departure_date)}</div>
-                          <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>Deposit: {b.deposit_amount ? `₹${Math.round(b.deposit_amount).toLocaleString('en-IN')}` : '—'}</div>
+                          <div style={{ fontSize: 12, color: C.inkLight, marginTop: 3 }}>Deposit: {b.deposit_amount ? fmtPrice(b.deposit_amount) : '—'}</div>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: C.ink }}>₹{Math.round(b.total_price).toLocaleString('en-IN')}</div>
-                          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', marginTop: 4, padding: '2px 6px', textTransform: 'uppercase', display: 'inline-block', background: st.bg, color: st.color }}>
-                            {b.status.toUpperCase()}
-                          </div>
+                          <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: C.ink }}>{fmtPrice(b.total_price)}</div>
+                          <div style={{ marginTop: 4 }}><StatusBadge status={b.status} /></div>
                         </div>
-                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: C.gold, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
                           View <span style={{ fontSize: 15 }}>→</span>
                         </div>
                       </Link>
@@ -402,11 +343,9 @@ export default function DashboardPage() {
                       </div>
                       <div style={{ textAlign: 'right' }}>
                         <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: C.ink }}>{fmtPrice(q.total_price, q.currency)}</div>
-                        <div style={{ ...pillStyle(q.status), fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', marginTop: 4, padding: '2px 6px', textTransform: 'uppercase', display: 'inline-block' }}>
-                          {pillLabel(q.status)}
-                        </div>
+                        <div style={{ marginTop: 4 }}><StatusBadge status={q.status} /></div>
                       </div>
-                      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: C.gold, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
                         Resume <span style={{ fontSize: 15 }}>→</span>
                       </div>
                     </Link>
@@ -416,22 +355,22 @@ export default function DashboardPage() {
             </div>
 
             {/* Commission + Departures */}
-            <div style={{ padding: '28px 0 32px 40px', display: 'flex', flexDirection: 'column', gap: 22 }}>
+            <div style={{ padding: '28px 0 32px clamp(18px, 5vw, 40px)', display: 'flex', flexDirection: 'column', gap: 22 }}>
 
               {/* Commission card — with FY/Quarter/Month tabs */}
               <div style={{ background: C.nav, color: C.navFg, padding: '26px 26px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'rgba(239,236,229,0.6)' }}>COMMISSION EARNED</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.72)' }}>Commission earned</div>
                   {/* Period tabs */}
-                  <div style={{ display: 'flex', gap: 0, border: '1px solid rgba(239,236,229,0.25)', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', gap: 0, border: '1px solid rgba(255,255,255,0.25)', overflow: 'hidden' }}>
                     {commTabs.map(t => (
                       <button key={t.id} onClick={() => setCommPeriod(t.id)} style={{
                         padding: '5px 11px', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em',
                         cursor: 'pointer', fontFamily: font, border: 'none',
-                        background: commPeriod === t.id ? 'rgba(239,236,229,0.15)' : 'transparent',
-                        color: commPeriod === t.id ? 'var(--paper)' : 'rgba(239,236,229,0.45)',
-                        borderRight: '1px solid rgba(239,236,229,0.15)',
-                        transition: 'all 0.15s',
+                        background: commPeriod === t.id ? 'rgba(255,255,255,0.15)' : 'transparent',
+                        color: commPeriod === t.id ? 'var(--paper)' : 'rgba(255,255,255,0.72)',
+                        borderRight: '1px solid rgba(255,255,255,0.15)',
+                        transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease',
                       }}>
                         {t.label}
                       </button>
@@ -439,20 +378,20 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: '-0.035em', margin: '4px 0', fontFamily: font }}>
-                  {comm.total > 0 ? `₹${Math.round(comm.total).toLocaleString('en-IN')}` : '₹0'}
+                  {fmtPrice(comm.total)}
                 </div>
-                <div style={{ fontSize: 13, color: 'rgba(239,236,229,0.55)', marginBottom: 20 }}>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', marginBottom: 20 }}>
                   {comm.count} quote{comm.count !== 1 ? 's' : ''} · {commPeriod === 'fy' ? `FY${String(new Date().getFullYear()).slice(-2)}` : commPeriod === 'quarter' ? `Q${Math.floor(new Date().getMonth() / 3) + 1}` : commPeriod === 'lastMonth' ? 'Last Month' : 'This Month'}
                 </div>
                 {/* Breakdown grid — gap:0 + border-right to avoid vertical line artifact */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}>
+                <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}>
                   {[
-                    { label: 'TOTAL QUOTES', value: quotes.length.toString() },
+                    { label: 'Total quotes', value: quotes.length.toString() },
                     { label: 'DRAFT', value: quotes.filter(q => q.status === 'draft').length.toString() },
                     { label: 'SENT', value: quotes.filter(q => q.status === 'sent').length.toString() },
                   ].map((b, i) => (
-                    <div key={b.label} style={{ background: 'rgba(255,255,255,0.05)', padding: '11px 12px 8px', borderRight: i < 2 ? '1px solid rgba(239,236,229,0.12)' : 'none' }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'rgba(239,236,229,0.5)' }}>{b.label}</div>
+                    <div key={b.label} style={{ background: 'rgba(255,255,255,0.05)', padding: '11px 12px 8px', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.12)' : 'none' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: 'rgba(255,255,255,0.72)' }}>{b.label}</div>
                       <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', marginTop: 5, color: C.navFg }}>{b.value}</div>
                     </div>
                   ))}
@@ -465,14 +404,14 @@ export default function DashboardPage() {
           <section style={{ padding: '34px 0 40px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
               <div>
-                <h2 style={{ fontSize: 15, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', margin: '0 0 6px', fontFamily: font }}>Explore by region</h2>
+                <h2 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 6px', fontFamily: font }}>Explore by region</h2>
                 <div style={{ fontSize: 13, color: C.inkLight }}>17 packages across three regions. Hover to preview departures.</div>
               </div>
-              <Link href="/dashboard/packages" style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: C.gold, textDecoration: 'none' }}>
+              <Link href="/dashboard/packages" style={{ fontSize: 12, fontWeight: 700, color: C.gold, textDecoration: 'none' }}>
                 All 17 packages →
               </Link>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2, background: 'rgba(24,22,26,0.15)' }}>
+            <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2, background: 'rgba(7,26,23,0.15)' }}>
               {regions.map(r => <RegionCard key={r.key} region={r} quotes={quotes} />)}
             </div>
           </section>

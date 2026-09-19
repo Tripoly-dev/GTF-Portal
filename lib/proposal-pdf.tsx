@@ -1,49 +1,47 @@
 export const runtime = 'nodejs'
 import React from 'react'
+import { money } from './format'
 import { Document, Page, Text, View, StyleSheet, Image, Font, Svg, Path } from '@react-pdf/renderer'
 
 // ── FONTS ─────────────────────────────────────────────────────────────────────
 const BASE = 'https://gtf-portal-six.vercel.app/fonts'
 
 Font.register({
-  family: 'Archivo',
+  family: 'Newsreader',
   fonts: [
-    { src: `${BASE}/archivo-latin-400-normal.woff`, fontWeight: 400, fontStyle: 'normal' },
-    { src: `${BASE}/archivo-latin-400-italic.woff`, fontWeight: 400, fontStyle: 'italic' },
-    { src: `${BASE}/archivo-latin-700-normal.woff`, fontWeight: 700, fontStyle: 'normal' },
-    { src: `${BASE}/archivo-latin-800-normal.woff`, fontWeight: 800, fontStyle: 'normal' },
+    { src: `${BASE}/pdf-newsreader-400.ttf`, fontWeight: 400, fontStyle: 'normal' },
+    { src: `${BASE}/pdf-newsreader-400-italic.ttf`, fontWeight: 400, fontStyle: 'italic' },
+    { src: `${BASE}/pdf-newsreader-500.ttf`, fontWeight: 500, fontStyle: 'normal' },
   ]
 })
 
 Font.register({
-  family: 'NotoSans',
+  family: 'Schibsted',
   fonts: [
-    { src: `${BASE}/noto-sans-latin-400-normal.woff`, fontWeight: 400, fontStyle: 'normal' },
-    { src: `${BASE}/noto-sans-latin-400-italic.woff`, fontWeight: 400, fontStyle: 'italic' },
-    { src: `${BASE}/noto-sans-latin-700-normal.woff`, fontWeight: 700, fontStyle: 'normal' },
+    { src: `${BASE}/pdf-schibsted-400.ttf`, fontWeight: 400, fontStyle: 'normal' },
+    { src: `${BASE}/pdf-schibsted-600.ttf`, fontWeight: 600, fontStyle: 'normal' },
+    { src: `${BASE}/pdf-schibsted-700.ttf`, fontWeight: 700, fontStyle: 'normal' },
   ]
 })
 
+Font.registerHyphenationCallback(word => [word])
+
 // ── COLORS ────────────────────────────────────────────────────────────────────
 const C = {
-  navy:      '#06316D',   // deep navy — headings, dark text
-  blue:      '#0d8ab1',   // mid blue — accents, day numbers, teal blocks
-  skyBlue:   '#2e97bc',   // sky blue — metadata on dark
-  grey:      '#757575',   // body text, labels
-  lightGrey: '#e8e6e6',   // dividers, light backgrounds
+  navy:      '#071A17',   // deep navy — headings, dark text
+  blue:      '#0A5F54',   // mid blue — accents, day numbers, teal blocks
+  skyBlue:   '#7FD4C4',   // sky blue — metadata on dark
+  grey:      '#4F6964',   // body text, labels
+  lightGrey: '#D5E2DE',   // dividers, light backgrounds
   white:     '#ffffff',
-  green:     '#28a078',   // "Included" confirmation text
-  dark:      '#1a1a2e',   // near-black for headings (Premium style)
-  red:       '#9e2233',
+  green:     '#14683F',   // "Included" confirmation text
+  dark:      '#0A1D1A',   // near-black for headings (Premium style)
+  red:       '#A32A2A',
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function fmtPrice(n: number, currency = 'INR') {
-  if (!n && n !== 0) return currency === 'INR' ? 'Rs.0' : '0'
-  const formatted = Math.round(n).toLocaleString('en-IN')
-  if (currency === 'USD') return `USD ${formatted}`
-  if (currency === 'EUR') return `EUR ${formatted}`
-  return `Rs. ${formatted}`
+  return money(n, currency)
 }
 
 function fmtDate(d: string) {
@@ -230,125 +228,125 @@ function IconWeb() {
 function IconStar() {
   return (
     <Svg width="9" height="9" viewBox="0 0 24 24">
-      <Path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="#F59E0B" />
+      <Path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="#0A7B6C" />
     </Svg>
   )
 }
 
 // ── STYLES ────────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
-  page:       { fontFamily: 'NotoSans', fontSize: 10, color: C.dark, backgroundColor: C.white },
+  page:       { fontFamily: 'Schibsted', fontSize: 10, color: C.dark, backgroundColor: C.white },
   pageBody:   { padding: '36px 48px', paddingBottom: 70 },
 
   // Footer
   footer:     { position: 'absolute', bottom: 20, left: 48, right: 48, borderTop: `1px solid ${C.lightGrey}`, paddingTop: 7, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' },
-  footerText: { fontFamily: 'NotoSans', fontSize: 7, color: C.grey },
+  footerText: { fontFamily: 'Schibsted', fontSize: 7, color: C.grey },
 
   // ── COVER ──
   coverHero:    { position: 'relative', width: '100%', height: 500 },
   coverImg:     { position: 'absolute', top: 0, left: 0, width: '100%', height: 500, objectFit: 'cover' as any },
   coverOverlay: { position: 'absolute', top: 0, left: 0, width: '100%', height: 500, backgroundColor: 'rgba(0,0,0,0.25)' },
-  coverLabel:   { fontFamily: 'NotoSans', fontSize: 8, color: 'rgba(255,255,255,0.7)', letterSpacing: 2, fontWeight: 700 },
+  coverLabel:   { fontFamily: 'Schibsted', fontSize: 8, color: 'rgba(255,255,255,0.7)', letterSpacing: 1.2, fontWeight: 700 },
   coverStrip:   { backgroundColor: C.blue, padding: '32px 48px 28px' },
-  coverRef:     { fontFamily: 'NotoSans', fontSize: 8, color: 'rgba(255,255,255,0.6)', letterSpacing: 2, marginBottom: 10 },
-  coverTitle:   { fontFamily: 'Archivo', fontSize: 44, fontWeight: 800, color: C.white, lineHeight: 1.05, marginBottom: 6 },
-  coverTagline: { fontFamily: 'NotoSans', fontSize: 13, color: 'rgba(255,255,255,0.75)', fontStyle: 'italic', marginBottom: 24 },
+  coverRef:     { fontFamily: 'Schibsted', fontSize: 8, color: 'var(--on-dark)', letterSpacing: 1.2, marginBottom: 10 },
+  coverTitle:   { fontFamily: 'Newsreader', fontSize: 44, fontWeight: 500, color: C.white, lineHeight: 1.05, marginBottom: 6 },
+  coverTagline: { fontFamily: 'Newsreader', fontSize: 13, color: 'rgba(255,255,255,0.75)', fontStyle: 'italic', marginBottom: 24 },
   coverMetaRow: { display: 'flex', flexDirection: 'row', gap: 40, borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 16 },
-  coverMetaLabel: { fontFamily: 'NotoSans', fontSize: 7.5, color: 'rgba(255,255,255,0.5)', letterSpacing: 1.5, fontWeight: 700, marginBottom: 4 },
-  coverMetaValue: { fontFamily: 'Archivo', fontSize: 13, color: C.white, fontWeight: 700 },
+  coverMetaLabel: { fontFamily: 'Schibsted', fontSize: 7.5, color: 'var(--on-dark)', letterSpacing: 1, fontWeight: 700, marginBottom: 4 },
+  coverMetaValue: { fontFamily: 'Schibsted', fontSize: 13, color: C.white, fontWeight: 700 },
 
   // ── ADVISOR ──
-  advisorEyebrow: { fontFamily: 'NotoSans', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 2, marginBottom: 6 },
-  advisorHeading: { fontFamily: 'Archivo', fontSize: 36, fontWeight: 800, color: C.dark, marginBottom: 24, lineHeight: 1.1 },
+  advisorEyebrow: { fontFamily: 'Schibsted', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 1.2, marginBottom: 6 },
+  advisorHeading: { fontFamily: 'Newsreader', fontSize: 36, fontWeight: 500, color: C.dark, marginBottom: 24, lineHeight: 1.1 },
   advisorRule:    { borderBottom: `1px solid ${C.lightGrey}`, marginBottom: 20 },
   advisorGrid:    { display: 'flex', flexDirection: 'row', gap: 0, marginBottom: 28 },
   advisorCol:     { flex: 1 },
-  advisorLabel:   { fontFamily: 'NotoSans', fontSize: 7.5, color: C.grey, letterSpacing: 1.5, fontWeight: 700, marginBottom: 8 },
-  advisorName:    { fontFamily: 'Archivo', fontSize: 18, fontWeight: 700, color: C.dark, marginBottom: 4 },
-  advisorAgency:  { fontFamily: 'NotoSans', fontSize: 10, color: C.grey, marginBottom: 12 },
+  advisorLabel:   { fontFamily: 'Schibsted', fontSize: 7.5, color: C.grey, letterSpacing: 1, fontWeight: 700, marginBottom: 8 },
+  advisorName:    { fontFamily: 'Schibsted', fontSize: 18, fontWeight: 700, color: C.dark, marginBottom: 4 },
+  advisorAgency:  { fontFamily: 'Schibsted', fontSize: 10, color: C.grey, marginBottom: 12 },
   advisorLogo:    { width: 100, height: 40, objectFit: 'contain' as any, marginBottom: 10 },
   advisorContact: { display: 'flex', flexDirection: 'row', gap: 6, alignItems: 'center', marginBottom: 5 },
-  advisorContactText: { fontFamily: 'NotoSans', fontSize: 9, color: C.grey },
-  disclaimer:     { fontFamily: 'NotoSans', fontSize: 8.5, color: C.grey, lineHeight: 1.7, borderTop: `1px solid ${C.lightGrey}`, paddingTop: 16 },
+  advisorContactText: { fontFamily: 'Schibsted', fontSize: 9, color: C.grey },
+  disclaimer:     { fontFamily: 'Schibsted', fontSize: 8.5, color: C.grey, lineHeight: 1.7, borderTop: `1px solid ${C.lightGrey}`, paddingTop: 16 },
 
   // ── EXPERIENCE ──
-  expEyebrow:  { fontFamily: 'NotoSans', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 2, marginBottom: 8 },
-  expHeading:  { fontFamily: 'Archivo', fontSize: 32, fontWeight: 800, color: C.dark, marginBottom: 20, lineHeight: 1.1 },
+  expEyebrow:  { fontFamily: 'Schibsted', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 1.2, marginBottom: 8 },
+  expHeading:  { fontFamily: 'Newsreader', fontSize: 32, fontWeight: 500, color: C.dark, marginBottom: 20, lineHeight: 1.1 },
   hlItem:      { display: 'flex', flexDirection: 'row', gap: 8, marginBottom: 10, width: '47%' },
-  hlText:      { fontFamily: 'NotoSans', fontSize: 9.5, color: C.dark, flex: 1, lineHeight: 1.5 },
-  wteHeading:  { fontFamily: 'Archivo', fontSize: 24, fontWeight: 800, color: C.dark, marginBottom: 14, marginTop: 20 },
+  hlText:      { fontFamily: 'Schibsted', fontSize: 9.5, color: C.dark, flex: 1, lineHeight: 1.5 },
+  wteHeading:  { fontFamily: 'Newsreader', fontSize: 24, fontWeight: 500, color: C.dark, marginBottom: 14, marginTop: 20 },
   wteItem:     { display: 'flex', flexDirection: 'row', gap: 6, marginBottom: 6 },
-  wteDash:     { fontFamily: 'NotoSans', fontSize: 9.5, color: C.blue, fontWeight: 700, flexShrink: 0 },
-  wteText:     { fontFamily: 'NotoSans', fontSize: 9.5, color: C.grey, flex: 1, lineHeight: 1.4 },
+  wteDash:     { fontFamily: 'Schibsted', fontSize: 9.5, color: C.blue, fontWeight: 700, flexShrink: 0 },
+  wteText:     { fontFamily: 'Schibsted', fontSize: 9.5, color: C.grey, flex: 1, lineHeight: 1.4 },
   mealsTable:  { borderTop: `1px solid ${C.lightGrey}`, marginTop: 20 },
   mealRow:     { display: 'flex', flexDirection: 'row', borderBottom: `1px solid ${C.lightGrey}`, padding: '8px 0' },
-  mealLabel:   { fontFamily: 'Archivo', fontSize: 9.5, fontWeight: 700, color: C.dark, width: 120 },
-  mealValue:   { fontFamily: 'NotoSans', fontSize: 9.5, color: C.grey, flex: 1 },
+  mealLabel:   { fontFamily: 'Schibsted', fontSize: 9.5, fontWeight: 600, color: C.dark, width: 120 },
+  mealValue:   { fontFamily: 'Schibsted', fontSize: 9.5, color: C.grey, flex: 1 },
 
   // ── CHAPTER ──
   chapterHero:    { position: 'relative', width: '100%', height: 500 },
   chapterImg:     { position: 'absolute', top: 0, left: 0, width: '100%', height: 500, objectFit: 'cover' as any },
   chapterOverlay: { position: 'absolute', top: 0, left: 0, width: '100%', height: 500, backgroundColor: 'rgba(0,0,0,0.2)' },
   chapterStrip:   { backgroundColor: C.blue, padding: '28px 48px 24px' },
-  chapterLabel:   { fontFamily: 'NotoSans', fontSize: 8, color: 'rgba(255,255,255,0.6)', letterSpacing: 2, fontWeight: 700, marginBottom: 8 },
-  chapterCity:    { fontFamily: 'Archivo', fontSize: 42, fontWeight: 800, color: C.white, lineHeight: 1.05, marginBottom: 6 },
-  chapterNights:  { fontFamily: 'NotoSans', fontSize: 12, color: 'rgba(255,255,255,0.65)' },
+  chapterLabel:   { fontFamily: 'Schibsted', fontSize: 8, color: 'var(--on-dark)', letterSpacing: 1.2, fontWeight: 700, marginBottom: 8 },
+  chapterCity:    { fontFamily: 'Newsreader', fontSize: 42, fontWeight: 500, color: C.white, lineHeight: 1.05, marginBottom: 6 },
+  chapterNights:  { fontFamily: 'Schibsted', fontSize: 12, color: 'rgba(255,255,255,0.65)' },
 
   // ── DAY PAGES ──
   dayItem:     { display: 'flex', flexDirection: 'row', gap: 20, marginBottom: 24, paddingBottom: 24, borderBottom: `1px solid ${C.lightGrey}` },
   dayNumCol:   { width: 60, flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' },
-  dayNum:      { fontFamily: 'Archivo', fontSize: 52, fontWeight: 800, color: C.blue, lineHeight: 1, marginBottom: 2 },
-  dayWeekday:  { fontFamily: 'NotoSans', fontSize: 8, color: C.grey, fontWeight: 700, letterSpacing: 1 },
-  dayDateStr:  { fontFamily: 'NotoSans', fontSize: 8, color: C.grey },
+  dayNum:      { fontFamily: 'Newsreader', fontSize: 52, fontWeight: 400, color: C.blue, lineHeight: 1, marginBottom: 2 },
+  dayWeekday:  { fontFamily: 'Schibsted', fontSize: 8, color: C.grey, fontWeight: 700, letterSpacing: 1 },
+  dayDateStr:  { fontFamily: 'Schibsted', fontSize: 8, color: C.grey },
   dayContent:  { flex: 1 },
-  dayTitle:    { fontFamily: 'Archivo', fontSize: 14, fontWeight: 800, color: C.dark, marginBottom: 8, lineHeight: 1.2 },
-  dayDesc:     { fontFamily: 'NotoSans', fontSize: 9.5, color: C.grey, lineHeight: 1.65, marginBottom: 10 },
+  dayTitle:    { fontFamily: 'Schibsted', fontSize: 14, fontWeight: 700, color: C.dark, marginBottom: 8, lineHeight: 1.2 },
+  dayDesc:     { fontFamily: 'Schibsted', fontSize: 9.5, color: C.grey, lineHeight: 1.65, marginBottom: 10 },
   dayIcons:    { display: 'flex', flexDirection: 'row', gap: 16, flexWrap: 'wrap', alignItems: 'center' },
   dayIconItem: { display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center' },
-  dayIconLabel:{ fontFamily: 'NotoSans', fontSize: 9, color: C.dark },
-  dayIncluded: { fontFamily: 'NotoSans', fontSize: 9, color: C.green },
+  dayIconLabel:{ fontFamily: 'Schibsted', fontSize: 9, color: C.dark },
+  dayIncluded: { fontFamily: 'Schibsted', fontSize: 9, color: C.green },
 
   // ── HOTELS ──
   hotelCityBar:  { backgroundColor: C.blue, padding: '10px 20px', marginBottom: 0 },
-  hotelCityText: { fontFamily: 'Archivo', fontSize: 16, fontWeight: 800, color: C.white },
-  hotelCityMeta: { fontFamily: 'NotoSans', fontSize: 8, color: 'rgba(255,255,255,0.6)', marginTop: 2 },
+  hotelCityText: { fontFamily: 'Schibsted', fontSize: 16, fontWeight: 700, color: C.white },
+  hotelCityMeta: { fontFamily: 'Schibsted', fontSize: 8, color: 'var(--on-dark)', marginTop: 2 },
   hotelCard:     { display: 'flex', flexDirection: 'row', border: `1px solid ${C.lightGrey}`, marginBottom: 16 },
   hotelImgCol:   { width: 180, flexShrink: 0 },
   hotelImg:      { width: 180, objectFit: 'cover' as any },
   hotelInfo:     { flex: 1, padding: '14px 18px' },
-  hotelName:     { fontFamily: 'Archivo', fontSize: 13, fontWeight: 700, color: C.dark, marginBottom: 6 },
+  hotelName:     { fontFamily: 'Schibsted', fontSize: 13, fontWeight: 700, color: C.dark, marginBottom: 6 },
   hotelStars:    { display: 'flex', flexDirection: 'row', gap: 2, marginBottom: 10 },
   hotelMetaRow:  { display: 'flex', flexDirection: 'row', gap: 24, marginBottom: 10 },
-  hotelMetaLabel:{ fontFamily: 'NotoSans', fontSize: 7.5, color: C.grey, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 },
-  hotelMetaValue:{ fontFamily: 'Archivo', fontSize: 9.5, color: C.dark, fontWeight: 700 },
+  hotelMetaLabel:{ fontFamily: 'Schibsted', fontSize: 7.5, color: C.grey, fontWeight: 700, letterSpacing: 0.5, marginBottom: 2 },
+  hotelMetaValue:{ fontFamily: 'Schibsted', fontSize: 9.5, color: C.dark, fontWeight: 600 },
   hotelMealBadge:{ display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center', backgroundColor: C.blue, paddingHorizontal: 8, paddingVertical: 4, alignSelf: 'flex-start' },
-  hotelMealText: { fontFamily: 'NotoSans', fontSize: 8, color: C.white },
+  hotelMealText: { fontFamily: 'Schibsted', fontSize: 8, color: C.white },
 
   // ── INCLUSIONS ──
-  inclEyebrow:  { fontFamily: 'NotoSans', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 2, marginBottom: 8 },
-  inclHeading:  { fontFamily: 'Archivo', fontSize: 28, fontWeight: 800, color: C.dark, marginBottom: 20 },
+  inclEyebrow:  { fontFamily: 'Schibsted', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 1.2, marginBottom: 8 },
+  inclHeading:  { fontFamily: 'Newsreader', fontSize: 28, fontWeight: 500, color: C.dark, marginBottom: 20 },
   inclItem:     { display: 'flex', flexDirection: 'row', gap: 8, marginBottom: 8, alignItems: 'flex-start' },
-  inclText:     { fontFamily: 'NotoSans', fontSize: 9.5, color: C.grey, flex: 1, lineHeight: 1.4 },
+  inclText:     { fontFamily: 'Schibsted', fontSize: 9.5, color: C.grey, flex: 1, lineHeight: 1.4 },
 
   // ── PRICING ──
-  pricingEyebrow: { fontFamily: 'NotoSans', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 2, marginBottom: 8 },
-  pricingHeading: { fontFamily: 'Archivo', fontSize: 28, fontWeight: 800, color: C.dark, marginBottom: 20 },
+  pricingEyebrow: { fontFamily: 'Schibsted', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 1.2, marginBottom: 8 },
+  pricingHeading: { fontFamily: 'Newsreader', fontSize: 28, fontWeight: 500, color: C.dark, marginBottom: 20 },
   pricingTable:   { border: `1px solid ${C.lightGrey}`, marginBottom: 24 },
   pricingRow:     { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '11px 18px', borderBottom: `1px solid ${C.lightGrey}` },
-  pricingLabel:   { fontFamily: 'NotoSans', fontSize: 10, color: C.grey },
-  pricingValue:   { fontFamily: 'Archivo', fontSize: 10, fontWeight: 700, color: C.dark },
+  pricingLabel:   { fontFamily: 'Schibsted', fontSize: 10, color: C.grey },
+  pricingValue:   { fontFamily: 'Schibsted', fontSize: 10, fontWeight: 600, color: C.dark },
   pricingTotal:   { backgroundColor: C.blue, padding: '14px 18px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  pricingTotLabel:{ fontFamily: 'Archivo', fontSize: 13, fontWeight: 700, color: C.white },
-  pricingTotValue:{ fontFamily: 'Archivo', fontSize: 18, fontWeight: 800, color: C.white },
+  pricingTotLabel:{ fontFamily: 'Schibsted', fontSize: 13, fontWeight: 700, color: C.white },
+  pricingTotValue:{ fontFamily: 'Schibsted', fontSize: 18, fontWeight: 700, color: C.white },
   agentBox:       { backgroundColor: C.lightGrey, padding: '14px 18px', marginBottom: 16 },
-  agentName:      { fontFamily: 'Archivo', fontSize: 10, fontWeight: 700, color: C.dark, marginBottom: 4 },
-  agentLine:      { fontFamily: 'NotoSans', fontSize: 9, color: C.grey },
+  agentName:      { fontFamily: 'Schibsted', fontSize: 10, fontWeight: 600, color: C.dark, marginBottom: 4 },
+  agentLine:      { fontFamily: 'Schibsted', fontSize: 9, color: C.grey },
 
   // ── T&C ──
-  tcEyebrow: { fontFamily: 'NotoSans', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 2, marginBottom: 8 },
-  tcHeading:  { fontFamily: 'Archivo', fontSize: 28, fontWeight: 800, color: C.dark, marginBottom: 20 },
-  tcTitle:    { fontFamily: 'Archivo', fontSize: 10, fontWeight: 700, color: C.dark, marginBottom: 5, marginTop: 14 },
-  tcText:     { fontFamily: 'NotoSans', fontSize: 8.5, color: C.grey, lineHeight: 1.6 },
+  tcEyebrow: { fontFamily: 'Schibsted', fontSize: 8, color: C.blue, fontWeight: 700, letterSpacing: 1.2, marginBottom: 8 },
+  tcHeading:  { fontFamily: 'Newsreader', fontSize: 28, fontWeight: 500, color: C.dark, marginBottom: 20 },
+  tcTitle:    { fontFamily: 'Schibsted', fontSize: 10, fontWeight: 600, color: C.dark, marginBottom: 5, marginTop: 14 },
+  tcText:     { fontFamily: 'Schibsted', fontSize: 8.5, color: C.grey, lineHeight: 1.6 },
 })
 
 // ── COMPONENTS ────────────────────────────────────────────────────────────────
@@ -412,7 +410,7 @@ export function ProposalPDF({ quote, agent, pkg }: { quote: any; agent: any; pkg
           <View style={s.coverMetaRow}>
             {[
               { l: 'TRAVEL DATES', v: fmtDate(quote.departure_date) },
-              { l: 'DURATION', v: pkg ? `${pkg.nights} Nights · ${pkg.days} Days` : '' },
+              { l: 'Duration', v: pkg ? `${pkg.nights} Nights · ${pkg.days} Days` : '' },
               { l: 'PREPARED FOR', v: quote.client_name },
               { l: 'PARTY', v: `${quote.adults} Adult${quote.adults > 1 ? 's' : ''}${totalChildren > 0 ? ` + ${totalChildren} Child${totalChildren > 1 ? 'ren' : ''}` : ''}` },
             ].filter(x => x.v).map(({ l, v }) => (
@@ -655,7 +653,7 @@ export function ProposalPDF({ quote, agent, pkg }: { quote: any; agent: any; pkg
                           <Text style={s.hotelMetaValue}>{fd(checkIn)}</Text>
                         </View>
                         <View style={{ alignItems: 'center', paddingTop: 14 }}>
-                          <Text style={{ fontFamily: 'NotoSans', fontSize: 8, color: C.grey }}>{h.nights}N</Text>
+                          <Text style={{ fontFamily: 'Schibsted', fontSize: 8, color: C.grey }}>{h.nights}N</Text>
                           <View style={{ width: 28, borderTop: `1px solid ${C.lightGrey}`, marginTop: 3 }} />
                         </View>
                         <View style={{ flex: 1 }}>
@@ -676,7 +674,7 @@ export function ProposalPDF({ quote, agent, pkg }: { quote: any; agent: any; pkg
                     </View>
                   </View>
                 </View>
-                <Text style={{ fontFamily: 'NotoSans', fontSize: 8, color: C.grey, fontStyle: 'italic' }}>
+                <Text style={{ fontFamily: 'Newsreader', fontSize: 8, color: C.grey, fontStyle: 'italic' }}>
                   * Hotels or equivalent. Subject to availability at time of booking.
                 </Text>
               </View>
@@ -753,7 +751,7 @@ export function ProposalPDF({ quote, agent, pkg }: { quote: any; agent: any; pkg
             {agent.whatsapp_number && <Text style={s.agentLine}>Tel: {agent.whatsapp_number}</Text>}
             {agent.email && <Text style={s.agentLine}>Email: {agent.email}</Text>}
           </View>
-          <Text style={{ fontFamily: 'NotoSans', fontSize: 8, color: C.grey, lineHeight: 1.5 }}>
+          <Text style={{ fontFamily: 'Schibsted', fontSize: 8, color: C.grey, lineHeight: 1.5 }}>
             This is a preliminary proposal. All prices are subject to availability and may change without notice. A deposit constitutes acceptance of our Terms and Conditions.
           </Text>
         </View>

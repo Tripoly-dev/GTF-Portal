@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { PACKAGES } from '@/data/packages'
+import StatusBadge from '@/components/ui/StatusBadge'
 
 const STATUS_STYLES: Record<string, { label: string; bg: string; color: string }> = {
   available:    { label: 'Available',    bg: 'var(--ok-bg)', color: 'var(--ok)' },
@@ -69,7 +70,7 @@ export default function AdminDeparturesPage() {
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
           <div>
-            <div className="eyebrow" style={{ marginBottom: 8 }}>ADMIN</div>
+            <div className="eyebrow" style={{ marginBottom: 8 }}>Admin</div>
             <h1 className="font-display" style={{ fontSize: 32, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', margin: 0 }}>Departure Management</h1>
           </div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -83,7 +84,7 @@ export default function AdminDeparturesPage() {
 
         {/* Search */}
         <div style={{ marginBottom: 20 }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--rule)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: 'var(--font-sans)' }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by package name or date..." style={{ padding: '10px 16px', border: '1.5px solid var(--ctl)', borderRadius: 8, fontSize: 13, width: 320, fontFamily: 'var(--font-sans)' }} />
         </div>
 
         {/* Table */}
@@ -120,13 +121,13 @@ export default function AdminDeparturesPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{d.booked_seats || 0} / {d.total_seats || 30}</span>
                           <div style={{ flex: 1, height: 6, background: 'var(--rule)', borderRadius: 3, minWidth: 60 }}>
-                            <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? 'var(--danger)' : pct >= 33 ? '#f59e0b' : 'var(--ok)', transition: 'width 0.3s' }} />
+                            <div style={{ height: '100%', borderRadius: 3, width: `${Math.min(pct, 100)}%`, background: pct >= 100 ? 'var(--danger)' : pct >= 33 ? 'var(--warn)' : 'var(--ok)', transition: 'width 0.3s' }} />
                           </div>
                           <span style={{ fontSize: 12, color: 'var(--ink-light)' }}>{pct}%</span>
                         </div>
                       </td>
                       <td style={{ padding: '14px 16px' }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 4, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
+                        <StatusBadge status={d.status}>{st.label}</StatusBadge>
                       </td>
                       <td style={{ padding: '14px 16px' }}>
                         <select

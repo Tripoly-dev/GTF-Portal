@@ -38,8 +38,8 @@ export default function AdhocWhiteLabelPage() {
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,26,23,0.3) 0%, rgba(7,26,23,0.85) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px 56px' }}>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', marginBottom: 12, fontWeight: 600 }}>ADHOC &amp; WHITE LABEL SOLUTIONS</div>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px clamp(18px, 5vw, 56px)' }}>
+          <div style={{ fontSize: 12, color: 'var(--on-dark)', letterSpacing: '0.04em', marginBottom: 12, fontWeight: 600 }}>ADHOC &amp; WHITE LABEL SOLUTIONS</div>
           <h1 className="font-display" style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
             Your brand.<br /><span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>Our execution.</span>
           </h1>
@@ -49,7 +49,7 @@ export default function AdhocWhiteLabelPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 56px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(48px, 9vw, 80px) clamp(18px, 5vw, 56px)' }}>
 
         {/* Stats */}
         <div style={{ display: 'flex', gap: 0, marginBottom: 80, borderTop: '1px solid var(--rule)', borderBottom: '1px solid var(--rule)', padding: '32px 0' }}>
@@ -69,11 +69,11 @@ export default function AdhocWhiteLabelPage() {
 
         {/* Complete Destination Management */}
         <div style={{ marginBottom: 80 }}>
-          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>COMPLETE DESTINATION MANAGEMENT</div>
+          <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 20 }}>Complete destination management</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 40, maxWidth: 640 }}>
             Everything handled. <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>Every time.</span>
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
+          <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {SERVICES.map((s, i) => (
               <div key={s} style={{
                 display: 'flex', alignItems: 'center', gap: 14, padding: '18px 24px',
@@ -90,11 +90,11 @@ export default function AdhocWhiteLabelPage() {
 
         {/* Why Partner */}
         <div>
-          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>WHY PARTNER WITH GTF</div>
+          <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 20 }}>Why partner with GTF</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 40, maxWidth: 640 }}>
             Built for travel <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>professionals.</span>
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
+          <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
             {BENEFITS.map((b, i) => (
               <div key={b} style={{
                 display: 'flex', alignItems: 'center', gap: 16, padding: '20px 28px',
@@ -111,12 +111,12 @@ export default function AdhocWhiteLabelPage() {
       </div>
 
       {/* Closing CTA */}
-      <div style={{ background: 'var(--ink)', padding: '80px 56px', textAlign: 'center' }}>
+      <div style={{ background: 'var(--ink)', padding: 'clamp(48px, 9vw, 80px) clamp(18px, 5vw, 56px)', textAlign: 'center' }}>
         <div style={{ maxWidth: 640, margin: '0 auto' }}>
           <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', marginBottom: 24 }}>
             Ready to build <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>together?</span>
           </h2>
-          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal"><WhatsAppIcon size={16} color="#fff" /> CHAT WITH OUR TEAM ON WHATSAPP →</a>
+          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal"><WhatsAppIcon size={16} color="#fff" /> Chat with our team on WhatsApp →</a>
         </div>
       </div>
     </div>

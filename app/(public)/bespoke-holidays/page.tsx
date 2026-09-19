@@ -42,8 +42,8 @@ export default function BespokeHolidaysPage() {
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,26,23,0.3) 0%, rgba(7,26,23,0.85) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px 56px' }}>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', marginBottom: 12, fontWeight: 600 }}>BESPOKE HOLIDAYS</div>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px clamp(18px, 5vw, 56px)' }}>
+          <div style={{ fontSize: 13, color: 'var(--on-dark)', marginBottom: 12, fontWeight: 600 }}>Bespoke Holidays</div>
           <h1 className="font-display" style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
             Personally curated.<br /><span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>Globally delivered.</span>
           </h1>
@@ -53,11 +53,11 @@ export default function BespokeHolidaysPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 56px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(48px, 9vw, 80px) clamp(18px, 5vw, 56px)' }}>
 
         {/* Who we are */}
         <div style={{ maxWidth: 760, marginBottom: 80 }}>
-          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>WHO WE ARE</div>
+          <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 20 }}>Who we are</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 24 }}>
             A global destination <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>management company.</span>
           </h2>
@@ -68,11 +68,11 @@ export default function BespokeHolidaysPage() {
 
         {/* Philosophy */}
         <div style={{ marginBottom: 80 }}>
-          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>THE BESPOKE HOLIDAYS PHILOSOPHY</div>
+          <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 20 }}>The Bespoke Holidays philosophy</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 32, maxWidth: 640 }}>
             Every traveller is different. <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>Every holiday should be too.</span>
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             {PHILOSOPHY_IMAGES.map((img, i) => (
               <div key={i} style={{ borderRadius: 4, overflow: 'hidden', height: 260 }}>
                 <img src={img} alt="Curated travel experience" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -89,8 +89,8 @@ export default function BespokeHolidaysPage() {
             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
           />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(7,26,23,0.9) 0%, rgba(7,26,23,0.5) 55%, rgba(7,26,23,0.25) 100%)' }} />
-          <div style={{ position: 'relative', padding: '56px 48px', maxWidth: 560 }}>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>UNFORGETTABLE HOLIDAYS. UNIQUE STORY.</div>
+          <div style={{ position: 'relative', padding: '56px clamp(18px, 5vw, 48px)', maxWidth: 560 }}>
+            <div style={{ fontSize: 13, color: 'var(--on-dark)', fontWeight: 600, marginBottom: 16 }}>Unforgettable holidays. Unique story.</div>
             <p className="font-tight" style={{ fontSize: 18, fontWeight: 400, color: '#fff', lineHeight: 1.7 }}>
               At Bespoke Holidays, we believe unforgettable holidays are never created from templates. Every traveller has a unique story, a different purpose of travel, and their own idea of the perfect holiday. Whether it&apos;s a honeymoon, multi-generational family holiday, luxury escape, milestone celebration, self-drive adventure, cruise, rail journey, wildlife expedition, pilgrimage, or a once-in-a-lifetime dream vacation, we transform ideas into unforgettable travel experiences.
             </p>
@@ -98,8 +98,8 @@ export default function BespokeHolidaysPage() {
         </div>
 
         {/* Your Client Remains Yours */}
-        <div style={{ background: 'var(--teal-lt)', padding: '56px 48px', marginBottom: 80, textAlign: 'center' }}>
-          <div style={{ fontSize: 12, color: 'var(--teal-dark)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>OUR COMMITMENT TO YOU</div>
+        <div style={{ background: 'var(--teal-lt)', padding: '56px clamp(18px, 5vw, 48px)', marginBottom: 80, textAlign: 'center' }}>
+          <div style={{ fontSize: 13, color: 'var(--teal-dark)', fontWeight: 600, marginBottom: 16 }}>Our commitment to you</div>
           <h3 className="font-display" style={{ fontSize: 'clamp(24px, 3vw, 34px)', fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.02em', marginBottom: 16, maxWidth: 620, margin: '0 auto 16px' }}>
             Your client remains yours. <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>Always.</span>
           </h3>
@@ -110,11 +110,11 @@ export default function BespokeHolidaysPage() {
 
         {/* Why Partner */}
         <div>
-          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>WHY PARTNER WITH BESPOKE HOLIDAYS</div>
+          <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 20 }}>Why partner with Bespoke Holidays</div>
           <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 40, maxWidth: 640 }}>
             Crafted for the <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>discerning traveller.</span>
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
+          <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
             {BENEFITS.map((b, i) => (
               <div key={b} style={{
                 display: 'flex', alignItems: 'center', gap: 16, padding: '20px 28px',
@@ -131,12 +131,12 @@ export default function BespokeHolidaysPage() {
       </div>
 
       {/* Closing CTA */}
-      <div style={{ background: 'var(--ink)', padding: '80px 56px', textAlign: 'center' }}>
+      <div style={{ background: 'var(--ink)', padding: 'clamp(48px, 9vw, 80px) clamp(18px, 5vw, 56px)', textAlign: 'center' }}>
         <div style={{ maxWidth: 640, margin: '0 auto' }}>
           <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', marginBottom: 24 }}>
             Let&apos;s design something <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>unforgettable.</span>
           </h2>
-          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal"><WhatsAppIcon size={16} color="#fff" /> CHAT WITH OUR TEAM ON WHATSAPP →</a>
+          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="btn-teal"><WhatsAppIcon size={16} color="#fff" /> Chat with our team on WhatsApp →</a>
         </div>
       </div>
     </div>

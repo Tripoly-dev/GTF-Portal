@@ -26,8 +26,8 @@ export default function AboutPage() {
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,26,23,0.3) 0%, rgba(7,26,23,0.82) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px 56px' }}>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', marginBottom: 12, fontWeight: 600 }}>ABOUT US</div>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '52px clamp(18px, 5vw, 56px)' }}>
+          <div style={{ fontSize: 13, color: 'var(--on-dark)', marginBottom: 12, fontWeight: 600 }}>About Us</div>
           <h1 className="font-display" style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 12 }}>
             Our Story
           </h1>
@@ -37,12 +37,12 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 56px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(48px, 9vw, 80px) clamp(18px, 5vw, 56px)' }}>
 
         {/* Intro with GTF map */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, marginBottom: 80, alignItems: 'center' }}>
+        <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, marginBottom: 80, alignItems: 'center' }}>
           <div>
-            <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 20 }}>WHO WE ARE</div>
+            <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 20 }}>Who we are</div>
             <h2 className="font-display" style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 24 }}>
               A Legacy of<br />B2B Excellence
             </h2>
@@ -73,17 +73,17 @@ export default function AboutPage() {
         </div>
 
         {/* Vision / Mission / Commitment */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, marginBottom: 80 }}>
+        <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, marginBottom: 80 }}>
           {[
             {
               title: 'Vision',
               body: 'To become the foremost B2B travel partner for organizations around the world. We aspire to be renowned for our unyielding commitment to delivering the highest level of service and personalized attention, setting a new benchmark for excellence in the travel industry.',
-              bg: 'var(--teal)', textColor: '#fff', labelColor: 'rgba(255,255,255,0.45)',
+              bg: 'var(--teal)', textColor: '#fff', labelColor: 'var(--on-dark)',
             },
             {
               title: 'Mission',
               body: 'To seamlessly fuse top-tier travel services, profound industry expertise, a personalized approach, and continuous availability — rendering us your trusted companion in the global travel arena. We redefine the standards of travel excellence and craft indelible memories for your clients on a global scale.',
-              bg: 'var(--ink)', textColor: '#fff', labelColor: 'rgba(255,255,255,0.4)',
+              bg: 'var(--ink)', textColor: '#fff', labelColor: 'var(--on-dark)',
             },
             {
               title: 'Commitment',
@@ -91,7 +91,7 @@ export default function AboutPage() {
               bg: 'var(--paper)', textColor: 'var(--ink)', labelColor: 'var(--teal)',
             },
           ].map((item, i) => (
-            <div key={i} style={{ background: item.bg, padding: '48px 40px' }}>
+            <div key={i} style={{ background: item.bg, padding: '48px clamp(18px, 5vw, 40px)' }}>
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', color: item.labelColor, marginBottom: 16 }}>{item.title.toUpperCase()}</div>
               <h3 className="font-display" style={{ fontSize: 28, fontWeight: 500, color: item.textColor, marginBottom: 16, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{item.title}</h3>
               <p style={{ fontSize: 14, color: item.labelColor, lineHeight: 1.8, fontWeight: 400 }}>{item.body}</p>
@@ -101,8 +101,8 @@ export default function AboutPage() {
 
         {/* USPs */}
         <div style={{ marginBottom: 80 }}>
-          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 32 }}>WHY CHOOSE GTF</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
+          <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 32 }}>Why choose GTF</div>
+          <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0 }}>
             {usps.map((u, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '20px 28px', borderBottom: '1px solid var(--rule)', borderRight: i % 2 === 0 ? '1px solid var(--rule)' : 'none', background: 'white' }}>
                 <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0 }} />
@@ -118,23 +118,23 @@ export default function AboutPage() {
           <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28, marginBottom: 40 }}>
             <LogoWall logos={AFFILIATION_LOGOS} height={84} />
           </div>
-          <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 24 }}>DESTINATION CERTIFICATIONS</div>
+          <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 24 }}>Destination certifications</div>
           <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28 }}>
             <LogoWall logos={CERTIFICATION_LOGOS} height={100} caption />
           </div>
         </div>
 
         {/* GTF Logo + HQ */}
-        <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: '48px 56px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 48, alignItems: 'start' }}>
+        <div className="rg-stack" style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: '48px clamp(18px, 5vw, 56px)', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 48, alignItems: 'start' }}>
           <div>
             <img
-              src="https://static.wixstatic.com/media/226760_114b9cd3484842c7997b35e8f455c25b~mv2.png"
+              src="/brand/gtf-logo.png"
               alt="GTF Holidays Logo"
               style={{ width: 120, marginBottom: 20 }}
             />
                       </div>
           <div>
-            <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>HEADQUARTERS</div>
+            <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 16 }}>Headquarters</div>
             <h3 className="font-display" style={{ fontSize: 18, fontWeight: 500, color: 'var(--ink)', marginBottom: 12, letterSpacing: '-0.01em' }}>Global Travel Fusion</h3>
             <p style={{ fontSize: 14, color: 'var(--ink-mid)', lineHeight: 1.9, fontWeight: 400 }}>
               Office No.102, Mahant Chambers<br />
@@ -145,7 +145,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div>
-            <div style={{ fontSize: 12, color: 'var(--teal)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>CONTACT</div>
+            <div style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, marginBottom: 16 }}>Contact</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {['+91 89288 72400', '+91 93727 33424', '+91 93727 33428', '+91 93727 33425', 'sales@gtfholidays.com', 'fit@gtfholidays.com'].map(c => (
                 <div key={c} style={{ fontSize: 14, color: 'var(--ink-mid)', fontWeight: c.includes('@') ? 400 : 500 }}>{c}</div>

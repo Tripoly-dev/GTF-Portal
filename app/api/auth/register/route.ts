@@ -13,14 +13,14 @@ export async function POST(req: NextRequest) {
 
     if (!full_name || !agency_name || !city || !mobile || !email || !password ||
       !agency_address?.trim() || !whatsapp_number?.trim() || !how_did_you_hear || !logo_url) {
-      return NextResponse.json({ error: 'All required fields must be filled' }, { status: 400 })
+      return NextResponse.json({ error: 'Please fill in every field marked with *.' }, { status: 400 })
     }
 
     const { data: existing } = await supabase
       .from('agents').select('id').eq('email', email.toLowerCase()).single()
 
     if (existing) {
-      return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 })
+      return NextResponse.json({ error: 'An account with this email already exists. Sign in instead, or use a different email.' }, { status: 409 })
     }
 
     const password_hash = await hashPassword(password)
@@ -49,6 +49,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('Register error:', err)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    return NextResponse.json({ error: 'Something went wrong on our side. Please try again in a minute.' }, { status: 500 })
   }
 }

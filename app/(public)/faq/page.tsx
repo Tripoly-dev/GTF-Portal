@@ -14,9 +14,9 @@ export default function FAQPage() {
     <div style={{ background: 'var(--bg)', minHeight: '80vh' }}>
 
       {/* Header */}
-      <div style={{ background: 'var(--ink)', padding: '72px 56px 64px' }}>
+      <div style={{ background: 'var(--ink)', padding: 'clamp(43px, 9vw, 72px) clamp(18px, 5vw, 56px) clamp(38px, 9vw, 64px)' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>HELP & FAQ</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.62)', fontWeight: 600, marginBottom: 16 }}>Help & FAQ</div>
           <h1 className="font-display" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 400, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 16 }}>
             Frequently Asked<br /><span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>Questions</span>
           </h1>
@@ -26,12 +26,12 @@ export default function FAQPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '64px 56px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 56 }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(38px, 9vw, 64px) clamp(18px, 5vw, 56px)' }}>
+        <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 56 }}>
 
           {/* Category sidebar */}
           <div>
-            <div style={{ fontSize: 12, color: 'var(--ink-light)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 16 }}>CATEGORIES</div>
+            <div style={{ fontSize: 13, color: 'var(--ink-light)', fontWeight: 600, marginBottom: 16 }}>Categories</div>
             {categories.map(cat => (
               <button key={cat} onClick={() => { setActiveCat(cat); setOpen(null) }} style={{
                 display: 'block', width: '100%', textAlign: 'left',
@@ -40,7 +40,7 @@ export default function FAQPage() {
                 color: activecat === cat ? 'var(--teal)' : 'var(--ink-light)',
                 fontSize: 13, fontWeight: activecat === cat ? 600 : 400,
                 borderLeft: activecat === cat ? '2px solid var(--teal)' : '2px solid transparent',
-                transition: 'all 0.2s', fontFamily: 'var(--font-sans)',
+                transition: 'background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease', fontFamily: 'var(--font-sans)',
               }}>{cat}</button>
             ))}
           </div>
@@ -79,12 +79,12 @@ export default function FAQPage() {
         </div>
 
         {/* CTA bottom */}
-        <div style={{ marginTop: 80, background: 'var(--teal-lt)', border: '1px solid var(--rule)', padding: '40px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40 }}>
+        <div style={{ marginTop: 80, background: 'var(--teal-lt)', border: '1px solid var(--rule)', padding: '40px clamp(18px, 5vw, 48px)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
           <div>
             <h3 className="font-display" style={{ fontSize: 22, fontWeight: 500, color: 'var(--ink)', marginBottom: 8, letterSpacing: '-0.01em' }}>Still have questions?</h3>
             <p style={{ fontSize: 14, color: 'var(--ink-light)', fontWeight: 400 }}>Our team is available to walk you through our products and help you get started.</p>
           </div>
-          <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
             <a href="https://wa.me/918928872400" target="_blank" rel="noopener noreferrer" className="btn-teal" style={{ whiteSpace: 'nowrap' }}><WhatsAppIcon size={16} color="#fff" /> WhatsApp Us</a>
             <a href="mailto:sales@gtfholidays.com" className="btn-outline" style={{ whiteSpace: 'nowrap' }}>Email Us</a>
           </div>

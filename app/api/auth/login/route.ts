@@ -5,7 +5,7 @@ import { verifyPassword, signToken } from '@/lib/auth'
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json()
-    if (!email || !password) return NextResponse.json({ error: 'Email and password required' }, { status: 400 })
+    if (!email || !password) return NextResponse.json({ error: 'Enter your email and password to sign in.' }, { status: 400 })
 
     const normalEmail = email.toLowerCase().trim()
 
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
     if (admin) {
       const valid = await verifyPassword(password, admin.password_hash)
-      if (!valid) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+      if (!valid) return NextResponse.json({ error: 'That email and password do not match. Check both and try again.' }, { status: 401 })
       const token = signToken({ id: admin.id, email: admin.email, role: 'admin' })
       const res = NextResponse.json({ success: true, role: 'admin' })
       res.cookies.set('gtf_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 60 * 60 * 24 * 7, path: '/' })
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     if (!agent) return NextResponse.json({ error: 'No account found with this email' }, { status: 401 })
 
     const valid = await verifyPassword(password, agent.password_hash)
-    if (!valid) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+    if (!valid) return NextResponse.json({ error: 'That email and password do not match. Check both and try again.' }, { status: 401 })
 
     if (agent.status === 'pending') return NextResponse.json({ error: 'Your account is pending approval. We\'ll notify you once approved.' }, { status: 403 })
     if (agent.status === 'rejected') return NextResponse.json({ error: 'Your application was not approved. Please contact sales@gtfholidays.com.' }, { status: 403 })
@@ -46,6 +46,6 @@ export async function POST(req: NextRequest) {
     return res
   } catch (err) {
     console.error('Login error:', err)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    return NextResponse.json({ error: 'Something went wrong on our side. Please try again in a minute.' }, { status: 500 })
   }
 }

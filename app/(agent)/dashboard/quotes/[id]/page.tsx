@@ -6,18 +6,12 @@ import { PACKAGES } from '@/data/packages'
 import BookingModal from '@/components/BookingModal'
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 import { HOTEL_IMAGES, HOTEL_GALLERY, normalizeHotelName } from '@/data/hotel-images'
+import { money as f, formatDate } from '@/lib/format'
+import StatusBadge from '@/components/ui/StatusBadge'
+import { reducedMotion } from '@/lib/motion'
 
-const f = (n: number, cur = 'INR') => {
-  if (!n) return '₹0'
-  if (cur === 'USD') return `$${Math.round(n).toLocaleString('en-US')}`
-  if (cur === 'EUR') return `€${Math.round(n).toLocaleString('en-IN')}`
-  return `₹${Math.round(n).toLocaleString('en-IN')}`
-}
 
-const fmtDate = (d: string) => {
-  if (!d) return ''
-  return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
-}
+const fmtDate = (d: string) => formatDate(d, 'long', '')
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   created:   { label: 'Created',   bg: 'var(--teal-lt)',  color: 'var(--teal)' },
@@ -43,14 +37,14 @@ function HotelCard({ h }: { h: any }) {
     pauRef.current = setTimeout(startAuto, 8000)
   }
   const startAuto = () => {
-    if (images.length < 2) return
+    if (images.length < 2 || reducedMotion()) return
     if (intRef.current) clearInterval(intRef.current)
     intRef.current = setInterval(() => setIdx(p => (p + 1) % images.length), 4000)
   }
   useEffect(() => { startAuto(); return () => { if (intRef.current) clearInterval(intRef.current) } }, [])
 
   return (
-    <div style={{ border: '1px solid var(--rule)', background: 'white', overflow: 'hidden', marginBottom: 12, borderRadius: 8 }}>
+    <div onMouseEnter={() => { if (intRef.current) clearInterval(intRef.current) }} onMouseLeave={startAuto} style={{ border: '1px solid var(--rule)', background: 'white', overflow: 'hidden', marginBottom: 12, borderRadius: 8 }}>
       {images.length > 0 && (
         <div style={{ position: 'relative', height: 300, overflow: 'hidden' }}>
           <img src={images[idx]} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'opacity 0.4s' }} />
@@ -65,7 +59,7 @@ function HotelCard({ h }: { h: any }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', marginBottom: 4 }}>{h.name}</div>
-            <div style={{ display: 'flex', gap: 1, marginBottom: 10 }}>{'★'.repeat(h.stars || 4).split('').map((_, j) => <span key={j} style={{ color: '#F59E0B', fontSize: 13 }}>★</span>)}</div>
+            <div style={{ display: 'flex', gap: 1, marginBottom: 10 }}>{'★'.repeat(h.stars || 4).split('').map((_, j) => <span key={j} style={{ color: 'var(--warn)', fontSize: 13 }}>★</span>)}</div>
           </div>
           <span style={{ fontSize: 12, padding: '5px 12px', background: 'var(--teal-lt)', color: 'var(--teal)', fontWeight: 700, borderRadius: 4, whiteSpace: 'nowrap' }}>{h.meal}</span>
         </div>
@@ -95,7 +89,7 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
       <div style={{ background: 'white', width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto', borderRadius: 12, boxShadow: '0 24px 64px rgba(7,26,23,0.2)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid var(--rule)' }}>
           <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)' }}>{title}</div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)', lineHeight: 1 }}>✕</button>
+          <button type="button" aria-label="Close" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)', lineHeight: 1 }}>✕</button>
         </div>
         <div style={{ padding: 24 }}>{children}</div>
       </div>
@@ -126,12 +120,12 @@ function HelpModal({ quoteId, onClose }: { quoteId: string; onClose: () => void 
       ) : (
         <>
           <div style={{ fontSize: 12, color: 'var(--ink-light)', marginBottom: 16 }}>Select one or more topics:</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
+          <div className="rg-stack-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
             {HELP_CATEGORIES.map(c => (
-              <button key={c} onClick={() => toggle(c)} style={{ padding: '10px 12px', border: `1.5px solid ${selected.includes(c) ? 'var(--teal)' : 'var(--rule)'}`, background: selected.includes(c) ? 'var(--teal-lt)' : 'white', color: selected.includes(c) ? 'var(--teal)' : 'var(--ink-mid)', fontSize: 12, fontWeight: selected.includes(c) ? 700 : 400, cursor: 'pointer', textAlign: 'left', borderRadius: 6, transition: 'all 0.15s' }}>{c}</button>
+              <button key={c} onClick={() => toggle(c)} style={{ padding: '10px 12px', border: `1.5px solid ${selected.includes(c) ? 'var(--teal)' : 'var(--rule)'}`, background: selected.includes(c) ? 'var(--teal-lt)' : 'white', color: selected.includes(c) ? 'var(--teal)' : 'var(--ink-mid)', fontSize: 12, fontWeight: selected.includes(c) ? 700 : 400, cursor: 'pointer', textAlign: 'left', borderRadius: 6, transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease' }}>{c}</button>
             ))}
           </div>
-          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: 'var(--font-sans)' }} placeholder="Additional details..." />
+          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={3} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--ctl)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: 'var(--font-sans)' }} placeholder="Additional details..." />
           <button onClick={submit} disabled={!selected.length || saving} className="btn-teal" style={{ width: '100%', justifyContent: 'center', opacity: selected.length ? 1 : 0.5 }}>{saving ? 'Submitting...' : 'Submit Request'}</button>
         </>
       )}
@@ -159,7 +153,7 @@ function CallbackModal({ quoteId, onClose }: { quoteId: string; onClose: () => v
         </div>
       ) : (
         <>
-          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={4} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--rule)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: 'var(--font-sans)' }} placeholder="Describe your query..." />
+          <textarea value={comments} onChange={e => setComments(e.target.value)} rows={4} style={{ width: '100%', padding: '10px 12px', border: '1.5px solid var(--ctl)', fontSize: 13, resize: 'none', boxSizing: 'border-box', borderRadius: 6, marginBottom: 16, fontFamily: 'var(--font-sans)' }} placeholder="Describe your query..." />
           <button onClick={submit} disabled={saving} className="btn-teal" style={{ width: '100%', justifyContent: 'center' }}>{saving ? 'Submitting...' : 'Request Callback'}</button>
         </>
       )}
@@ -185,7 +179,7 @@ function MarkupModal({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; o
     <Modal title="Update Markup" onClose={onClose}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div>
-          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>MARKUP TYPE</label>
+          <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Markup type</label>
           <select value={type} onChange={e => setType(e.target.value)} className="input-field">
             <option value="fixed">Fixed Amount (₹)</option>
             <option value="percent">Percentage (%)</option>
@@ -249,7 +243,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid var(--rule)' }}>
           <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-display)' }}>Edit Proposal</div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)' }}>✕</button>
+          <button type="button" aria-label="Close" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--ink-light)' }}>✕</button>
         </div>
         {/* Step tabs */}
         <div style={{ display: 'flex', borderBottom: '1px solid var(--rule)' }}>
@@ -262,11 +256,11 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
         <div style={{ padding: 28 }}>
           {step === 1 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div><label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>CLIENT NAME</label><input className="input-field" value={form.client_name} onChange={set('client_name')} /></div>
-              <div><label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>TRIP NAME</label><input className="input-field" value={form.trip_name} onChange={set('trip_name')} /></div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div><label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Client name</label><input className="input-field" value={form.client_name} onChange={set('client_name')} /></div>
+              <div><label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Trip name</label><input className="input-field" value={form.trip_name} onChange={set('trip_name')} /></div>
+              <div className="rg-stack-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>ADULTS</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Adults</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
                     <button onClick={() => setForm(p => ({ ...p, adults: Math.max(1, p.adults - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>{form.adults}</span>
@@ -274,7 +268,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>ROOM TYPE</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Room type</label>
                   <select className="input-field" value={form.room_type} onChange={set('room_type')}>
                     <option value="double">Double / Twin</option>
                     <option value="single">Single Room</option>
@@ -282,9 +276,9 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                   </select>
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="rg-stack-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>CHILD WITH BED</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Child with bed</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
                     <button onClick={() => setForm(p => ({ ...p, children_with_bed: Math.max(0, p.children_with_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700 }}>{form.children_with_bed}</span>
@@ -292,7 +286,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>CHILD WITHOUT BED</label>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Child without bed</label>
                   <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid var(--rule)', borderRadius: 8, overflow: 'hidden' }}>
                     <button onClick={() => setForm(p => ({ ...p, children_without_bed: Math.max(0, p.children_without_bed - 1) }))} style={{ width: 36, height: 44, background: 'var(--bg)', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--teal)' }}>−</button>
                     <span style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: 700 }}>{form.children_without_bed}</span>
@@ -304,7 +298,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
           )}
           {step === 2 && (
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>DEPARTURE DATE</label>
+              <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Departure date</label>
               <select className="input-field" value={form.departure_date} onChange={set('departure_date')}>
                 <option value="">Select departure</option>
                 {pkg?.departures?.filter((d: any) => d.status !== 'sold-out').map((d: any) => (
@@ -316,14 +310,14 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
           {step === 3 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>MARKUP TYPE</label>
+                <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Markup type</label>
                 <select className="input-field" value={form.markup_type} onChange={set('markup_type')}>
                   <option value="fixed">Fixed Amount (₹)</option>
                   <option value="percent">Percentage (%)</option>
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>MARKUP VALUE</label>
+                <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Markup value</label>
                 <input type="number" className="input-field" value={form.markup_value} onChange={set('markup_value')} />
               </div>
               <div style={{ background: 'var(--bg)', padding: 16, borderRadius: 8, border: '1px solid var(--rule)' }}>
@@ -341,7 +335,7 @@ function EditWizard({ quote, pkg, onClose, onSaved }: { quote: any; pkg: any; on
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-light)', letterSpacing: '0.04em', display: 'block', marginBottom: 8 }}>INTERNAL NOTES</label>
+                <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-light)', display: 'block', marginBottom: 8 }}>Internal notes</label>
                 <textarea className="input-field" rows={3} value={form.notes} onChange={set('notes')} style={{ resize: 'none' }} placeholder="Visible only to you" />
               </div>
             </div>
@@ -506,30 +500,30 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         {/* Breadcrumb inside hero */}
         <div style={{ position: 'absolute', top: 20, left: 32, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.85)', padding: '8px 14px', background: 'rgba(7,26,23,0.55)', borderRadius: 6, backdropFilter: 'blur(8px)' }}>
           <Link href="/dashboard" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none' }}>Dashboard</Link>
-          <span style={{ color: 'rgba(255,255,255,0.5)' }}>→</span>
+          <span style={{ color: 'var(--on-dark)' }}>→</span>
           <Link href="/dashboard/quotes" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none' }}>My Quotes</Link>
-          <span style={{ color: 'rgba(255,255,255,0.5)' }}>→</span>
+          <span style={{ color: 'var(--on-dark)' }}>→</span>
           <span style={{ color: '#fff' }}>{quote.trip_name}</span>
         </div>
 
         {/* Proposal No + Status top right */}
         <div style={{ position: 'absolute', top: 20, right: 32, display: 'flex', gap: 8, alignItems: 'center' }}>
           <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '5px 12px', background: 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 4, backdropFilter: 'blur(8px)' }}>PROPOSAL NO: {quote.quote_number}</span>
-          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', padding: '5px 12px', background: statusStyle.bg, color: statusStyle.color, borderRadius: 4 }}>{statusStyle.label.toUpperCase()}</span>
+          <StatusBadge status={status}>{statusStyle.label}</StatusBadge>
         </div>
 
         {/* Bottom content */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '28px 32px 28px' }}>
-          <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)', marginBottom: 8 }}>{(quote.region || '').toUpperCase()}</div>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '28px clamp(18px, 5vw, 32px) 28px' }}>
+          <div className="eyebrow" style={{ color: 'var(--on-dark)', marginBottom: 8 }}>{(quote.region || '').toUpperCase()}</div>
           <h1 className="font-display" style={{ fontSize: 36, fontWeight: 500, color: '#fff', margin: '0 0 18px', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
             {quote.trip_name}
           </h1>
           <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
             {[
               { l: 'CLIENT', v: quote.client_name },
-              { l: 'DEPARTURE', v: fmtDate(quote.departure_date) },
-              { l: 'PASSENGERS', v: paxStr },
-              { l: 'DURATION', v: pkg ? `${pkg.nights}N/${pkg.days}D` : '' },
+              { l: 'Departure', v: fmtDate(quote.departure_date) },
+              { l: 'Passengers', v: paxStr },
+              { l: 'Duration', v: pkg ? `${pkg.nights}N/${pkg.days}D` : '' },
             ].filter(x => x.v).map(({ l, v }) => (
               <div key={l}>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', fontWeight: 600, letterSpacing: '0.04em', marginBottom: 4 }}>{l}</div>
@@ -541,7 +535,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div style={{ maxWidth: 1560, margin: '0 auto', padding: '24px 24px 64px', display: 'grid', gridTemplateColumns: '220px 1fr 340px', gap: 20, alignItems: 'start' }}>
+      <div className="rg-stack" style={{ maxWidth: 1560, margin: '0 auto', padding: '24px 24px clamp(38px, 9vw, 64px)', display: 'grid', gridTemplateColumns: '220px 1fr 340px', gap: 20, alignItems: 'start' }}>
 
         {/* ── LEFT: Vertical tab nav ── */}
         <div style={{ position: 'sticky', top: 20 }}>
@@ -553,7 +547,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 borderBottom: '1px solid var(--rule)', cursor: 'pointer',
                 fontSize: 13, fontWeight: activeTab === tab.id ? 700 : 400,
                 color: activeTab === tab.id ? 'var(--teal)' : 'var(--ink-mid)',
-                textAlign: 'left', transition: 'all 0.15s', fontFamily: 'var(--font-sans)',
+                textAlign: 'left', transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease', fontFamily: 'var(--font-sans)',
                 display: 'flex', alignItems: 'center', gap: 10,
               }}>
                 <span style={{ fontSize: 16 }}>
@@ -566,7 +560,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
         </div>
 
         {/* ── CENTER: Tab content ── */}
-        <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '28px 32px', minHeight: 400 }}>
+        <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '28px clamp(18px, 5vw, 32px)', minHeight: 400 }}>
 
           {/* OVERVIEW */}
           {activeTab === 'overview' && (
@@ -576,8 +570,8 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               )}
               {pkg?.highlights && pkg.highlights.length > 0 && (
                 <div>
-                  <div className="eyebrow" style={{ marginBottom: 16 }}>★ HIGHLIGHTS</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="eyebrow" style={{ marginBottom: 16 }}>★ Highlights</div>
+                  <div className="rg-stack-sm" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {pkg.highlights.map((h: string, i: number) => (
                       <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal)', flexShrink: 0, marginTop: 7 }} />
@@ -593,7 +587,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           {/* ITINERARY */}
           {activeTab === 'itinerary' && (
             <div>
-              <div className="eyebrow" style={{ marginBottom: 20 }}>DAY-WISE ITINERARY</div>
+              <div className="eyebrow" style={{ marginBottom: 20 }}>Day-wise itinerary</div>
               {pkg?.itinerary?.map((item: any, i: number) => (
                 <div key={i} style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
                   <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -616,7 +610,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           {/* HOTELS */}
           {activeTab === 'hotels' && (
             <div>
-              <div className="eyebrow" style={{ marginBottom: 16 }}>ACCOMMODATION</div>
+              <div className="eyebrow" style={{ marginBottom: 16 }}>Accommodation</div>
               {pkg?.hotels?.map((h: any, i: number) => <HotelCard key={i} h={h} />)}
             </div>
           )}
@@ -624,7 +618,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           {/* INCLUSIONS */}
           {activeTab === 'inclusions' && (
             <div>
-              <div className="eyebrow" style={{ marginBottom: 20 }}>WHAT'S INCLUDED</div>
+              <div className="eyebrow" style={{ marginBottom: 20 }}>What's included</div>
               {pkg?.inclusions?.map((item: string, i: number) => (
                 <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
                   <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--ok-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
@@ -639,7 +633,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           {/* EXCLUSIONS */}
           {activeTab === 'exclusions' && (
             <div>
-              <div className="eyebrow" style={{ color: 'var(--warn)', marginBottom: 20 }}>NOT INCLUDED</div>
+              <div className="eyebrow" style={{ color: 'var(--warn)', marginBottom: 20 }}>Not included</div>
               {pkg?.exclusions?.map((item: string, i: number) => (
                 <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
                   <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--danger-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
@@ -659,7 +653,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', overflow: 'hidden' }}>
             {/* Price header */}
             <div style={{ background: 'var(--teal)', padding: '20px 20px 16px' }}>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 6 }}>TOTAL PRICE</div>
+              <div style={{ fontSize: 13, color: 'var(--on-dark)', fontWeight: 600, marginBottom: 6 }}>Total price</div>
               <div style={{ fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{f(quote.total_price || 0, cur)}</div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)' }}>{f(Math.round((quote.total_price || 0) / (quote.adults || 1)), cur)} per adult · {paxStr}</div>
             </div>
@@ -721,7 +715,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 { label: 'WhatsApp / Text Summary', icon: <WhatsAppIcon size={15} />, href: whatsappMsg() },
                 { label: 'WhatsApp Quote Link', icon: <WhatsAppIcon size={15} />, href: whatsappQuoteLinkMsg() },
               ].map(({ label, icon, href }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 500, color: 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.15s', fontFamily: 'var(--font-sans)', textDecoration: 'none' }}
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 500, color: 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease', fontFamily: 'var(--font-sans)', textDecoration: 'none' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-mid)' }}>
                   {icon}{label}
@@ -734,7 +728,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
                 { label: '📞 Get a Callback', action: () => setShowCallback(true) },
                 { label: '✉️ Mail (Coming Soon)', action: () => {}, disabled: true },
               ].map(({ label, action, disabled }) => (
-                <button key={label} onClick={action} disabled={disabled} style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: disabled ? 'not-allowed' : 'pointer', fontSize: 12, fontWeight: 500, color: disabled ? 'var(--ink-light)' : 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.15s', fontFamily: 'var(--font-sans)', opacity: disabled ? 0.5 : 1 }}
+                <button key={label} onClick={action} disabled={disabled} style={{ padding: '10px 14px', background: 'none', border: '1px solid var(--rule)', borderRadius: 6, cursor: disabled ? 'not-allowed' : 'pointer', fontSize: 12, fontWeight: 500, color: disabled ? 'var(--ink-light)' : 'var(--ink-mid)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, transition: 'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease', fontFamily: 'var(--font-sans)', opacity: disabled ? 0.5 : 1 }}
                   onMouseEnter={e => { if (!disabled) { (e.currentTarget as HTMLElement).style.borderColor = 'var(--teal)'; (e.currentTarget as HTMLElement).style.color = 'var(--teal)' } }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'; (e.currentTarget as HTMLElement).style.color = disabled ? 'var(--ink-light)' : 'var(--ink-mid)' }}>
                   {label}

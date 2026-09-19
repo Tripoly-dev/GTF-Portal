@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { PACKAGES } from '@/data/packages'
+import { reducedMotion } from '@/lib/motion'
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
 // Exact implementation matching zip HTML prototype (GTF Portal Homepage.dc.html)
@@ -14,19 +15,19 @@ function Hero() {
   }, [])
 
   return (
-    <section style={{
+    <section className="hero-sec" style={{
       minHeight: 650,
       display: 'flex',
       alignItems: 'center',
       gap: 64,
-      padding: '88px 56px 42px',
+      padding: 'clamp(53px, 9vw, 88px) clamp(18px, 5vw, 56px) 42px',
       position: 'relative',
       background: '#FFFFFF',
       overflow: 'hidden',
     }}>
 
       {/* LEFT — Typography / Brand (47%) */}
-      <div style={{
+      <div className="hero-left" style={{
         flex: '0 0 47%',
         display: 'flex',
         flexDirection: 'column',
@@ -62,55 +63,20 @@ function Hero() {
         </p>
 
         {/* CTAs — pill 999px, teal primary */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 18, marginTop: 6,
+        <div className="hero-cta" style={{
+          display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 14, marginTop: 6,
           opacity: loaded ? 1 : 0,
           transform: loaded ? 'translateY(0)' : 'translateY(16px)',
           transition: 'opacity 0.7s 0.28s ease, transform 0.7s 0.28s ease',
         }}>
-          <Link href="/register" style={{
-            textDecoration: 'none', fontSize: 15, fontWeight: 600,
-            letterSpacing: '0.01em', color: '#fff',
-            padding: '18px 32px', borderRadius: 999,
-            background: 'var(--brand)',
-            boxShadow: '0 6px 16px rgba(7,26,23,0.16)',
-            display: 'inline-block', fontFamily: 'var(--font-sans)',
-            transition: 'transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease',
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'scale(1.045) translateY(-1px)'
-            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 10px 24px rgba(7,26,23,0.22)'
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'scale(1) translateY(0)'
-            ;(e.currentTarget as HTMLElement).style.boxShadow = '0 6px 16px rgba(7,26,23,0.16)'
-          }}>
-            Join as partner
-          </Link>
-          <Link href="/departures/europe" style={{
-            textDecoration: 'none', fontSize: 15, fontWeight: 600,
-            letterSpacing: '0.01em', color: 'var(--ink)',
-            padding: '18px 30px', borderRadius: 999,
-            border: '1.5px solid var(--rule)',
-            display: 'inline-block', fontFamily: 'var(--font-sans)',
-            transition: 'transform 0.3s cubic-bezier(0.22,1,0.36,1), border-color 0.3s ease',
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'
-            ;(e.currentTarget as HTMLElement).style.borderColor = 'var(--ink)'
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
-            ;(e.currentTarget as HTMLElement).style.borderColor = 'var(--rule)'
-          }}>
-            Explore departures
-          </Link>
+          <Link href="/register" className="btn-teal btn-lg">Join as partner</Link>
+          <Link href="/departures/europe" className="btn-outline btn-lg">Explore departures</Link>
         </div>
 
       </div>
 
       {/* RIGHT — Organic blob collage (44%) */}
-      <div style={{ flex: '0 0 44%', position: 'relative', height: 600 }}>
+      <div className="hero-right" style={{ flex: '0 0 44%', position: 'relative', height: 600 }}>
 
         {/* Dashed vertical route line */}
         <div style={{
@@ -141,7 +107,7 @@ function Hero() {
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(200deg, transparent 55%, rgba(3,10,10,0.65) 100%)', pointerEvents: 'none' }} />
           <div style={{
             position: 'absolute', bottom: 22, left: 26,
-            color: '#fff', fontSize: 12, letterSpacing: '0.04em',
+            color: '#fff', fontSize: 12,
             fontFamily: 'var(--font-mono)', opacity: 0.9,
           }}>ZRH · 47.3°N</div>
         </div>
@@ -166,7 +132,7 @@ function Hero() {
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(200deg, transparent 55%, rgba(3,10,10,0.55) 100%)', pointerEvents: 'none' }} />
           <div style={{
             position: 'absolute', bottom: 16, left: 18,
-            color: '#fff', fontSize: 12, letterSpacing: '0.04em',
+            color: '#fff', fontSize: 12,
             fontFamily: 'var(--font-mono)', opacity: 0.9,
           }}>PAR · 48.8566°N</div>
         </div>
@@ -213,13 +179,13 @@ function ProductStream() {
   ]
 
   return (
-    <section id="product-stream" style={{ padding: '96px 48px 112px', background: 'linear-gradient(135deg,#123536 0%,#1B4949 58%,#245756 100%)', color: 'var(--bg)', overflow: 'hidden' }}>
+    <section id="product-stream" style={{ padding: 'clamp(58px, 9vw, 96px) clamp(18px, 5vw, 48px) clamp(67px, 9vw, 112px)', background: 'linear-gradient(135deg,#123536 0%,#1B4949 58%,#245756 100%)', color: 'var(--bg)', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1240, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 24, marginBottom: 42, flexWrap: 'wrap' }}>
           <div>
             <h2 className="font-tight product-stream-heading font-display" style={{ margin: 0, fontSize: 'clamp(34px, 4vw, 52px)', lineHeight: 1, fontWeight: 400, letterSpacing: '-0.03em' }}>Three continents. <span style={{ color: 'var(--accent-dk)', fontWeight: 400, fontStyle: 'italic' }}>Ready-to-sell departures.</span></h2>
           </div>
-          <Link href="/departures/europe" style={{ color: 'var(--accent-dk)', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>BROWSE ALL DEPARTURES →</Link>
+          <Link href="/departures/europe" style={{ color: 'var(--accent-dk)', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>Browse all departures →</Link>
         </div>
         <div style={{ display: 'flex', alignItems: 'stretch', gap: 14, justifyContent: 'center', padding: '8px 4px 18px' }}>
           {products.map((p, i) => {
@@ -231,7 +197,7 @@ function ProductStream() {
                   <div className="font-tight" style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>{p.name}</div>
                   <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 12, fontWeight: 700, color: 'rgba(255,253,248,.9)' }}><span>{p.packages} DEPARTURES</span>{p.price && <span style={{ color: 'var(--accent-dk)' }}>FROM {p.price}</span>}</div>
                   <div style={{ marginTop: 7, fontSize: 12, color: 'rgba(255,255,255,.7)', fontWeight: 600 }}>NEXT: {p.next}</div>
-                  {expanded && <div style={{ marginTop: 14, paddingTop: 13, borderTop: '1px solid rgba(255,255,255,.26)' }}><div style={{ fontSize: 12, letterSpacing: '0.04em', fontWeight: 700, color: 'rgba(255,255,255,.62)', marginBottom: 8 }}>POPULAR DEPARTURES</div>{p.popular.map(item => <div key={item} style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>{item}</div>)}<div style={{ marginTop: 12, fontSize: 12, fontWeight: 700 }}>VIEW PRODUCTS →</div></div>}
+                  {expanded && <div style={{ marginTop: 14, paddingTop: 13, borderTop: '1px solid rgba(255,255,255,.26)' }}><div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,.62)', marginBottom: 8 }}>Popular departures</div>{p.popular.map(item => <div key={item} style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>{item}</div>)}<div style={{ marginTop: 12, fontSize: 13, fontWeight: 700 }}>View products →</div></div>}
                 </div>
               </Link>
             )
@@ -241,7 +207,7 @@ function ProductStream() {
           <button type="button" aria-label="Previous destination" onClick={() => setActive((active + products.length - 1) % products.length)} style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid rgba(255,255,255,.26)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer' }}>←</button>
           <button type="button" aria-label="Next destination" onClick={() => setActive((active + 1) % products.length)} style={{ width: 42, height: 42, borderRadius: '50%', border: '1px solid rgba(255,255,255,.26)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer' }}>→</button>
         </div>
-        <div aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', gap: 7, marginTop: 28 }}>{products.map((p, i) => <span key={p.name} style={{ width: active === i ? 24 : 6, height: 6, borderRadius: 99, background: active === i ? 'var(--accent-dk)' : 'rgba(255,253,248,.28)', transition: 'all .25s ease' }} />)}</div>
+        <div aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', gap: 7, marginTop: 28 }}>{products.map((p, i) => <span key={p.name} style={{ width: active === i ? 24 : 6, height: 6, borderRadius: 99, background: active === i ? 'var(--accent-dk)' : 'rgba(255,253,248,.28)', transition: 'background-color .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease, transform .25s ease, opacity .25s ease, width 0.25s ease' }} />)}</div>
       </div>
     </section>
   )
@@ -268,6 +234,7 @@ function CustomerJourney() {
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const startAuto = (currentActive: number) => {
+    if (reducedMotion()) return
     if (intervalRef.current) clearInterval(intervalRef.current)
     if (progressRef.current) clearInterval(progressRef.current)
     setProgress(0)
@@ -341,9 +308,9 @@ function CustomerJourney() {
 // ── EDITORIAL INTRO ───────────────────────────────────────────────────────────
 function EditorialIntro() {
   return (
-    <section style={{ position: 'relative', overflow: 'hidden', minHeight: 560, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+    <section className="rg-stack" style={{ position: 'relative', overflow: 'hidden', minHeight: 560, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
       {/* Left — editorial text */}
-      <div style={{ padding: '72px 56px 72px 56px', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: '#fff', zIndex: 1 }}>
+      <div style={{ padding: 'clamp(43px, 9vw, 72px) clamp(18px, 5vw, 56px) clamp(43px, 9vw, 72px) clamp(18px, 5vw, 56px)', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: '#fff', zIndex: 1 }}>
         <h2 className="font-tight about-portal-heading font-display" style={{
           fontSize: 'clamp(36px, 4.5vw, 58px)', fontWeight: 400, lineHeight: 1.0,
           color: 'var(--ink)', letterSpacing: '-0.03em', marginBottom: 28,
@@ -359,11 +326,11 @@ function EditorialIntro() {
           We coordinate the details behind the scenes so your team can sell with clarity, protect the client relationship, and grow across continents.
         </p>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 28 }}>
-          <Link href="/register" className="btn-teal">JOIN GTF AS A PARTNER →</Link>
-          <Link href="/contact" className="btn-outline">SCHEDULE A CALL</Link>
+          <Link href="/register" className="btn-teal">Join GTF as a partner →</Link>
+          <Link href="/contact" className="btn-outline">Schedule a call</Link>
         </div>
         <div aria-label="GTF operating flow" style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap' }}>
-          {['DISCOVER', 'QUOTE', 'CONFIRM', 'SUPPORT'].map((step, i) => (
+          {['DISCOVER', 'QUOTE', 'Confirm', 'SUPPORT'].map((step, i) => (
             <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}>
               <span style={{ padding: '8px 13px', border: '1px solid var(--rule)', borderRadius: 999, color: 'var(--teal)', fontSize: 12, letterSpacing: '0.04em', fontWeight: 700 }}>{step}</span>
               {i < 3 && <span aria-hidden="true" style={{ color: 'var(--rule)' }}>→</span>}
@@ -380,16 +347,16 @@ function EditorialIntro() {
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 42%', position: 'absolute', inset: 0 }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(7,26,23,0.88) 0%, rgba(7,26,23,0.55) 60%, rgba(7,26,23,0.3) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '56px 56px 56px 52px' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '56px clamp(18px, 5vw, 56px) 56px clamp(18px, 5vw, 52px)' }}>
           <h2 className="font-display" style={{ fontSize: 'clamp(32px, 4vw, 54px)', fontWeight: 400, lineHeight: 0.95, color: '#fff', marginBottom: 20, letterSpacing: '-0.03em' }}>
             Your next best-seller<br />
             <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal-lt)' }}>starts here.</span>
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 36, fontWeight: 400, maxWidth: 380 }}>
+          <p style={{ fontSize: 15, color: 'var(--on-dark)', lineHeight: 1.7, marginBottom: 36, fontWeight: 400, maxWidth: 380 }}>
             Join a global partner network built to help travel professionals sell further — while GTF coordinates the world behind the scenes.
           </p>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', marginBottom: 16, letterSpacing: '0.04em' }}>
-            B2B ONLY · FREE REGISTRATION · ADMIN APPROVAL REQUIRED
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.62)', marginBottom: 16 }}>
+            B2B only · Free registration · Admin approval required
           </div>
         </div>
       </div>
@@ -442,9 +409,9 @@ function ApprovedBento() {
     observer.observe(node)
     return () => observer.disconnect()
   }, [])
-  useEffect(() => { const t = setInterval(() => setRouteMap(v => !v), 3200); return () => clearInterval(t) }, [])
-  useEffect(() => { const t = setInterval(() => setPhotoIndex(v => (v + 1) % photos.length), 4800); return () => clearInterval(t) }, [photos.length])
-  useEffect(() => { const t = setInterval(() => setFlowStep(v => (v + 1) % 4), 1200); return () => clearInterval(t) }, [])
+  useEffect(() => { if (reducedMotion()) return; const t = setInterval(() => setRouteMap(v => !v), 3200); return () => clearInterval(t) }, [])
+  useEffect(() => { if (reducedMotion()) return; const t = setInterval(() => setPhotoIndex(v => (v + 1) % photos.length), 4800); return () => clearInterval(t) }, [photos.length])
+  useEffect(() => { if (reducedMotion()) return; const t = setInterval(() => setFlowStep(v => (v + 1) % 4), 2400); return () => clearInterval(t) }, [])
   const reveal = inView ? ' approved-in' : ''
   return (
     <section ref={sectionRef} className="bento-approved" aria-labelledby="approved-bento-title">
@@ -476,7 +443,7 @@ function ApprovedBento() {
           </article>
           <article className={`approved-tile approved-flow${reveal}`}>
             <div className="approved-label">OPERATING MODEL</div>
-            <div className="flow-line">{['DISCOVER', 'QUOTE', 'CONFIRM', 'SUPPORT'].map((step, i) => <span key={step} className={flowStep === i ? 'flow-active' : ''}>{step}{i < 3 ? ' →' : ''}</span>)}</div>
+            <div className="flow-line">{['DISCOVER', 'QUOTE', 'Confirm', 'SUPPORT'].map((step, i) => <span key={step} className={flowStep === i ? 'flow-active' : ''}>{step}{i < 3 ? ' →' : ''}</span>)}</div>
             <small>ONE BRIEF · ONE PROPOSAL</small>
           </article>
           <article className={`approved-tile approved-white-label${reveal}`}><div className="approved-label">WHITE LABEL SOLUTIONS</div><strong>YOUR BRAND.<br /><i>OUR BACKEND.</i></strong><small>PARTNER-READY · BUILT TO SCALE</small></article>

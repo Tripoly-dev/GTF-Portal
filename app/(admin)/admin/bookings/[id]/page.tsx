@@ -7,9 +7,10 @@ import PaymentHistoryTable from '@/components/bookings/PaymentHistoryTable'
 import RecordPaymentModal from '@/components/bookings/RecordPaymentModal'
 import type { Payment } from '@/components/bookings/types'
 import { todayISO } from '@/lib/date'
+import { formatDate, moneyOrDash as fmtPrice } from '@/lib/format'
+import StatusBadge from '@/components/ui/StatusBadge'
 
-const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
-const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
+const fmtDate = (d: string) => formatDate(d, 'long')
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   pending:   { label: 'Awaiting Confirmation', bg: 'var(--warn-lt)', color: 'var(--warn)' },
@@ -114,7 +115,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
         </div>
 
         {/* Header */}
-        <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '28px 32px', marginBottom: 20 }}>
+        <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '28px clamp(18px, 5vw, 32px)', marginBottom: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div className="eyebrow" style={{ marginBottom: 8 }}>BOOKING REF: {booking.id.slice(0, 8).toUpperCase()}</div>
@@ -124,8 +125,8 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                   { l: 'AGENT', v: agent?.full_name || '—' },
                   { l: 'AGENCY', v: agent?.agency_name || '—' },
                   { l: 'EMAIL', v: agent?.email || '—' },
-                  { l: 'DEPARTURE', v: fmtDate(booking.departure_date) },
-                  { l: 'PASSENGERS', v: `${pax} pax` },
+                  { l: 'Departure', v: fmtDate(booking.departure_date) },
+                  { l: 'Passengers', v: `${pax} pax` },
                   { l: 'TOTAL', v: fmtPrice(booking.total_price) },
                 ].map(({ l, v }) => (
                   <div key={l}>
@@ -136,7 +137,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
-              <span style={{ fontSize: 12, fontWeight: 700, padding: '6px 14px', borderRadius: 6, background: st.bg, color: st.color, letterSpacing: '0.04em' }}>{st.label.toUpperCase()}</span>
+              <StatusBadge status={booking.status}>{st.label}</StatusBadge>
               {booking.status === 'pending' && (
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button onClick={() => updateStatus('confirmed')} disabled={updating} style={{ padding: '10px 20px', background: 'var(--ok)', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: updating ? 0.5 : 1, fontFamily: 'var(--font-sans)' }}>
@@ -154,10 +155,10 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20 }}>
+        <div className="rg-stack" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20 }}>
           {/* Passengers */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '24px 28px' }}>
-            <div className="eyebrow" style={{ marginBottom: 20 }}>PASSENGER DETAILS</div>
+            <div className="eyebrow" style={{ marginBottom: 20 }}>Passenger details</div>
             {passengers.map((p: any, i: number) => (
               <div key={i} style={{ padding: '16px 0', borderBottom: '1px solid var(--rule)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -189,7 +190,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
           {/* Payment + Notes */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '24px' }}>
-              <div className="eyebrow" style={{ marginBottom: 16 }}>PAYMENT SCHEDULE</div>
+              <div className="eyebrow" style={{ marginBottom: 16 }}>Payment schedule</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
                   { l: 'Total Amount', v: fmtPrice(booking.total_price), bold: true },
@@ -224,7 +225,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
             </div>
             {booking.notes && (
               <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--rule)', padding: '20px 24px' }}>
-                <div className="eyebrow" style={{ marginBottom: 10 }}>NOTES</div>
+                <div className="eyebrow" style={{ marginBottom: 10 }}>Notes</div>
                 <p style={{ fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6, margin: 0 }}>{booking.notes}</p>
               </div>
             )}
@@ -234,9 +235,9 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
         {/* Payments */}
         <div style={{ marginTop: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
-            <div className="eyebrow">PAYMENTS</div>
+            <div className="eyebrow">Payments</div>
             <button onClick={() => { setEditingPayment(null); setShowRecordModal(true) }} className="btn-teal">
-              + RECORD PAYMENT
+              + Record payment
             </button>
           </div>
 
