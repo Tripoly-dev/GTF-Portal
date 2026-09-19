@@ -298,6 +298,7 @@ export default function AdminPage() {
       body: JSON.stringify({ status: action }),
     })
     if (res.ok) setAgents(prev => prev.map(a => a.id === agentId ? { ...a, status: action } : a))
+    else { const d = await res.json().catch(() => ({})); alert(d.error || 'Failed to update agent status') }
     setUpdatingAgent(null)
   }
 

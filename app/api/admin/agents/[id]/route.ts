@@ -17,7 +17,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const { data, error } = await supabase
       .from('agents')
-      .update({ status, updated_at: new Date().toISOString() })
+      .update({ status })
       .eq('id', id)
       .select()
       .single()
@@ -44,7 +44,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const body = await req.json()
 
     const required = ['full_name', 'agency_name', 'agency_address', 'city', 'mobile', 'whatsapp_number', 'how_did_you_hear'] as const
-    const update: Record<string, string | null> = { updated_at: new Date().toISOString() }
+    const update: Record<string, string | null> = {}
     for (const k of required) {
       const v = typeof body[k] === 'string' ? body[k].trim() : ''
       if (!v) return NextResponse.json({ error: `${k.replace(/_/g, ' ')} is required` }, { status: 400 })
