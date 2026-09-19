@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { todayISO } from '@/lib/date'
 
 const PAYMENT_MODES = ['Cash', 'Bank Transfer', 'UPI', 'Cheque', 'NEFT/RTGS']
 
@@ -89,6 +90,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
       if (!p.passport_number.trim()) { setError('All passport numbers are required'); return false }
       if (!p.doi) { setError('Date of Issue is required for all passengers'); return false }
       if (!p.doe) { setError('Date of Expiry is required for all passengers'); return false }
+      if (p.doe < todayISO()) { setError('Passport has already expired — Date of Expiry cannot be in the past'); return false }
     }
     setError('')
     return true
@@ -97,7 +99,9 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
   const validateStep2 = () => {
     if (!payment.deposit_amount || Number(payment.deposit_amount) <= 0) { setError('Deposit amount is required'); return false }
     if (!payment.deposit_due_date) { setError('Deposit due date is required'); return false }
+    if (payment.deposit_due_date < todayISO()) { setError('Deposit due date cannot be in the past'); return false }
     if (!payment.balance_due_date) { setError('Balance due date is required'); return false }
+    if (payment.balance_due_date < todayISO()) { setError('Balance due date cannot be in the past'); return false }
     if (!payment.payment_mode) { setError('Payment mode is required'); return false }
     setError('')
     return true
@@ -227,7 +231,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
                     </div>
                     <div>
                       <label style={labelStyle()}>DATE OF EXPIRY</label>
-                      <input type="date" style={inputStyle(!!(!p.doe && error))} value={p.doe} onChange={e => updatePassenger(idx, 'doe', e.target.value)} />
+                      <input type="date" min={todayISO()} style={inputStyle(!!(!p.doe && error))} value={p.doe} onChange={e => updatePassenger(idx, 'doe', e.target.value)} />
                     </div>
                     <div style={{ gridColumn: '1 / -1' }}>
                       <label style={labelStyle()}>PASSPORT COPY (JPG/PNG/PDF · MAX 2MB)</label>
@@ -269,7 +273,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
                 </div>
                 <div>
                   <label style={labelStyle()}>DEPOSIT DUE DATE</label>
-                  <input type="date" style={inputStyle()} value={payment.deposit_due_date} onChange={e => setPayment(p => ({ ...p, deposit_due_date: e.target.value }))} />
+                  <input type="date" min={todayISO()} style={inputStyle()} value={payment.deposit_due_date} onChange={e => setPayment(p => ({ ...p, deposit_due_date: e.target.value }))} />
                 </div>
               </div>
 
@@ -281,7 +285,7 @@ export default function BookingModal({ quote, pkg, onClose, onSuccess }: Props) 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 <div>
                   <label style={labelStyle()}>BALANCE DUE DATE</label>
-                  <input type="date" style={inputStyle()} value={payment.balance_due_date} onChange={e => setPayment(p => ({ ...p, balance_due_date: e.target.value }))} />
+                  <input type="date" min={todayISO()} style={inputStyle()} value={payment.balance_due_date} onChange={e => setPayment(p => ({ ...p, balance_due_date: e.target.value }))} />
                 </div>
                 <div>
                   <label style={labelStyle()}>PAYMENT MODE</label>

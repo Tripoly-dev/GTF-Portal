@@ -6,6 +6,7 @@ import PaymentSummaryStrip from '@/components/bookings/PaymentSummaryStrip'
 import PaymentHistoryTable from '@/components/bookings/PaymentHistoryTable'
 import RecordPaymentModal from '@/components/bookings/RecordPaymentModal'
 import type { Payment } from '@/components/bookings/types'
+import { todayISO } from '@/lib/date'
 
 const fmtDate = (d: string) => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
 const fmtPrice = (n: number) => n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—'
@@ -79,6 +80,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
   }
 
   const handleSaveDueDate = async () => {
+    if (balanceDueDate && balanceDueDate < todayISO()) { alert('Balance due date cannot be in the past'); return }
     setSavingDueDate(true)
     const res = await fetch(`/api/bookings/${id}/balance-due-date`, {
       method: 'PUT',
@@ -204,7 +206,7 @@ export default function AdminBookingDetailPage({ params }: { params: Promise<{ i
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                   <span style={{ fontSize: 12, color: 'var(--ink-light)', flexShrink: 0 }}>Balance Due</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <input type="date" value={balanceDueDate} onChange={e => setBalanceDueDate(e.target.value)} style={{
+                    <input type="date" min={todayISO()} value={balanceDueDate} onChange={e => setBalanceDueDate(e.target.value)} style={{
                       fontSize: 12.5, fontWeight: 600, color: 'var(--ink)', border: '1px solid var(--rule)', borderRadius: 6,
                       padding: '5px 8px', fontFamily: "'DM Sans', sans-serif",
                     }} />

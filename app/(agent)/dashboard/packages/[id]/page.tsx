@@ -3,6 +3,7 @@ import { useState, useEffect, use, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { PACKAGES, Package, DepartureSlot } from '@/data/packages'
+import { todayISO } from '@/lib/date'
 
 // ── CURRENCY HELPERS ─────────────────────────────────────────────────────────
 const fmtCurrency = (n: number, currency: string) => {
@@ -69,6 +70,7 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
 
   const handleSave = async () => {
     if (!form.client_name.trim()) { alert('Client name is required'); return }
+    if (form.estimated_booking_date && form.estimated_booking_date < todayISO()) { alert('Estimated booking date cannot be in the past'); return }
     setSaving(true)
     await onSave({ ...form, markup_value: Number(form.markup_value), markup_amount: markupAmount, final_total: finalTotal })
     setSaving(false)
@@ -169,7 +171,7 @@ function SaveProposalModal({ pkg, summary, onClose, onSave }: {
                 </div>
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink-mid)', letterSpacing: '0.08em', display: 'block', marginBottom: 6 }}>EST. BOOKING DATE</label>
-                  <input type="date" className="input-field" value={form.estimated_booking_date} onChange={set('estimated_booking_date')} />
+                  <input type="date" className="input-field" min={todayISO()} value={form.estimated_booking_date} onChange={set('estimated_booking_date')} />
                 </div>
               </div>
               <div>
