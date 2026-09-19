@@ -101,9 +101,9 @@ export default function Navbar() {
           {[
             { label: 'Adhoc & White Label', href: '/adhoc-and-white-label-solutions' },
             { label: 'Bespoke Holidays', href: '/bespoke-holidays' },
-            { label: 'About', href: '/about' },
+            { label: 'About Us', href: '/about' },
             { label: 'FAQ', href: '/faq' },
-            { label: 'Contact', href: '/contact' },
+            { label: 'Contact Us', href: '/contact' },
           ].map(l => (
             <Link key={l.href} href={l.href} className="nav-link" style={{
               color: overPhoto ? 'rgba(255,255,255,0.8)' : undefined,

@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import LogoWall from '@/components/ui/LogoWall'
+import { AFFILIATION_LOGOS } from '@/data/logos'
 
 export default function Footer() {
   return (
@@ -53,7 +55,7 @@ export default function Footer() {
           <div>
             <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: 20, fontWeight: 600 }}>COMPANY</div>
             {[
-              { label: 'About GTF', href: '/about' },
+              { label: 'About Us', href: '/about' },
               { label: 'FAQ', href: '/faq' },
               { label: 'Contact Us', href: '/contact' },
               { label: 'Partner Registration', href: '/register' },
@@ -64,16 +66,17 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Affiliations */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28, marginBottom: 28 }}>
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: 16, fontWeight: 600 }}>MEMBERSHIPS &amp; AFFILIATIONS</div>
+          <LogoWall logos={AFFILIATION_LOGOS} height={36} />
+        </div>
+
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <span style={{ fontSize: 11, letterSpacing: '0.04em' }}>
             © 2026 GTF Holidays LLP (Global Travel Fusion) · All rights reserved
           </span>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {['ETOA', 'TAAI', 'OTOAI', 'PATA'].map(b => (
-              <div key={b} style={{ padding: '3px 10px', border: '1px solid rgba(255,255,255,0.12)', fontSize: 9, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.3)', fontFamily: 'Inter, sans-serif', fontWeight: 600 }}>{b}</div>
-            ))}
-          </div>
         </div>
       </div>
     </footer>

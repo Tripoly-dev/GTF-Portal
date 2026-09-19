@@ -1,4 +1,7 @@
-export const metadata = { title: 'About GTF — Global Travel Fusion' }
+import LogoWall from '@/components/ui/LogoWall'
+import { AFFILIATION_LOGOS, CERTIFICATION_LOGOS } from '@/data/logos'
+
+export const metadata = { title: 'About Us — GTF Holidays (Global Travel Fusion)' }
 
 export default function AboutPage() {
   const usps = [
@@ -10,7 +13,6 @@ export default function AboutPage() {
     'Truly Global Destination Coverage',
     'Theme-Based Product Structure',
   ]
-  const affiliations = ['ETOA', 'TAAI', 'OTOAI', 'PATA', 'IITM', 'TTF', 'GTAA', 'TAAPI']
 
   return (
     <div style={{ background: 'var(--bg)' }}>
@@ -109,6 +111,18 @@ export default function AboutPage() {
           </div>
         </div>
 
+        {/* Affiliations & certifications */}
+        <div style={{ marginBottom: 80 }}>
+          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 24 }}>MEMBERSHIPS &amp; AFFILIATIONS</div>
+          <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28, marginBottom: 40 }}>
+            <LogoWall logos={AFFILIATION_LOGOS} height={52} />
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 24 }}>DESTINATION CERTIFICATIONS</div>
+          <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: 28 }}>
+            <LogoWall logos={CERTIFICATION_LOGOS} height={64} caption />
+          </div>
+        </div>
+
         {/* GTF Logo + HQ */}
         <div style={{ background: 'var(--paper)', border: '1px solid var(--rule)', padding: '48px 56px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 48, alignItems: 'start' }}>
           <div>
@@ -117,13 +131,7 @@ export default function AboutPage() {
               alt="GTF Holidays Logo"
               style={{ width: 120, marginBottom: 20 }}
             />
-            <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.1em', fontWeight: 600, marginBottom: 10 }}>MEMBERSHIPS & AFFILIATIONS</div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {affiliations.map(a => (
-                <div key={a} style={{ padding: '5px 12px', border: '1.5px solid var(--rule)', background: 'white', fontSize: 11, fontWeight: 700, color: 'var(--ink-mid)', letterSpacing: '0.06em' }}>{a}</div>
-              ))}
-            </div>
-          </div>
+                      </div>
           <div>
             <div style={{ fontSize: 11, color: 'var(--teal)', letterSpacing: '0.14em', fontWeight: 600, marginBottom: 16 }}>HEADQUARTERS</div>
             <h3 className="font-tight" style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)', marginBottom: 12, letterSpacing: '-0.01em' }}>Global Travel Fusion</h3>
